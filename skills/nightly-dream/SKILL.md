@@ -1,6 +1,6 @@
 ---
 name: nightly-dream
-description: Workbench routine and the heart of the self-improving loop. Each workday night it reads the day's recap and the owner's project captures, files them into people, projects, organizations, tools, the glossary and goals (dream-owned blocks and ledgers only), turns corrections into learned rules, and writes what it read, changed and wasn't sure about to Tracking/DREAM_LOG.md. Runs as "[Workbench] Nightly Dream"; can be run by hand with /workbench:nightly-dream.
+description: Workbench routine and the heart of the self-improving loop. Each workday night it reads the day's recap and the owner's project captures, files them into people, projects, organizations, tools, the glossary and goals (dream-owned blocks and ledgers only), learns from corrections, digest answers and how drafts were edited before sending, proposes improvements, and writes what it read, changed and wasn't sure about to Tracking/DREAM_LOG.md. Runs as "[Workbench] Nightly Dream"; can be run by hand with /workbench:nightly-dream.
 ---
 
 # Nightly dream
@@ -43,12 +43,16 @@ Whenever you write to a page, bump its `updated:` to today.
    decision/person/term 0.90).
 3. Today's `Daily/<date>_DAILY_RECAP.md`. If it's missing, write a DREAM_LOG entry saying so, add a
    FRICTION_LOG `## Open` line ("recap missing for <date>"), and stop. Don't rebuild the day yourself.
-4. `Tracking/Signals/<date>_recap.md` (graded claims and corrections).
+4. `Tracking/Signals/<date>_recap.md`: graded claims, graded drafts, answers to the digest, corrections.
 5. Every `Tracking/Captures/*.md` file with lines not yet listed under `## Processed captures`.
 6. If `Meetings/` exists, today's meeting files above `## Transcript` only, to cross-check the
    recap's commitments and decisions.
 7. Answers to yesterday's **Needs your yes**: lines the owner ticked `- [x]` (approved) or deleted
-   (declined) in the previous DREAM_LOG entry, and any answers in captures.
+   (declined) in the previous DREAM_LOG entry, `answer:` captures, and `## Answers` in the recap
+   Signals (replies to the digest).
+8. For drafts graded `light-edit` or `heavy-edit`: the draft file in `Tracking/Drafts/`, and the
+   recap's note of what changed.
+9. `Tracking/IMPROVEMENTS.md` `## Open`, so you don't re-propose what's already pending or declined.
 
 ## What to do
 
@@ -82,8 +86,18 @@ again for 30 days.
   `FRICTION_LOG.md` `## Open` entry with the cause and a proposed fix.
 - Claims graded `deleted` in the recap Signals: find the cause (stale page, wrong source, name
   variant) and fix the page or log the friction.
-- Notice repeated manual work in the recap (the same kind of task three times in two weeks) and
-  propose a playbook or skill under **Learned about how they work**.
+- **Drafts.** For each edited draft, compare the draft with the recap's note of what changed and
+  extract the pattern: tone, length, openers, sign-offs, structure, words they add or strike. One
+  edit is an anecdote; write a rule into `## Learned rules (dream)` in `Context/voice.md` only when
+  the same change shows up in two or more drafts, citing them. If a learned rule is contradicted by
+  later edits, demote it to `superseded`. `verbatim` drafts are evidence a rule works; note them.
+- **Questions answered or ignored.** Act on answers. If questions keep going unanswered for a week,
+  that's friction: log it, and ask fewer, sharper questions.
+- **Proposals.** Notice repeated manual work (the same kind of task three times in two weeks),
+  repeated corrections, and friction without a fix. Propose one concrete change for each under
+  **Proposals** in the log entry, with its kind (`rule`, `skill`, `routine`, `source`, `cleanup`) and
+  evidence. Skip anything already open or declined in `IMPROVEMENTS.md`. You only propose; the weekly
+  logs it and follows up.
 
 **d. Escape hatch.** If a recap line is genuinely ambiguous about one entity, you may make one
 read-only source lookup for it, **at most five a night**, each recorded under Lookups. Anything past
@@ -110,7 +124,10 @@ the cap becomes a question for tomorrow's briefing.
 - [ ] Mark "Send pricing to Sam" done? (sent mail 16:10 looks like it) — [[Acme Expansion]]
 
 **Learned about how {owner} works**
-- …
+- Drafts: 3 graded (1 verbatim, 2 light-edit). New voice rule: no "Hope you're well" openers (2 drafts).
+
+**Proposals**
+- skill · a /qbr-prep skill: QBR prep done by hand 3 times since 10-21 · evidence: recaps 10-21, 10-28, 11-03
 
 **Lookups**
 - none

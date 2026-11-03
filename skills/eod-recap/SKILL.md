@@ -1,6 +1,6 @@
 ---
 name: eod-recap
-description: Workbench routine. Sweeps every reachable source once at the end of the workday and writes the one account of the day to Daily/YYYY-MM-DD_DAILY_RECAP.md, with a source and date on every line, then grades the morning briefing's claims into Tracking/Signals/YYYY-MM-DD_recap.md. The nightly dream and the weekly build on this file instead of going back to the sources. Runs as "[Workbench] End-of-Day Recap"; can be run by hand with /workbench:eod-recap.
+description: Workbench routine. Sweeps every reachable source once at the end of the workday and writes the one account of the day to Daily/YYYY-MM-DD_DAILY_RECAP.md, with a source and date on every line, then grades the morning briefing's claims and every saved draft (sent verbatim, edited, or not sent) into Tracking/Signals/YYYY-MM-DD_recap.md, and collects answers to the briefing digest. The nightly dream and the weekly build on this file instead of going back to the sources. Runs as "[Workbench] End-of-Day Recap"; can be run by hand with /workbench:eod-recap.
 ---
 
 # End-of-day recap
@@ -104,6 +104,36 @@ routine: eod-recap
 One line per claim, with the evidence. You grade; you never edit the briefing. Also note any
 correction the owner made today in chat or captures (`correction:` lines) under a `## Corrections`
 heading here; the dream turns them into rules.
+
+## Grade the drafts
+
+For each file in `Tracking/Drafts/` dated today or in the previous two workdays and not yet graded
+in an earlier `*_recap.md`, look for what was actually sent: sent email, the owner's own Slack
+messages, edited docs, as reachable. Compare by recipient, topic and wording, and grade:
+
+| Grade | Means |
+|---|---|
+| `verbatim` | sent as written, or typo-level changes |
+| `light-edit` | same message, some wording changed |
+| `heavy-edit` | rewritten: structure, tone or substance changed |
+| `not-sent` | nothing matching went out within two workdays (grade only once the window has passed) |
+| `unknown` | the channel isn't reachable |
+
+Add to the Signals file under `## Drafts`, one line each, and for edits say **what** changed in a
+few words, without copying the sent text:
+
+```markdown
+## Drafts
+- 2026-11-03_pricing-reply-pat | email | light-edit | cut the opening pleasantry; "Hi Pat" not "Hello Pat"; shorter close
+- 2026-11-03_launch-update | slack | heavy-edit | reordered to lead with the date; dropped two bullets; more casual
+```
+
+## Collect answers to the digest
+
+If the briefing digest went out by Slack or email, read the owner's replies to it today. Each
+answer to a numbered question goes under `## Answers` in the Signals file:
+`- briefing YYYY-MM-DD Q2 — yes, it's Jamie Torres`. Answers given in the project arrive as
+`answer:` captures; list those too, so the dream has one place to read them.
 
 ## If the recap already exists
 

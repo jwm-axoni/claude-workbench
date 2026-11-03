@@ -10,5 +10,9 @@ First public release.
 - Self-improvement loop: captures from the one project, corrections turned into rules by the dream, claims graded by the recap, thresholds tuned weekly on evidence
 - Safe upgrades via a hash manifest and `.workbench-new` conflict files; adoption of existing vaults
 - Read-only commands: person, project, vault-search
+- Daily digest delivery chosen at setup (Slack DM, email, Claude, or none), tested during setup; replies flow back as answers
+- Outcome learning: drafts saved to `Tracking/Drafts/` and graded against what was actually sent; voice rules learned from repeated edits; `Tracking/IMPROVEMENTS.md` tracks proposed skills/rules through adoption and verification; weekly learning scorecard
+- Project instructions in READ / CAPTURE / DRAFTS / WRITE form
+- Optional starter Obsidian config
 
 Content migrations: none.

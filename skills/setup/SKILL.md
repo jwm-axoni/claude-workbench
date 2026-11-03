@@ -67,6 +67,21 @@ from the account, the company from an email domain.
 | Nightly Dream | 22:00 on workdays | files the day into people, projects, orgs; learns from corrections |
 | Weekly Plan & Maintenance | 90 min before work on the first workday | next week's plan plus the librarian's checks and fixes |
 
+**Round 4: how the day reaches you.** Most people won't open the folder every morning, so ask how
+they want the briefing delivered:
+
+| Option | What they get | Needs |
+|---|---|---|
+| **Slack** | a DM to themselves (or a private channel they name) with today's focus, risks and numbered questions; they reply in the thread | a Slack connector that can post |
+| **Email** | the same digest in their inbox; they reply to it | an email connector that can send (if it can only draft, say so and offer another option) |
+| **Claude** | the digest is the scheduled task's own message, in the Claude app; they answer in the project | nothing extra |
+| **None** | just the file in `Daily/` | nothing extra |
+
+Also ask whether the midday update should message them too (default: only if something changed),
+and whether they want **Obsidian** (free, obsidian.md) to browse the workbench: it shows the folders,
+links and a graph of people and projects, which is far easier than a file browser. Default yes; the
+workbench ships a starter Obsidian config.
+
 Pick the role pack by matching their role against `blueprints/roles.json` (`sales`,
 `customer-success`, `marketing`, `engineering`, `product`, `operations`, `people`, `it-security`,
 `finance`, `leadership`, `general`). Tell them which you picked and let them override it. The pack
@@ -119,6 +134,8 @@ Write the profile as JSON to a scratch file:
   "work_style": [],
   "guardrails": [],
   "extra_tags": [],
+  "delivery": { "channel": "slack", "target": "DM to myself", "midday": "if-changed" },
+  "obsidian": true,
   "routines": { "calendar-sync": true, "daily-briefing": true, "midday-update": true,
                 "eod-recap": true, "nightly-dream": true, "weekly": true },
   "routine_times": {}
@@ -151,6 +168,18 @@ Hand off to the `schedules` skill. It finds any existing `[Workbench] …` sched
 updates or removes them, and creates the current set from `.workbench/schedules.json`. Don't
 create scheduled tasks yourself here.
 
+## 7b. Test delivery
+
+Send one test digest through the chosen channel, to the owner only: "Your workbench is set up.
+Tomorrow's briefing arrives here at <time>. Reply to it to answer its questions." Confirm they got
+it. If it fails, fix the connector or pick another channel now. A briefing nobody receives is the
+most common reason a workbench goes quiet. Record the working channel in the profile and re-run
+`apply` if it changed.
+
+If they chose Obsidian and don't have it: point them to obsidian.md, then **Open folder as vault**
+and pick the workbench folder. Tell them where to look first: `CLAUDE.md`, `Context/me.md`, and
+the graph view.
+
 ## 8. The one project
 
 Tell them to work from **one** Claude project from now on:
@@ -158,7 +187,9 @@ Tell them to work from **one** Claude project from now on:
 1. Create a project named "<Name>'s Workbench" (Claude desktop or Cowork) with the workbench
    folder attached.
 2. Paste everything below the line in `.workbench/PROJECT_INSTRUCTIONS.md` into the project's
-   instructions. Show them the text so they can copy it.
+   instructions. Show them the text so they can copy it. If they already have a project with its
+   own instructions, merge: keep their additions, and make sure the READ / CAPTURE / DRAFTS / WRITE
+   sections are present.
 3. Start every piece of work there. The project reads the vault and writes only to
    `Tracking/Captures/`, which the nightly dream files into the right pages. That's the loop that
    makes the workbench learn from their chats.

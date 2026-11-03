@@ -11,6 +11,7 @@
     { "path": "Tracking",           "template": "folders/Tracking.md" },
     { "path": "Tracking/Captures" },
     { "path": "Tracking/Signals" },
+    { "path": "Tracking/Drafts" },
     { "path": "Meetings",           "template": "folders/Meetings.md", "when": "meetings" },
     { "path": "Archive",            "template": "folders/Archive.md" },
     { "path": ".workbench" },
@@ -31,6 +32,10 @@
     { "path": "Tracking/DREAM_LOG.md",              "template": "pages/DREAM_LOG.md",        "user_owned": true },
     { "path": "Tracking/Captures/README.md",        "template": "pages/Captures-README.md" },
     { "path": "Tracking/Signals/README.md",         "template": "pages/Signals-README.md" },
+    { "path": "Tracking/Drafts/README.md",          "template": "pages/Drafts-README.md" },
+    { "path": "Tracking/IMPROVEMENTS.md",           "template": "pages/IMPROVEMENTS.md",     "user_owned": true },
+    { "path": ".obsidian/app.json",                 "template": "obsidian/app.json",         "user_owned": true, "when": "obsidian" },
+    { "path": ".obsidian/graph.json",               "template": "obsidian/graph.json",       "user_owned": true, "when": "obsidian" },
     { "path": ".workbench/PROJECT_INSTRUCTIONS.md", "template": "pages/PROJECT_INSTRUCTIONS.md" }
   ],
   "routines": [
@@ -48,7 +53,7 @@
       "skill": "daily-briefing",
       "when": "workdays at {{brief_time}}",
       "cron": "{{brief_minute}} {{brief_hour}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_MORNING_BRIEFING.md"
+      "writes": "Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends the digest to the owner only, by their chosen channel"
     },
     {
       "id": "midday-update",
@@ -57,7 +62,7 @@
       "mode": "midday",
       "when": "workdays at {{midday_time}}",
       "cron": "{{midday_minute}} {{midday_hour}} * * {{workdays_cron}}",
-      "writes": "appends to Daily/YYYY-MM-DD_MORNING_BRIEFING.md"
+      "writes": "appends to Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends a short update to the owner only if something changed"
     },
     {
       "id": "eod-recap",
@@ -65,7 +70,7 @@
       "skill": "eod-recap",
       "when": "workdays at {{recap_time}}",
       "cron": "{{recap_minute}} {{recap_hour}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md, Tracking/Signals/YYYY-MM-DD_recap.md"
+      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md, Tracking/Signals/YYYY-MM-DD_recap.md (briefing claims and drafts graded)"
     },
     {
       "id": "nightly-dream",
@@ -81,7 +86,7 @@
       "skill": "weekly-review",
       "when": "first workday at {{weekly_time}}",
       "cron": "{{weekly_minute}} {{weekly_hour}} * * {{first_workday_cron}}",
-      "writes": "Daily/YYYY-MM-DD_NEXT_WEEK_PLAN.md, Tracking/Signals/YYYY-MM-DD_weekly.md, frontmatter/links/index repairs, every move to Archive/"
+      "writes": "Daily/YYYY-MM-DD_NEXT_WEEK_PLAN.md, Tracking/Signals/YYYY-MM-DD_weekly.md, Tracking/IMPROVEMENTS.md, frontmatter/links/index repairs, every move to Archive/"
     }
   ]
 }

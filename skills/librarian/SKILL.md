@@ -59,6 +59,10 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
 21. One-writer violations: if the vault is a git repo, commits from the last two weeks that touched a
     file outside the committing routine's ownership table in the root `CLAUDE.md`.
 22. Glossary terms `unconfirmed` and seen 3+ times; `UNCONFIRMED` name variants older than 14 days.
+23. Drafts in `Tracking/Drafts/` older than three workdays with no grade in any `*_recap.md`.
+24. `IMPROVEMENTS.md` items `accepted` for 14+ days but not `done`, or `done` for 30+ days but not
+    `verified` / `not-working`.
+25. Digests not delivered: briefings in the last two weeks with no `Delivered:` note, or a failure note.
 
 ## Report
 

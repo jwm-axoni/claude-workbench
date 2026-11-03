@@ -20,7 +20,7 @@ gathered during onboarding.
 ├── People/              one page per person + NAME_VARIANTS.md
 ├── Organizations/       employer, customers, vendors, partners
 ├── Resources/           reference material, Tools/, GLOSSARY.md
-├── Tracking/            GOALS, FRICTION_LOG, DREAM_LOG, Captures/, Signals/
+├── Tracking/            GOALS, FRICTION_LOG, DREAM_LOG, IMPROVEMENTS, Captures/, Drafts/, Signals/
 ├── Meetings/            only if your meeting recorder exports notes
 └── Archive/             closed chapters, read-only
 ```
@@ -66,14 +66,41 @@ A few rules hold the whole thing together:
 - **It measures itself.** The briefing makes checkable claims, the recap grades them, and the
   weekly only moves the confidence bar when there's enough evidence.
 
+## Getting the day without opening the folder
+
+Most people won't browse a folder every morning, so setup asks how the briefing should reach you:
+
+| Channel | What happens |
+|---|---|
+| Slack | a DM to yourself with today's focus, risks and numbered questions; reply in the thread |
+| Email | the same digest in your inbox; reply to it |
+| Claude | the digest is the scheduled task's message in the Claude app; answer in your project |
+| None | just the file in `Daily/` |
+
+Setup sends a test message so you know it works. Answers ("1 yes, 2 it's Jo Tan") flow back
+through the recap or your project's captures, and the dream acts on them that night. Sending the
+digest to you is the one thing a routine may send, and only ever to you.
+
+For browsing, setup suggests [Obsidian](https://obsidian.md) and ships a starter config with a
+colored graph of people, projects and orgs.
+
 ## The self-improving part
 
-When you correct Claude in your project ("never put dates in that format", "Dana owns pricing
-now"), it writes a `correction:` line to today's capture file. That night the dream turns it
-into a rule in `Context/voice.md` or `Context/me.md`, or logs it in the friction log if a
-routine got something wrong. The weekly reports what the system learned and proposes one
-improvement to the system itself. You stay in control of the `CLAUDE.md` contracts: routines
-can propose changes to them but never write them.
+It learns from three things, and it measures each instead of assuming:
+
+- **Your corrections.** Correct Claude in your project and it logs a `correction:` line. That night
+  the dream turns it into a rule in `Context/voice.md` or `Context/me.md`. If the same correction
+  comes back later, the weekly flags the rule as not working.
+- **What you actually send.** Every draft Claude hands you is saved to `Tracking/Drafts/`. The
+  end-of-day recap compares it with what you really sent (verbatim, light edit, rewrite, not sent).
+  When the same kind of edit shows up twice, the dream writes it into your voice rules.
+- **What it proposes.** When the dream spots repeated manual work or friction, it proposes a fix: a
+  rule, a skill, a routine change, a connector. The weekly logs it in `Tracking/IMPROVEMENTS.md`,
+  asks you about it, and later checks whether it got built and whether the problem went away.
+
+Every week a short scorecard answers "is it getting better?": draft acceptance rate, heavy edits,
+briefing accuracy, repeat corrections, questions answered, improvements adopted. You stay in
+control of the `CLAUDE.md` contracts; routines can propose changes to them but never write them.
 
 ## Install
 
@@ -107,9 +134,11 @@ times, or cloud routines with the workbench in a private GitHub repo.
 ## The one-project setup
 
 After setup, create one Claude project called "<Your name>'s Workbench" with the workbench folder
-attached, and paste in the instructions from `.workbench/PROJECT_INSTRUCTIONS.md`. Do your work
-there. Every chat reads the same memory, and everything a chat settles flows back into the vault
-through captures. Separate projects per topic split your memory; this setup keeps it whole.
+attached, and paste in the instructions from `.workbench/PROJECT_INSTRUCTIONS.md`. They have four
+parts: READ (the vault first, in a set order, citing pages), CAPTURE (log decisions, process
+changes, facts, corrections and briefing answers as they're settled), DRAFTS (save every draft
+handed over), and WRITE (captures and drafts only; nothing else without asking). Do your work
+there. Every chat reads the same memory, and everything a chat settles flows back into the vault. Separate projects per topic split your memory; this setup keeps it whole.
 
 ## Safe upgrades
 

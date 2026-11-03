@@ -167,8 +167,24 @@ def build_context(profile: dict, root: Path):
     meetings_source = (profile.get("meetings_source") or "").strip()
     function_tags = list(dict.fromkeys(pack.get("function_tags", []) + profile.get("extra_tags", [])))
 
+    delivery = profile.get("delivery") or {}
+    channel = (delivery.get("channel") or "claude").lower()
+    target = delivery.get("target") or {"slack": "a DM to themselves", "email": "their own inbox"}.get(channel, "")
+    delivery_label = {
+        "slack": f"a Slack message ({target})",
+        "email": f"an email ({target})",
+        "claude": "the scheduled task's own message in the Claude app",
+        "none": "nothing sent; the briefing file only",
+    }.get(channel, channel)
+
     ctx = {
         "version": plugin_version(),
+        "delivery_channel": channel,
+        "delivery_label": delivery_label,
+        "meetings_rule": ("`Meetings/` is the authoritative record of what was said and assigned. Read only above\n"
+                          "the `## Transcript` marker. Files sharing an export id are one meeting exported more than\n"
+                          "once: read the longest.\n") if meetings_source else "",
+        "meetings_never": " `Meetings/`," if meetings_source else "",
         "created_date": profile.get("created_date") or dt.date.today().isoformat(),
         "name": name,
         "preferred_name": preferred,
@@ -266,7 +282,8 @@ _Maintained nightly by nightly-dream._
 
 def desired_state(profile: dict, root: Path):
     ctx, base, _pack = build_context(profile, root)
-    flags = {"meetings": bool(profile.get("meetings_source")), "company": bool(profile.get("company"))}
+    flags = {"meetings": bool(profile.get("meetings_source")), "company": bool(profile.get("company")),
+             "obsidian": profile.get("obsidian", True) is not False}
     dirs, files = [], []
 
     def add(path: str, content: str, user_owned: bool):

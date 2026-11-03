@@ -61,7 +61,8 @@ class FreshBuild(Base):
                     "People/NAME_VARIANTS.md", "People/Jane Rivera.md", "Organizations/Acme Data.md",
                     "Resources/GLOSSARY.md", "Resources/Tools/Salesforce.md", "Tracking/GOALS.md",
                     "Tracking/DREAM_LOG.md", "Tracking/FRICTION_LOG.md", "Tracking/Captures/README.md",
-                    "Tracking/Signals/README.md", "Archive/CLAUDE.md", ".workbench/manifest.json",
+                    "Tracking/Signals/README.md", "Tracking/Drafts/README.md", "Tracking/IMPROVEMENTS.md",
+                    ".obsidian/app.json", ".obsidian/graph.json", "Archive/CLAUDE.md", ".workbench/manifest.json",
                     ".workbench/profile.json", ".workbench/schedules.json",
                     ".workbench/PROJECT_INSTRUCTIONS.md", ".workbench/routines/nightly-dream.md"]:
             self.assertTrue((self.root / rel).exists(), rel)
@@ -86,9 +87,25 @@ class FreshBuild(Base):
         self.assertIn("`sales`", (self.root / "People/CLAUDE.md").read_text())
 
     def test_meetings_folder_when_recorder_export(self):
+        instructions = self.root / ".workbench/PROJECT_INSTRUCTIONS.md"
+        self.apply()
+        self.assertNotIn("## Transcript", instructions.read_text())
         self.apply(dict(PROFILE, meetings_source="Granola"))
         self.assertIn("Granola", (self.root / "Meetings/CLAUDE.md").read_text())
         self.assertIn("`Meetings/`", (self.root / "CLAUDE.md").read_text())
+        self.assertIn("## Transcript", instructions.read_text())
+
+    def test_delivery_channel_lands_in_the_contract(self):
+        self.apply(dict(PROFILE, delivery={"channel": "slack", "target": "DM to myself"}))
+        self.assertIn("a Slack message (DM to myself)", (self.root / "CLAUDE.md").read_text())
+
+    def test_obsidian_config_optional_and_never_overwritten(self):
+        self.apply(dict(PROFILE, obsidian=False))
+        self.assertFalse((self.root / ".obsidian").exists())
+        (self.root / ".obsidian").mkdir()
+        (self.root / ".obsidian/app.json").write_text("{}")
+        self.apply()
+        self.assertEqual((self.root / ".obsidian/app.json").read_text(), "{}")
 
 
 class Upgrades(Base):

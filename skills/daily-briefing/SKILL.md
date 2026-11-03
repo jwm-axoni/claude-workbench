@@ -9,7 +9,8 @@ The briefing is the surface the owner reads to start the day. It is not the reco
 is), so it can be opinionated about priorities, but every fact in it must trace to a source.
 
 **You own one file:** `Daily/<today>_MORNING_BRIEFING.md`. In midday mode you append to it. You
-write nothing else in the vault.
+write nothing else in the vault. The one thing you may send is the **digest**, to the owner only,
+by the channel in `.workbench/profile.json` → `delivery` (the root `CLAUDE.md` standing exception).
 
 ## Read first, in this order
 
@@ -107,6 +108,42 @@ connector), new actions. **Append** at the bottom:
 
 Never edit anything above it. What was known in the morning has value precisely because it
 wasn't rewritten. If nothing changed, append one line saying so.
+
+## Deliver the digest
+
+After writing the file, send a short digest by `delivery.channel`:
+
+- **slack**: a DM to the owner themselves (or the private channel named in `delivery.target`).
+  Never any other person or shared channel.
+- **email**: one email to the owner's own address, subject `Briefing — <Weekday> <date>`.
+- **claude**: make the digest your final message for this run; the Claude app shows it.
+- **none**: skip.
+
+Digest shape, at most 15 lines, no tables:
+
+```
+Morning, <name>. <Weekday> <date>.
+Focus: 1) … 2) … 3) …
+Watch: <the one or two real risks>
+Today: <N meetings>; prep needed for <meeting> (<what>)
+From the dream: <one line>
+Questions (reply with the number):
+1. Is "Send Pat the draft" done? (yes/no)
+2. Is "JT" Jamie Torres? (yes/no)
+Full briefing: Daily/<date>_MORNING_BRIEFING.md
+```
+
+Number questions `Q1…` to match the file's `## Questions`, so replies like "1 yes, 2 no it's Jo
+Tan" map back. Put **Needs your yes** items from the dream log first. Record the channel and time
+sent under `## Notes` in the file (e.g. `Delivered: slack 07:58`). If sending fails, note the
+failure there and in the digest's next successful send; don't retry in a loop.
+
+In **midday mode**, send only if the update has something new that needs action (when
+`delivery.midday` is `if-changed`, the default), as a reply in the same Slack thread or email thread
+when possible.
+
+Never put anything in a digest that the briefing itself must not show: private calendar blocks,
+personal meetings, secrets, guarded data.
 
 ## If the file already exists in morning mode
 

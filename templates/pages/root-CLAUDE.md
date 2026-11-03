@@ -52,10 +52,16 @@ conflicts, and if the vault syncs through git a conflict can silently halt the s
 
 {{routine_table}}
 
-**The Claude project → `Tracking/Captures/YYYY-MM-DD.md`, and nothing else.** Chats in the
-project are invisible to the routines, so each time a chat settles a decision, a process
-change, or a fact worth having next time, the project appends one line there. The dream
-files those lines into the right pages nightly.
+**The Claude project → `Tracking/Captures/YYYY-MM-DD.md` and `Tracking/Drafts/`, and nothing
+else.** Chats in the project are invisible to the routines, so each time a chat settles a
+decision, a process change, a fact, a correction, or an answer to a briefing question, the
+project appends one line to today's capture file. Every draft it hands {{preferred_name}} to send
+to someone else is saved, as given, in `Tracking/Drafts/`. The dream files captures into the right
+pages nightly; the recap compares drafts with what was actually sent.
+
+**How {{preferred_name}} gets the day:** {{delivery_label}}. The briefing writes the full file and
+sends a short digest (focus, risks, numbered questions) by that channel. Replies to it, or answers
+given in the project, come back as captures or through the recap, and the dream acts on them.
 
 **The recap is the one account of the day.** Every source reaches the vault through it.
 The dream and the weekly build on that account instead of going back to the sources, which
@@ -76,7 +82,10 @@ When you decide a routine may do something this file forbids, write the exceptio
 dated, with the reason, rather than quietly editing the rule. A later reader can then tell a
 decision was made. Revoking one means deleting its entry here and in the routine on the same day.
 
-_None yet._
+**{{created_date}} — the briefing may send its digest to {{preferred_name}}.** Routines never send
+anything, except that `daily-briefing` may deliver its digest to the owner alone, by the channel in
+`.workbench/profile.json` (`delivery`). Never to anyone else, never into a shared channel.
+*Reason: not everyone opens the folder every morning; the digest is how the day reaches them.*
 
 ## Conventions
 
@@ -96,7 +105,7 @@ reviewed: YYYY-MM-DD   # set by the weekly when it confirms the page still holds
 
 `updated:` moves only when content changes. `reviewed:` moves when the weekly confirms the
 page against current sources. Routine-only types: `morning-briefing`, `daily-recap`,
-`calendar`, `weekly-plan`. Add a new `type` value here before using it anywhere.
+`calendar`, `weekly-plan`, plus `draft` (written only by the project). Add a new `type` value here before using it anywhere.
 
 ### Links
 
@@ -145,7 +154,8 @@ Any routine that writes to a page bumps that page's `updated:` in the same chang
 2. This vault holds real names and internal detail. None of it goes anywhere shared or public
    without {{preferred_name}} checking first.
 3. Write, send or change things in other tools (email, chat, CRM, tickets) only when
-   {{preferred_name}} asks in that session. Routines read; they don't act.
+   {{preferred_name}} asks in that session. Routines read; they don't act. The one standing
+   exception is the briefing digest to the owner, below.
 {{guardrails_rules}}
 
 ## Archive policy
@@ -153,6 +163,19 @@ Any routine that writes to a page bumps that page's `updated:` in the same chang
 `Archive/` is read-only history. Move something there when it stops being referenced, not
 when it stops being true. Search it only when the active vault comes up empty or the
 question is explicitly historical.
+
+## How the workbench learns
+
+Three feedback loops, all measured rather than assumed:
+
+1. **Corrections.** Every `correction:` capture becomes a rule (voice, how-they-work, or a friction
+   fix). The weekly checks whether the same correction comes back after the rule exists.
+2. **Outcomes.** The recap grades the briefing's claims (kept, edited, wrong) and every saved draft
+   (sent verbatim, lightly edited, rewritten, not sent). The dream turns the edits into voice rules;
+   the weekly reports the trend and tunes the confidence bar on evidence.
+3. **Proposals.** When the dream sees repeated manual work or friction, it proposes a fix: a rule, a
+   skill, a routine change, a connector. The weekly logs each in `Tracking/IMPROVEMENTS.md` and
+   checks later whether it was adopted and whether it worked.
 
 ## Maintaining this system
 

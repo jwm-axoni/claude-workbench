@@ -8,7 +8,8 @@ description: Workbench routine. On the first workday of the week it writes the w
 Two jobs: tell the owner what the week ahead needs, and keep the vault healthy. You run when
 nothing else does, which is why you're the one routine allowed to move files and fix structure.
 
-**You own:** `Daily/<today>_NEXT_WEEK_PLAN.md`, `Tracking/Signals/<today>_weekly.md`, frontmatter
+**You own:** `Daily/<today>_NEXT_WEEK_PLAN.md`, `Tracking/Signals/<today>_weekly.md`,
+`Tracking/IMPROVEMENTS.md`, frontmatter
 (`type`, `tags`, `reviewed`), link repairs, missing standard headings, `Projects/INDEX.md` row
 repairs, stale claims in page prose **outside** dream-owned blocks, and every move into `Archive/`.
 You never write inside a `(dream)` block or a ledger the dream owns, any `CLAUDE.md`, another
@@ -50,7 +51,10 @@ The weekly checks listed under "Role lens" in Context/me.md.
 
 ## Meetings needing prep
 ## What the system learned
-What the dream promoted into rules last week, what changed in the confidence bar, and why.
+The scorecard headline (is it getting better?), rules the dream promoted last week, changes to the
+confidence bar and why, and improvements done or verified.
+## Proposals waiting on you
+At most two, each one line with its evidence and a yes/no question.
 ## Notes
 ```
 
@@ -96,9 +100,40 @@ and many items sat in Needs your yes unanswered. If most claims are `unaddressed
 giving feedback), hold every threshold and say so; silence is not agreement. Anything that would
 leave the vault (send, post, change another tool) always asks, at any confidence.
 
-## 5. One improvement
+## 5. Is it learning? The scorecard
 
-Pick the single most useful fix for the system itself from FRICTION_LOG `## Open` and last week's
-"Learned about how they work" notes, and propose it in the plan under What the system learned:
-a rule to add to a folder `CLAUDE.md`, a routine tweak, or a new playbook. Write it as a proposal;
-the owner (or `/workbench:migrate`) applies changes to `CLAUDE.md` files.
+Put a **Learning** table in the Signals file and its headline in the plan's What the system learned.
+Compare this week with the previous four from earlier `*_weekly.md` files:
+
+| Measure | From | Good direction |
+|---|---|---|
+| Draft acceptance: % `verbatim` + `light-edit` of graded drafts | recap `## Drafts` | up |
+| Heavy edits per week | recap `## Drafts` | down |
+| Briefing precision by kind | recap claims | up, or steady above 85% |
+| Repeat corrections: a correction on a topic that already has a learned rule | captures, voice/me rules | down (a repeat means the rule isn't working: mark it `not-working` and say why) |
+| Questions answered: % of digest questions with an answer within 2 workdays | recap `## Answers`, `answer:` captures | up; if low, ask fewer |
+| Proposals adopted / verified | `IMPROVEMENTS.md` | up |
+
+Say in one or two plain sentences whether the workbench is getting better and what's holding it
+back. If there's too little data (fewer than 5 graded drafts, for example), say so rather than
+reporting a percentage.
+
+## 6. Improvements ledger
+
+You own `Tracking/IMPROVEMENTS.md`.
+
+1. **Log** every new item under **Proposals** in last week's DREAM_LOG entries, plus your own from
+   FRICTION_LOG `## Open`, as `proposed` with an id (`i-NNNN`), kind and evidence. Dedupe.
+2. **Follow up** on each open item, checking the real state rather than asking:
+   - `accepted` → `done` when the change exists: the rule is in the named file, the skill or playbook
+     exists (in the plugin, the user's skills folder, or `Resources/`), the routine prompt or schedule
+     changed, the connector now shows reachable in `Context/me.md`.
+   - `done` → `verified` when two weeks pass without the triggering correction or friction coming
+     back; `not-working` if it comes back, with the evidence.
+   - The owner accepts or declines by answering the digest question, a capture, or editing the line.
+     Move declined items to `## Declined` with the date.
+3. **Ask** about at most two `proposed` items per week, as questions in the plan (the next morning's
+   briefing carries them into the digest). Lead with the one with the strongest evidence.
+
+Changes to any `CLAUDE.md` are applied by the owner or by `/workbench:migrate`, never by you. Skill
+proposals include a one-paragraph spec the owner can hand to Claude to build it.
