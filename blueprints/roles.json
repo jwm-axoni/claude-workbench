@@ -1,0 +1,112 @@
+{
+  "general": {
+    "label": "General knowledge worker",
+    "match": [],
+    "function_tags": ["operations", "leadership", "it", "finance", "legal", "people-ops"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "Docs storage", "Meeting notes"],
+    "briefing_lens": ["Meetings that need prep, and what to bring", "Replies owed, oldest first"],
+    "weekly_lens": ["Projects with no movement in 14 days", "Commitments owed to others that are past due"],
+    "connectors": ["Email", "Calendar", "Chat (Slack or Teams)", "Docs storage (Drive, OneDrive, Notion)"],
+    "guardrails": []
+  },
+  "sales": {
+    "label": "Sales (AE, SDR/BDR, account management)",
+    "match": ["sales", "account executive", "ae", "sdr", "bdr", "account manager", "seller", "business development"],
+    "function_tags": ["sales", "bdr", "sales-engineering", "partner", "customer"],
+    "sources": ["Calendar", "Email", "CRM", "Call recorder", "Chat (Slack/Teams)"],
+    "briefing_lens": ["External meetings today: account context, last touch, open next steps", "Deals with a close date this month and no activity in 7+ days"],
+    "weekly_lens": ["Pipeline movement: stage changes, slipped close dates, new and lost deals", "Accounts with no touch in 14+ days", "Follow-ups promised on calls that haven't gone out"],
+    "connectors": ["CRM (Salesforce or HubSpot)", "Email", "Calendar", "Call recorder (Gong, Clari, Fathom)", "Slack"],
+    "guardrails": []
+  },
+  "customer-success": {
+    "label": "Customer Success / Account Management / Support",
+    "match": ["customer success", "csm", "tam", "support", "implementation", "onboarding specialist", "customer experience"],
+    "function_tags": ["customer-success", "support", "implementation", "customer"],
+    "sources": ["Calendar", "Email", "CRM", "CS platform", "Ticketing", "Chat (Slack/Teams)"],
+    "briefing_lens": ["Customer meetings today: health, open tickets, last QBR", "Escalations or tickets that changed overnight"],
+    "weekly_lens": ["Renewals in the next 90 days and their health signals", "Accounts with rising ticket volume or falling usage", "Promises made to customers that are past due"],
+    "connectors": ["CRM", "CS platform (Gainsight, Planhat, ChurnZero)", "Ticketing (Zendesk, Jira, Intercom)", "Email", "Calendar", "Slack"],
+    "guardrails": []
+  },
+  "marketing": {
+    "label": "Marketing (content, demand gen, product marketing, brand)",
+    "match": ["marketing", "content", "demand gen", "pmm", "product marketing", "brand", "seo", "social", "communications", "comms"],
+    "function_tags": ["marketing", "content", "demand-gen", "product-marketing", "brand", "agency"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "Docs storage", "Analytics", "Project tool"],
+    "briefing_lens": ["Content or campaigns due this week and what's still missing", "Approvals waiting on you"],
+    "weekly_lens": ["Campaign results vs. goal where numbers are reachable", "Content calendar for the next two weeks: due, drafted, blocked"],
+    "connectors": ["Docs storage", "Analytics (GA4, HubSpot)", "Social scheduler", "Design (Canva, Figma)", "Slack", "Email"],
+    "guardrails": []
+  },
+  "engineering": {
+    "label": "Engineering / Data / DevOps",
+    "match": ["engineer", "developer", "software", "devops", "sre", "data scientist", "data engineer", "ml", "architect", "programmer"],
+    "function_tags": ["engineering", "data", "devops", "security", "product"],
+    "sources": ["Calendar", "Code host (GitHub/GitLab)", "Issue tracker", "Chat (Slack/Teams)", "Email"],
+    "briefing_lens": ["PRs waiting on your review, your PRs with new comments", "Tickets assigned to you that changed since yesterday"],
+    "weekly_lens": ["What shipped, what's in review, what's blocked", "On-call or incident follow-ups still open"],
+    "connectors": ["GitHub or GitLab", "Issue tracker (Jira, Linear)", "Slack", "Docs (Confluence, Notion)", "Calendar"],
+    "guardrails": ["Never paste secrets, keys or credentials into a page. Name where they live instead."]
+  },
+  "product": {
+    "label": "Product Management / Design / Research",
+    "match": ["product manager", "pm", "product owner", "designer", "ux", "user research", "product"],
+    "function_tags": ["product", "design", "research", "engineering", "customer"],
+    "sources": ["Calendar", "Issue tracker", "Docs storage", "Chat (Slack/Teams)", "Analytics", "Email"],
+    "briefing_lens": ["Decisions waiting on you", "Customer or user feedback that arrived since yesterday"],
+    "weekly_lens": ["Roadmap items that moved or slipped", "Feedback themes this week with counts"],
+    "connectors": ["Issue tracker", "Docs", "Design (Figma)", "Analytics", "Slack", "Calendar"],
+    "guardrails": []
+  },
+  "operations": {
+    "label": "Operations / RevOps / BizOps / Program Management",
+    "match": ["operations", "ops", "revops", "bizops", "project manager", "program manager", "chief of staff", "coordinator", "strategy"],
+    "function_tags": ["operations", "revops", "program-management", "finance", "it", "leadership"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "Project tool", "Spreadsheets", "CRM"],
+    "briefing_lens": ["Requests waiting on you, by who's asking", "Deadlines in the next 3 days across projects"],
+    "weekly_lens": ["Project health: overdue tasks, missing owners, no update in 7+ days", "Requests that came in this week and their status"],
+    "connectors": ["Spreadsheets", "Project tool (Asana, ClickUp, Monday, Jira)", "CRM", "Slack", "Email", "Calendar"],
+    "guardrails": []
+  },
+  "people": {
+    "label": "People / HR / Recruiting",
+    "match": ["hr", "people", "head of people", "vp people", "vp of people", "chief people officer", "recruiter", "recruiting", "talent", "human resources", "people ops"],
+    "function_tags": ["people-ops", "talent-acquisition", "legal", "leadership"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "ATS", "Docs storage"],
+    "briefing_lens": ["Interviews and candidate debriefs today", "Requests from managers waiting on you"],
+    "weekly_lens": ["Open roles and where each pipeline stands", "Programs and policies with a date in the next 30 days"],
+    "connectors": ["Email", "Calendar", "Slack", "Docs storage", "ATS (Greenhouse, Lever, Ashby)"],
+    "guardrails": ["Never record employee or candidate personal data, health, compensation or case details. Use role titles or initials, and keep sensitive cases out of the vault."]
+  },
+  "it-security": {
+    "label": "IT / Security / Compliance",
+    "match": ["it", "security", "infosec", "compliance", "sysadmin", "helpdesk", "grc", "soc"],
+    "function_tags": ["it", "security", "compliance", "vendor"],
+    "sources": ["Calendar", "Ticketing", "Chat (Slack/Teams)", "Email", "Docs (Confluence)"],
+    "briefing_lens": ["Tickets breaching or near SLA", "Change windows and maintenance today"],
+    "weekly_lens": ["Open incidents and their follow-ups", "Audit or compliance dates in the next 30 days"],
+    "connectors": ["Ticketing", "Docs (Confluence)", "Slack", "Email", "Calendar"],
+    "guardrails": ["Never paste secrets, keys or credentials into a page. Name where they live instead."]
+  },
+  "finance": {
+    "label": "Finance / Accounting / FP&A",
+    "match": ["finance", "accounting", "accountant", "controller", "fp&a", "cfo", "bookkeeper"],
+    "function_tags": ["finance", "accounting", "fp-and-a", "vendor", "leadership"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "Spreadsheets", "Docs storage"],
+    "briefing_lens": ["Close or reporting deadlines in the next 3 days", "Approvals waiting on you"],
+    "weekly_lens": ["Where the close stands", "Variances or questions raised this week and who owes answers"],
+    "connectors": ["Spreadsheets", "Email", "Calendar", "Slack", "Docs storage"],
+    "guardrails": ["Never paste account numbers or bank details into a page."]
+  },
+  "leadership": {
+    "label": "Founder / Executive / People manager",
+    "match": ["founder", "ceo", "coo", "cto", "cmo", "cro", "vp", "director", "head of", "manager", "executive", "owner", "president"],
+    "function_tags": ["leadership", "exec", "board", "investor", "operations"],
+    "sources": ["Calendar", "Email", "Chat (Slack/Teams)", "Docs storage", "Meeting notes"],
+    "briefing_lens": ["1:1s today: last notes and open commitments both ways", "Decisions waiting on you"],
+    "weekly_lens": ["Commitments made to your team and whether each is done", "Direct reports you haven't had a 1:1 with in 3+ weeks", "Decisions made this week and who needs to hear them"],
+    "connectors": ["Email", "Calendar", "Slack", "Docs storage", "CRM or finance dashboards"],
+    "guardrails": []
+  }
+}

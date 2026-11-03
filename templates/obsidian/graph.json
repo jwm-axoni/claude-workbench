@@ -1,0 +1,18 @@
+{
+  "search": "-path:Daily -path:Tracking -path:Archive",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": true,
+  "showOrphans": false,
+  "colorGroups": [
+    { "query": "path:People", "color": { "a": 1, "rgb": 5809896 } },
+    { "query": "path:Projects", "color": { "a": 1, "rgb": 9141494 } },
+    { "query": "path:Organizations", "color": { "a": 1, "rgb": 2201331 } },
+    { "query": "path:Resources", "color": { "a": 1, "rgb": 10724259 } },
+    { "query": "path:Context", "color": { "a": 1, "rgb": 15308410 } }
+  ],
+  "showArrow": false,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1,
+  "lineSizeMultiplier": 1
+}

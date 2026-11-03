@@ -1,0 +1,7 @@
+{
+  "userIgnoreFilters": ["Tracking/Signals/"],
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": false
+}
