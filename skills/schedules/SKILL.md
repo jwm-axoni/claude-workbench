@@ -48,7 +48,9 @@ List every scheduled task you can see. Sort each into:
 - **Look-alikes:** not prefixed, but clearly an older version of the same job, e.g. "daily
   briefing", "vault-dream", "EOD recap", "weekly plan", or any task whose prompt points at this
   workbench folder. Show these to the person and ask, one line each: replace with the workbench
-  version, or leave alone? Never delete a look-alike without a yes.
+  version, or leave alone? Replacing means **pausing** (disabling) the old task, not deleting it,
+  so its wording survives and it can be switched back on. Delete only if the tool can't pause, and
+  only with an explicit yes.
 - **Unrelated:** leave alone and don't mention them.
 
 If two tasks map to the same routine, that's a duplicate. Keep one (prefer the one already
@@ -64,7 +66,7 @@ Show the plan as one small table (routine · action · when) and get a yes, then
 | present, cron/prompt/timezone differ | **update** in place (keeps its history); if the tool can't update, delete then create |
 | present and identical | leave it |
 | ours, retired | **delete** |
-| look-alike the person said to replace | delete it, then create ours |
+| look-alike the person said to replace | pause it, then create ours |
 
 Cron expressions are in the routine's `timezone`. If the scheduling tool only accepts UTC, convert
 it and note the conversion, since daylight saving shifts it twice a year; prefer a tool option that

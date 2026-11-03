@@ -16,6 +16,7 @@ scripts/          workbench.py: stdlib-only scaffolder (detect/plan/apply/schedu
 blueprints/       base.json (folders, files, routines) + roles.json (role packs)
 templates/        folders/*.md -> each folder's CLAUDE.md; pages/*.md -> starter pages
 tests/            unittest suite for the scaffolder
+docs/index.html   the visual explainer (self-contained, no external assets); keep it in step with the skills
 ```
 
 ## How the pieces fit
@@ -39,6 +40,8 @@ tests/            unittest suite for the scaffolder
   `test_no_unrendered_placeholders` fails if one slips through.
 - Prose in templates and skills: plain, direct, contractions fine, no filler. Write for a smart
   reader who's busy.
+- When a skill's behavior changes, update `docs/index.html` and the README in the same change, so the
+  explainer never promises something the plugin doesn't do.
 - Bump `version` in both `.claude-plugin/plugin.json` and `marketplace.json`, and add a
   `CHANGELOG.md` entry. If a release changes content-page shapes, list the migration under the
   version so `/workbench:migrate` can apply it.

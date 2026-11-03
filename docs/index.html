@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Claude Workbench</title>
+<meta name="description" content="How the Claude Workbench plugin works: setup, the folder, the routines, how it learns, and the skills.">
+
+<link rel="icon" href="data:,">
+
+<style>
+
+:root{
+  
+  --board:#232323;
+
+  
+  --ink:#F4F4F1;                     
+  --ink-72:rgba(244,244,241,.72);    
+  --ink-56:rgba(244,244,241,.56);    
+  --ink-42:rgba(244,244,241,.42);    
+  --ink-26:rgba(244,244,241,.26);    
+  --hair:rgba(244,244,241,.13);      
+  --chalk:rgba(244,244,241,.78);     
+  --on-accent:#1A1A18;               
+
+  
+  --orange:#FF824D;                  
+  --blue:#7FD1FE;                    
+  --yellow:#F7DF91;                  
+  --pink:#FFD2E1;                    
+  --purple:#CBB6EA;                  
+  --hand-ink:#FFF0F5;                
+
+  
+  --sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --handfont:"Bradley Hand","Segoe Print","Comic Sans MS",cursive;
+
+  
+  --ease-quint:cubic-bezier(.22,1,.36,1);   
+  --ease-wipe:cubic-bezier(.25,.72,.3,1);   
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--ink); background:var(--board);
+  font-family:var(--sans);
+  line-height:1.55; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:2px}
+
+.board-noise{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  mix-blend-mode:screen;
+  background-size:100px 100px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='gamma' exponent='9' amplitude='0.2' offset='0'/%3E%3CfeFuncG type='gamma' exponent='9' amplitude='0.2' offset='0'/%3E%3CfeFuncB type='gamma' exponent='9' amplitude='0.2' offset='0'/%3E%3CfeFuncA type='discrete' tableValues='1'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+h1,h2,h3,h4{margin:0;color:var(--ink);font-family:var(--sans)}
+h1,.title{                                    
+  font-size:clamp(32px,5.2vw,52px);font-weight:600;letter-spacing:-.015em;
+  line-height:1.3;max-width:780px;
+}
+h2,h3{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.33}
+h4,.label{                                    
+  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-42);
+}
+.kicker{font-size:10px;color:var(--ink-56);letter-spacing:.14em;text-transform:uppercase}
+.subhead{font-size:18px;line-height:1.55;color:var(--ink-72);max-width:800px;margin:26px 0 0}
+.body{max-width:790px;font-size:16px;line-height:1.55;color:var(--ink-72)}
+.body p{margin:0 0 20px}
+.body strong{color:var(--ink);font-weight:600}
+.caption{font-size:10px;color:var(--ink-42);margin-top:9px}
+.accent{color:var(--orange);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+
+.hand{
+  font-family:var(--handfont);color:var(--hand-ink);
+  font-size:26px;line-height:1.25;letter-spacing:.01em;
+  transform:rotate(-2.5deg);display:inline-block;
+}
+.hand.sm{font-size:21px}
+.hand.orange{color:var(--orange)}
+.hand.blue{color:var(--blue)}
+
+.rbox,.rcircle{position:relative}
+.rbox>svg.rlayer,.rcircle>svg.rlayer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0}
+.rbox>*:not(svg.rlayer),.rcircle>*:not(svg.rlayer){position:relative;z-index:1}
+svg.rlayer path,svg.pxlayer path{fill:none;stroke:var(--rb,var(--chalk));stroke-width:var(--rw,1.1);stroke-linecap:round;stroke-linejoin:round}
+svg.pxlayer{position:absolute;inset:0;overflow:visible;pointer-events:none}
+
+.rbox>svg.pxlayer,.rcircle>svg.pxlayer{position:absolute;inset:0;z-index:0}
+[data-px]{position:relative}
+
+.doodle{fill:none;stroke:var(--chalk);stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.doodle.faint{stroke:var(--ink-42)}
+.doodle.orange{stroke:var(--orange)}
+.doodle.blue{stroke:var(--blue)}
+.doodle.pink{stroke:var(--pink)}
+.doodle.yellow{stroke:var(--yellow)}
+.doodle.purple{stroke:var(--purple)}
+
+.chalk-icon path{fill:none;stroke:var(--c,var(--chalk));stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+.rbar{display:block;height:20px;width:calc(var(--v,100)*1%);position:relative}
+.rbar>svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform-origin:left center;transform:scaleX(.02);transition:transform .85s cubic-bezier(.2,.75,.25,1)}
+.rbar.on>svg{transform:scaleX(1)}
+.rbar path{fill:var(--bc,var(--chalk));stroke:none}
+
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:none}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .rbar>svg{transform:scaleX(1);transition:none}
+}
+body{padding:0 0 110px}
+.page{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:58px 24px 0;
+  display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px;align-items:start}
+.note-row{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:44px;align-items:start;margin-top:30px}
+.margin-note{padding-top:10px}
+.divider{height:54px;margin:54px 0 44px}
+.sec-kicker{margin:0 0 14px}
+section h2{max-width:700px}
+.lead{max-width:760px;font-size:16px;line-height:1.6;color:var(--ink-72);margin:16px 0 0}
+.lead strong{color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-top:28px}
+.card{padding:18px 20px 16px}
+.card h4{font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:700;margin:0 0 7px}
+.card p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink-56)}
+.tag{display:inline-block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;margin-bottom:9px}
+.tag.routine{color:var(--pink)}
+.tag.demand{color:var(--blue)}
+.tag.once{color:var(--yellow)}
+.steps{margin:34px 0 0}
+.step{display:grid;grid-template-columns:54px minmax(0,1fr);gap:22px;padding:6px 0 26px}
+.stepnum{width:42px;height:42px;display:grid;place-items:center;font-weight:700;font-size:15px;color:var(--blue);--rb:var(--blue)}
+.step h3{font-size:17px;margin:8px 0 7px}
+.step p{margin:0;font-size:15px;line-height:1.55;color:var(--ink-72);max-width:660px}
+.say{display:block;margin-top:10px;font-size:14px;line-height:1.5;color:var(--ink-56);font-style:italic;max-width:620px}
+.folder{padding:22px 26px;max-width:560px;margin-top:28px;font-size:14px;line-height:1.7}
+.folder .fname{color:var(--yellow);font-weight:600}
+.folder ul{list-style:none;margin:0;padding-left:20px}
+.folder>ul{padding-left:0}
+.folder li{color:var(--ink)}
+.folder .why{color:var(--ink-56);font-size:13px}
+.week{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:36px 0 4px;padding:6px 4px 58px}
+.day{text-align:center}
+.daychip{display:inline-grid;place-items:center;min-width:58px;padding:8px 10px;font-size:13px;font-weight:700;color:var(--ink);--rb:var(--pink)}
+.day p{margin:10px 0 0;font-size:12px;line-height:1.45;color:var(--ink-56)}
+.loop{display:grid;grid-template-columns:1fr 1.1fr 1fr;grid-template-rows:auto auto;gap:30px 46px;align-items:center;margin:38px 0 6px}
+.signal{padding:14px 16px}
+.signal b{display:block;font-size:14px;color:var(--ink);margin-bottom:4px}
+.signal span{font-size:12.5px;line-height:1.45;color:var(--ink-56);display:block}
+.corefile{grid-column:2;grid-row:1 / span 2;padding:20px 18px;text-align:center;--rb:var(--purple);--rw:1.4}
+.corefile b{display:block;font-size:15px;color:var(--ink)}
+.corefile span{font-size:12.5px;color:var(--ink-56)}
+.mem{overflow-x:auto;margin-top:28px}
+.mem table{border-collapse:collapse;min-width:640px;width:100%;font-size:14px}
+.mem th,.mem td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--ink-72);line-height:1.45}
+.mem th{color:var(--ink-56);font-size:11px;text-transform:uppercase;letter-spacing:.1em}
+.mem td b{color:var(--ink)}
+.asklist{margin:26px 0 0;padding:0;list-style:none;max-width:700px}
+.asklist li{padding:10px 0;border-bottom:1px solid var(--hair);font-size:15px;color:var(--ink-72)}
+.asklist code{font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:var(--yellow);background:none}
+.chain{display:grid;grid-template-columns:repeat(3,1fr);gap:20px 44px;margin:34px 0 4px;padding:6px 4px 66px}
+.chainstep{padding:16px 18px 15px}
+.chainstep .when{display:block;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.chainstep b{display:block;font-size:14.5px;color:var(--ink);margin-bottom:6px}
+.chainstep .what{display:block;font-size:12.5px;line-height:1.5;color:var(--ink-56)}
+/* ledger */
+.ledger{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:20px 52px;align-items:center;margin:34px 0 4px;padding:6px 4px}
+.ledgercol{display:grid;gap:14px}
+.ledgersrc,.ledgerout{padding:11px 13px}
+.ledgersrc b,.ledgerout b,.ledgerhub b{display:block;font-size:13px;color:var(--ink);margin-bottom:3px}
+.ledgersrc span,.ledgerout span{display:block;font-size:12px;line-height:1.45;color:var(--ink-56)}
+.ledgerhub{padding:17px 19px}
+.ledgerhub span{display:block;font-size:12.5px;line-height:1.5;color:var(--ink-56)}
+.srcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:16px;margin-top:26px}
+.srcgrid .rbox{padding:15px 17px 13px}
+.srcgrid h4{font-size:13px;color:var(--ink);font-weight:700;margin:0 0 6px}
+.srcgrid p{margin:0;font-size:12.5px;line-height:1.5;color:var(--ink-56)}
+.srcgrid .deft{display:block;margin-top:7px;font-size:11.5px;color:var(--ink-42)}
+/* tabs */
+[hidden]{display:none!important}
+.tabs{position:sticky;top:calc(24px + env(safe-area-inset-top, 0px));z-index:5}
+.tablist{position:relative;display:flex;flex-direction:column;gap:2px}
+.tab{appearance:none;background:none;border:0;border-left:2px solid var(--hair);border-radius:0;
+  padding:10px 12px 10px 16px;text-align:left;cursor:pointer;
+  font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;line-height:1.4;
+  color:var(--ink-56);transition:color .18s ease,border-color .18s ease}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-left-color:var(--orange)}
+.panel:focus-visible{outline-offset:8px}
+.panels [id]{scroll-margin-top:24px}
+.card p+p{margin-top:8px}
+.card p b{color:var(--ink-72);font-weight:600}
+.card code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--yellow)}
+@media(max-width:900px){
+  .page{display:block}
+  .tabs{top:env(safe-area-inset-top, 0px);margin:0 -24px 34px;padding:10px 0;background:var(--board);border-bottom:1px solid var(--hair)}
+  .tablist{flex-direction:row;gap:8px;overflow-x:auto;padding:4px 24px;scrollbar-width:none}
+  .tablist::-webkit-scrollbar{display:none}
+  .tab{flex:none;white-space:nowrap;border:1px solid var(--hair);border-radius:999px;padding:7px 14px}
+  .tab[aria-selected="true"]{border-color:var(--orange)}
+  .panels [id]{scroll-margin-top:84px}
+}
+@media(max-width:780px){
+  .ledger{grid-template-columns:1fr;gap:14px}
+}
+@media(max-width:780px){
+  .note-row{grid-template-columns:1fr;gap:22px}
+  .page{padding:42px 18px 0}
+  .tabs{margin:0 -18px 30px}
+  .tablist{padding:4px 18px}
+  .loop{grid-template-columns:1fr;grid-template-rows:none}
+  .corefile{grid-column:auto;grid-row:auto}
+  .week{grid-template-columns:repeat(2,1fr);padding-bottom:10px}
+  .chain{grid-template-columns:1fr;padding-bottom:10px}
+}
+</style>
+
+<script>
+
+(function (global) {
+  "use strict";
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var doc = global.document;
+
+  var mqReduce = global.matchMedia('(prefers-reduced-motion: reduce)');
+  
+  var STACK_BREAKPOINT = 780;
+  var mqStack = global.matchMedia('(max-width:' + STACK_BREAKPOINT + 'px)');
+
+  
+  function reduced() { return mqReduce.matches; }
+
+  
+  function isStacked() { return mqStack.matches; }
+
+  
+
+  
+  function fnv(str) {
+    var h = 2166136261 >>> 0;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    return h >>> 0;
+  }
+
+  
+  function mulberry32(a) {
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  
+  function seeded(s) { return mulberry32(fnv(String(s))); }
+
+  
+  function n2(v) { return Math.round(v * 100) / 100; }
+
+  
+  function bez(p) {
+    if (p.length < 2) return '';
+    var d = 'M' + n2(p[0][0]) + ' ' + n2(p[0][1]);
+    if (p.length === 2) {
+      var a = p[0], b = p[1];
+      return d + ' C' + n2(a[0] + (b[0] - a[0]) / 3) + ' ' + n2(a[1] + (b[1] - a[1]) / 3) + ', ' +
+        n2(a[0] + 2 * (b[0] - a[0]) / 3) + ' ' + n2(a[1] + 2 * (b[1] - a[1]) / 3) + ', ' +
+        n2(b[0]) + ' ' + n2(b[1]);
+    }
+    for (var i = 0; i < p.length - 1; i++) {
+      var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p[i + 1];
+      d += ' C' + n2(p1[0] + (p2[0] - p0[0]) / 6) + ' ' + n2(p1[1] + (p2[1] - p0[1]) / 6) + ', ' +
+        n2(p2[0] - (p3[0] - p1[0]) / 6) + ' ' + n2(p2[1] - (p3[1] - p1[1]) / 6) + ', ' +
+        n2(p2[0]) + ' ' + n2(p2[1]);
+    }
+    return d;
+  }
+
+  
+  function roughLine(x1, y1, x2, y2, seed, amp) {
+    var A = amp || 1.8, r = seeded(seed + '|ln');
+    var dx = x2 - x1, dy = y2 - y1, L = Math.hypot(dx, dy) || 1, nx = -dy / L, ny = dx / L;
+    var d = '';
+    for (var pass = 0; pass < 2; pass++) {
+      var a = A * (pass ? 1 : .82), j = function () { return (r() * 2 - 1) * a; };
+      var sx = x1 + j() * .55, sy = y1 + j() * .55, ex = x2 + j() * .55, ey = y2 + j() * .55;
+      var o1 = j(), o2 = j();
+      d += 'M' + n2(sx) + ' ' + n2(sy) + ' C' + n2(x1 + dx * .32 + nx * o1) + ' ' + n2(y1 + dy * .32 + ny * o1) + ', ' +
+        n2(x1 + dx * .68 + nx * o2) + ' ' + n2(y1 + dy * .68 + ny * o2) + ', ' + n2(ex) + ' ' + n2(ey) + ' ';
+    }
+    return d.trim();
+  }
+
+  
+  function roughPoly(pts, seed, amp) {
+    var A = amp || 1.8, r = seeded(seed + '|py');
+    var d = '';
+    for (var pass = 0; pass < 2; pass++) {
+      var a = A * (pass ? 1 : .82);
+      var j = pts.map(function (p, i) {
+        var k = (i === 0 || i === pts.length - 1) ? .6 : 1;
+        return [p[0] + (r() * 2 - 1) * a * k, p[1] + (r() * 2 - 1) * a * k];
+      });
+      d += (pass ? ' ' : '') + bez(j);
+    }
+    return d;
+  }
+
+  
+  function roughRect(x, y, w, h, seed, amp) {
+    
+    var cap = Math.max(1, Math.min(5, Math.min(Math.abs(w), Math.abs(h)) * .22));
+    var r = seeded(seed + '|rc'), o = function () { return Math.min(2 + r() * 3, cap); }, a = amp || 1.5;
+    var t = o(), rt = o(), b = o(), l = o();
+    return [
+      roughLine(x - t, y, x + w + t, y, seed + '|t', a),
+      roughLine(x + w, y - rt, x + w, y + h + rt, seed + '|r', a),
+      roughLine(x + w + b, y + h, x - b, y + h, seed + '|b', a),
+      roughLine(x, y + h + l, x, y - l, seed + '|l', a)
+    ].join(' ');
+  }
+
+  
+  function roughEllipse(cx, cy, rx, ry, seed, amp) {
+    var A = amp || 1.7, r = seeded(seed + '|el'), d = '';
+    for (var pass = 0; pass < 2; pass++) {
+      var N = 14, st = r() * 0.7, en = st + Math.PI * 2 - (0.09 + r() * 0.26), pts = [];
+      for (var i = 0; i <= N; i++) {
+        var t = st + (en - st) * i / N;
+        var k = 1 + (r() * 2 - 1) * (A / Math.max(rx, ry, 1)) * 1.15;
+        pts.push([cx + Math.cos(t) * rx * k + (r() * 2 - 1) * A * .3, cy + Math.sin(t) * ry * k + (r() * 2 - 1) * A * .3]);
+      }
+      d += (pass ? ' ' : '') + bez(pts);
+    }
+    return d;
+  }
+
+  
+  function roughFill(x, y, w, h, seed, amp) {
+    var A = amp || 1.5, r = seeded(seed + '|fl');
+    var edge = function (x1, y1, x2, y2, n) {
+      var o = [];
+      for (var i = 1; i <= n; i++) { var t = i / n; o.push([x1 + (x2 - x1) * t + (r() * 2 - 1) * A, y1 + (y2 - y1) * t + (r() * 2 - 1) * A]); }
+      return o;
+    };
+    var nx = Math.max(3, Math.round(w / 24)), ny = Math.max(2, Math.round(h / 20));
+    var pts = [[x + (r() * 2 - 1) * A, y + (r() * 2 - 1) * A]];
+    pts = pts.concat(edge(x, y, x + w, y, nx), edge(x + w, y, x + w, y + h, ny), edge(x + w, y + h, x, y + h, nx), edge(x, y + h, x, y, ny));
+    return bez(pts) + ' Z';
+  }
+
+  
+  function roughDash(x1, y1, x2, y2, seed, amp, dash, gap) {
+    var D = dash || 6, G = gap || 5, L = Math.hypot(x2 - x1, y2 - y1) || 1;
+    var ux = (x2 - x1) / L, uy = (y2 - y1) / L;
+    var d = '', t = 0, k = 0;
+    while (t < L - 1) {
+      var e = Math.min(t + D, L);
+      d += (d ? ' ' : '') + roughLine(x1 + ux * t, y1 + uy * t, x1 + ux * e, y1 + uy * e, seed + '|d' + (k++), amp || .9);
+      t = e + G;
+    }
+    return d;
+  }
+
+  
+  function roughArrow(pts, seed, amp, head) {
+    var H = head || 9, d = roughPoly(pts, seed, amp);
+    var b = pts[pts.length - 1], a = pts[pts.length - 2];
+    var ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    return d + ' ' + roughPoly([[b[0] - Math.cos(ang - .42) * H, b[1] - Math.sin(ang - .42) * H], b], seed + '|h1', 1) +
+      ' ' + roughPoly([[b[0] - Math.cos(ang + .42) * H, b[1] - Math.sin(ang + .42) * H], b], seed + '|h2', 1);
+  }
+
+  
+
+  
+  function armPath(p) {
+    if (reduced()) { p.style.strokeDasharray = ''; p.style.strokeDashoffset = '0'; p.dataset.armed = ''; return; }
+    var L = 0;
+    try { L = p.getTotalLength(); } catch (e) { L = 0; }
+    if (!L) { p.style.strokeDashoffset = '0'; return; }
+    L = Math.ceil(L) + 2;
+    p.style.transition = 'none';
+    p.style.strokeDasharray = L + ' ' + L;
+    p.style.strokeDashoffset = L;
+    p.dataset.armed = '1';
+  }
+
+  
+  function playPath(p, delay, dur, ease) {
+    
+    if (p.dataset.armed === '2') return;
+    if (p.dataset.armed !== '1') { p.style.strokeDashoffset = '0'; return; }
+    p.dataset.armed = '2';
+    requestAnimationFrame(function () {
+      p.style.transition = 'stroke-dashoffset ' + (dur || '.95s') + ' ' + (ease || 'cubic-bezier(.25,.72,.3,1)') + ' ' + delay + 'ms' +
+        ',stroke .18s ease,stroke-width .18s ease';
+      p.style.strokeDashoffset = '0';
+    });
+  }
+
+  
+  function unplayPath(p) { p.style.transition = 'none'; armPath(p); }
+
+  
+  function showPath(p) { p.style.transition = ''; p.style.strokeDasharray = ''; p.style.strokeDashoffset = '0'; p.dataset.armed = ''; }
+
+  
+  function armAll(root) { root.querySelectorAll('path.sketch').forEach(armPath); }
+
+  
+  function playAll(root) {
+    var i = 0;
+    root.querySelectorAll('path.sketch').forEach(function (p) { playPath(p, Math.min(i++ * 70, 700)); });
+    root.querySelectorAll('.rbar').forEach(function (b, k) {
+      if (reduced()) { b.classList.add('on'); return; }
+      setTimeout(function () { b.classList.add('on'); }, 90 + k * 55);
+    });
+  }
+
+  
+
+  
+  function applyDeclarative(root) {
+    (root || doc).querySelectorAll('path[data-r]').forEach(function (el, i) {
+      if (el.dataset.rDone) return;
+      var seed = el.dataset.seed || (el.dataset.r + '|' + el.dataset.p + '|' + i);
+      var pts = (el.dataset.p || '').trim().split(/\s+/).map(function (s) { return s.split(',').map(Number); });
+      var amp = parseFloat(el.dataset.amp) || (el.closest('.chalk-icon') ? .85 : undefined);
+      var d = '';
+      switch (el.dataset.r) {
+        case 'line': d = roughLine(pts[0][0], pts[0][1], pts[1][0], pts[1][1], seed, amp); break;
+        case 'poly': d = roughPoly(pts, seed, amp); break;
+        case 'arrow': d = roughArrow(pts, seed, amp); break;
+        case 'rect': d = roughRect(pts[0][0], pts[0][1], pts[1][0], pts[1][1], seed, amp); break;
+        case 'ellipse': d = roughEllipse(pts[0][0], pts[0][1], pts[1][0], pts[1][1], seed, amp); break;
+        case 'fill': d = roughFill(pts[0][0], pts[0][1], pts[1][0], pts[1][1], seed, amp); break;
+      }
+      el.setAttribute('d', d);
+      el.dataset.rDone = '1';
+    });
+  }
+
+  
+
+  
+  function layerFor(el, cls) {
+    var s = el.querySelector(':scope > svg.' + cls);
+    if (!s) {
+      s = doc.createElementNS(NS, 'svg');
+      s.setAttribute('class', cls);
+      s.setAttribute('aria-hidden', 'true');
+      el.insertBefore(s, el.firstChild);
+    }
+    return s;
+  }
+
+  
+  function sizeLayer(s, w, h) {
+    s.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    s.setAttribute('width', w);
+    s.setAttribute('height', h);
+    s.innerHTML = '';
+    return s;
+  }
+
+  
+  function addPath(svg, cls, d, style) {
+    var p = doc.createElementNS(NS, 'path');
+    if (cls) p.setAttribute('class', cls);
+    p.setAttribute('d', d);
+    if (style) for (var k in style) p.style[k] = style[k];
+    svg.appendChild(p);
+    return p;
+  }
+
+  var seedCounter = 0;
+  
+  function stableSeed(el) {
+    if (!el.__seed) el.__seed = el.id || ('n' + (seedCounter++));
+    return el.__seed;
+  }
+
+  
+  function drawBox(el) {
+    var w = el.offsetWidth, h = el.offsetHeight;
+    if (!w || !h) return;
+    var svg = sizeLayer(layerFor(el, 'rlayer'), w, h);
+    addPath(svg, 'sketch', roughRect(1, 1, w - 2, h - 2, stableSeed(el), 1.4));
+    finish(el, svg);
+  }
+
+  
+  function drawCircle(el) {
+    var w = el.offsetWidth, h = el.offsetHeight;
+    if (!w || !h) return;
+    var svg = sizeLayer(layerFor(el, 'rlayer'), w, h);
+    addPath(svg, 'sketch', roughEllipse(w / 2, h / 2, w / 2 - 2, h / 2 - 2, stableSeed(el), 1.5));
+    finish(el, svg);
+  }
+
+  
+  function finish(el, svg) {
+    var host = el.closest('.reveal,[data-px],.wipe');
+    if (host && !host.__shown && wipeHosts.has(host)) { armAll(svg); return; }
+    svg.querySelectorAll('path.sketch').forEach(showPath);
+  }
+
+  
+
+  var pxR = {};
+
+  
+  function registerRenderer(name, fn) { pxR[name] = fn; }
+
+  
+  function rectIn(child, parent) {
+    var a = child.getBoundingClientRect(), b = parent.getBoundingClientRect();
+    return {
+      x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height,
+      cx: a.left - b.left + a.width / 2, cy: a.top - b.top + a.height / 2,
+      round: child.classList.contains('rcircle')
+    };
+  }
+
+  
+  function edgeOf(R, ux, uy, pad) {
+    if (R.round) { var r = Math.min(R.w, R.h) / 2 + pad; return [R.cx + ux * r, R.cy + uy * r]; }
+    var hw = R.w / 2 + pad, hh = R.h / 2 + pad;
+    var t = Math.min(ux ? hw / Math.abs(ux) : 1e9, uy ? hh / Math.abs(uy) : 1e9);
+    return [R.cx + ux * t, R.cy + uy * t];
+  }
+
+  
+  function connect(svg, A, B, seed, bow, cls, head) {
+    var dx = B.cx - A.cx, dy = B.cy - A.cy, L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+    var p1 = edgeOf(A, ux, uy, 6), p2 = edgeOf(B, -ux, -uy, 9);
+    var seg = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+    var bw = Math.sign(bow || 0) * Math.min(Math.abs(bow || 0), seg * .16);
+    var mx = (p1[0] + p2[0]) / 2 - uy * bw, my = (p1[1] + p2[1]) / 2 + ux * bw;
+    var pts = [p1, [mx, my], p2];
+    return addPath(svg, cls || 'doodle sketch', head === false ? roughPoly(pts, seed, 1.7) : roughArrow(pts, seed, 1.7, 10));
+  }
+
+  
+  registerRenderer('divider', function (svg, el, w, h) {
+    var y = h / 2, s = stableSeed(el);
+    addPath(svg, 'doodle sketch', roughPoly([[10, y], [w * .28, y - 2.5], [w * .55, y + 2.5], [w * .8, y - 1], [w - 10, y]], s + 'd', 1.7));
+    addPath(svg, 'doodle sketch', roughPoly([[18, y - 8], [10, y], [18, y + 8]], s + 'a1', 1.1));
+    addPath(svg, 'doodle sketch', roughPoly([[w - 18, y - 8], [w - 10, y], [w - 18, y + 8]], s + 'a2', 1.1));
+  });
+
+  
+  registerRenderer('bar', function (svg, el, w, h) {
+    var c = el.dataset.c || 'chalk';
+    addPath(svg, '', roughFill(1.5, 1.5, Math.max(w - 3, 2), Math.max(h - 3, 2), stableSeed(el), 1.15),
+      { fill: 'var(--' + c + ')', stroke: 'none' });
+  });
+
+  function renderPx(el) {
+    var name = el.dataset.px, fn = pxR[name];
+    if (!fn) return;
+    var w = Math.round(el.clientWidth), h = Math.round(el.clientHeight);
+    if (!w || !h) return;
+    var svg = sizeLayer(layerFor(el, 'pxlayer'), w, h);
+    fn(svg, el, w, h);
+    
+    if (!el.__shown && wipeHosts.has(el)) armAll(svg);
+    else svg.querySelectorAll('path.sketch').forEach(showPath);
+  }
+
+  
+
+  var boxes = [], circles = [], pxNodes = [], ro = null, raf = null;
+
+  
+  var wipeHosts = new Set();
+
+  var revObs = null;
+
+  
+  function registerPx(el) {
+    if (pxNodes.indexOf(el) >= 0) return;
+    stableSeed(el);
+    pxNodes.push(el);
+    if (ro) ro.observe(el);
+  }
+
+  
+  function unregisterPx(el) {
+    var i = pxNodes.indexOf(el);
+    if (i >= 0) pxNodes.splice(i, 1);
+    if (ro) ro.unobserve(el);
+  }
+
+  function drawEverything() {
+    if (pxNodes.some(function (n) { return !n.isConnected; })) {
+      pxNodes = pxNodes.filter(function (n) { return n.isConnected; });
+    }
+    boxes.forEach(drawBox);
+    circles.forEach(drawCircle);
+    pxNodes.forEach(renderPx);
+  }
+
+  
+  function redraw() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function () { raf = null; drawEverything(); });
+  }
+
+  // Reveal a container that was hidden (e.g. a tab panel just shown). Un-hiding makes the
+  // ResizeObserver queue a second redraw, and a redraw after a host is marked shown rebuilds
+  // its paths already drawn. So wait until no redraw is pending, then mark shown and play.
+  function showIn(root) {
+    var hosts = [].filter.call(root.querySelectorAll('.reveal,[data-px],.wipe'), function (n) {
+      return !n.__shown && wipeHosts.has(n);
+    });
+    if (revObs) hosts.forEach(function (n) { revObs.unobserve(n); });
+    redraw();
+    var frames = 0;
+    (function settle() {
+      requestAnimationFrame(function () {
+        frames++;
+        if ((raf || frames < 2) && frames < 12) return settle();
+        hosts.forEach(function (n) {
+          if (n.__shown) return;
+          n.__shown = true;
+          n.classList.add('visible');
+          playAll(n);
+        });
+      });
+    })();
+  }
+
+  
+
+  function init() {
+    boxes = [].slice.call(doc.querySelectorAll('.rbox'));
+    circles = [].slice.call(doc.querySelectorAll('.rcircle'));
+    pxNodes = [].slice.call(doc.querySelectorAll('[data-px]'));
+    boxes.forEach(stableSeed);
+    circles.forEach(stableSeed);
+    pxNodes.forEach(stableSeed);
+
+    doc.querySelectorAll('.reveal,[data-px],.wipe').forEach(function (n) { wipeHosts.add(n); });
+
+    applyDeclarative(doc);
+
+    
+    wipeHosts.forEach(function (h) {
+      
+      if (!h.getClientRects().length) return;
+      h.querySelectorAll('path.sketch[data-r]').forEach(armPath);
+    });
+
+    drawEverything();
+
+    if ('ResizeObserver' in global) {
+      ro = new ResizeObserver(redraw);
+      boxes.concat(circles, pxNodes).forEach(function (n) { ro.observe(n); });
+    }
+    global.addEventListener('resize', redraw);
+    if (doc.fonts && doc.fonts.ready) doc.fonts.ready.then(redraw).catch(function () {});
+
+    revObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var t = e.target;
+        t.__shown = true;
+        t.classList.add('visible');
+        playAll(t);
+        revObs.unobserve(t);
+      });
+    }, { threshold: .06, rootMargin: '0px 0px -6% 0px' });
+    wipeHosts.forEach(function (n) { revObs.observe(n); });
+  }
+
+  
+
+  var Chalk = {
+    
+    roughLine: roughLine, roughPoly: roughPoly, roughRect: roughRect,
+    roughEllipse: roughEllipse, roughFill: roughFill, roughDash: roughDash,
+    roughArrow: roughArrow, bez: bez,
+    
+    armPath: armPath, playPath: playPath, unplayPath: unplayPath,
+    showPath: showPath, armAll: armAll, playAll: playAll,
+    
+    registerRenderer: registerRenderer, registerPx: registerPx,
+    unregisterPx: unregisterPx, redraw: redraw, applyDeclarative: applyDeclarative,
+    showIn: showIn,
+    
+    rectIn: rectIn, edgeOf: edgeOf, connect: connect,
+    
+    layerFor: layerFor, sizeLayer: sizeLayer, addPath: addPath,
+    stableSeed: stableSeed, seeded: seeded,
+    
+    reduced: reduced, isStacked: isStacked
+  };
+
+  global.Chalk = Chalk;
+
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', init);
+  else init();
+
+})(window);
+</script>
+
+<script>
+
+Chalk.registerRenderer('loop', function (svg, el, w, h) {
+  if (Chalk.isStacked()) return;
+  var c = el.querySelector('.corefile');
+  if (!c) return;
+  var C = Chalk.rectIn(c, el), seed = Chalk.stableSeed(el), i = 0;
+  el.querySelectorAll('.signal').forEach(function (s) {
+    var S = Chalk.rectIn(s, el);
+    Chalk.connect(svg, S, C, seed + '|s' + i, (i % 2 ? -20 : 20), 'doodle purple sketch');
+    i++;
+  });
+});
+
+Chalk.registerRenderer('week', function (svg, el, w, h) {
+  if (Chalk.isStacked()) return;
+  var days = el.querySelectorAll('.day');
+  if (!days.length) return;
+  var seed = Chalk.stableSeed(el), y = h - 22;
+  Chalk.addPath(svg, 'doodle sketch', Chalk.roughLine(6, y, w - 6, y, seed + '|base', 1.6));
+  var i = 0;
+  days.forEach(function (d) {
+    var R = Chalk.rectIn(d, el);
+    Chalk.addPath(svg, 'doodle pink sketch', Chalk.roughLine(R.cx, R.y + R.h + 8, R.cx, y - 5, seed + '|t' + i, 1.0));
+    i++;
+  });
+});
+
+Chalk.registerRenderer('ledger', function (svg, el, w, h) {
+  if (Chalk.isStacked()) return;
+  var hubEl = el.querySelector('.ledgerhub');
+  if (!hubEl) return;
+  var seed = Chalk.stableSeed(el);
+  var hub = Chalk.rectIn(hubEl, el);
+  var srcs = [].slice.call(el.querySelectorAll('.ledgersrc'));
+  var outs = [].slice.call(el.querySelectorAll('.ledgerout'));
+  srcs.forEach(function (n, i) {
+    Chalk.connect(svg, Chalk.rectIn(n, el), hub, seed + '|s' + i, 0, 'doodle sketch');
+  });
+  outs.forEach(function (n, i) {
+    Chalk.connect(svg, hub, Chalk.rectIn(n, el), seed + '|o' + i, 0, 'doodle purple sketch');
+  });
+});
+
+Chalk.registerRenderer('chain', function (svg, el, w, h) {
+  if (Chalk.isStacked()) return;
+  var nodes = [].slice.call(el.querySelectorAll('.chainstep'));
+  if (nodes.length < 2) return;
+  var seed = Chalk.stableSeed(el);
+  var R = nodes.map(function (n) { return Chalk.rectIn(n, el); });
+  for (var i = 0; i < R.length - 1; i++) {
+    Chalk.connect(svg, R[i], R[i + 1], seed + '|c' + i, 0, 'doodle blue sketch');
+  }
+  var a = R[R.length - 1], b = R[0], y = h - 16;
+  Chalk.addPath(svg, 'doodle orange sketch', Chalk.roughArrow(
+    [[a.cx, a.y + a.h + 7], [a.cx, y - 7], [a.cx - 16, y], [b.cx + 16, y], [b.cx, y - 7], [b.cx, b.y + b.h + 9]],
+    seed + '|back', 1.5, 9));
+});
+</script>
+</head>
+
+<body>
+<div class="board-noise"></div>
+
+<main class="page">
+
+  <nav class="tabs" aria-label="Sections">
+    <div class="tablist" role="tablist" aria-orientation="vertical">
+      <button type="button" class="tab" role="tab" id="tab-start" aria-selected="true" aria-controls="panel-start" tabindex="0">Start here</button>
+      <button type="button" class="tab" role="tab" id="tab-setup" aria-selected="false" aria-controls="panel-setup" tabindex="-1">Setup</button>
+      <button type="button" class="tab" role="tab" id="tab-folder" aria-selected="false" aria-controls="panel-folder" tabindex="-1">Your folder</button>
+      <button type="button" class="tab" role="tab" id="tab-routines" aria-selected="false" aria-controls="panel-routines" tabindex="-1">The routines</button>
+      <button type="button" class="tab" role="tab" id="tab-learning" aria-selected="false" aria-controls="panel-learning" tabindex="-1">How it learns</button>
+      <button type="button" class="tab" role="tab" id="tab-skills" aria-selected="false" aria-controls="panel-skills" tabindex="-1">The skills</button>
+      <button type="button" class="tab" role="tab" id="tab-memory" aria-selected="false" aria-controls="panel-memory" tabindex="-1">Memory and moving over</button>
+    </div>
+  </nav>
+
+  <div class="panels">
+
+  <!-- ============================== START ============================== -->
+  <div class="panel" role="tabpanel" id="panel-start" aria-labelledby="tab-start" tabindex="0">
+
+  <p class="kicker">Claude plugin &middot; Claude Code and Cowork &middot; how it works</p>
+  <h1>A Claude that actually knows you.</h1>
+
+  <div class="note-row">
+    <div class="body">
+      <p>Out of the box, Claude is smart and knows nothing about you. Not your team,
+        not your accounts, not what "urgent" means to you, not the words your group
+        uses that appear in no manual. So you re-explain yourself in every chat, and
+        drafts sound like a polite stranger wrote them.</p>
+      <p><strong>This plugin fixes that.</strong> It gives Claude a memory that lives
+        in plain files you own, six routines that run your day on a schedule, and a
+        nightly pass where Claude reads what happened, learns from it, and proposes
+        changes. It measures whether it's getting better instead of assuming it is.</p>
+      <p>The part that makes it a system is the handoff. The briefing, the recap and
+        the nightly dream each read what the one before them wrote, so the day gets
+        gathered once and nothing falls on the floor.</p>
+    </div>
+    <aside class="margin-note">
+      <span class="hand">your files,<br>your machine</span>
+    </aside>
+  </div>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="install-h">
+    <p class="sec-kicker label" style="color:var(--yellow)">Install</p>
+    <h2 id="install-h">Two lines, then say "set me up."</h2>
+    <p class="lead">In Claude Code or Cowork, add the marketplace and install the plugin.
+      You need Python 3 on the machine that runs setup; macOS and most Linux installs
+      already have it.</p>
+    <ul class="asklist">
+      <li><code>/plugin marketplace add jwm-axoni/claude-workbench</code></li>
+      <li><code>/plugin install workbench@claude-workbench</code></li>
+      <li><code>/workbench:setup</code> &nbsp;or just say "set me up"</li>
+    </ul>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="box-h">
+    <p class="sec-kicker label" style="color:var(--orange)">What's in the box</p>
+    <h2 id="box-h">Ten skills. Six of them never wait on you.</h2>
+    <p class="lead">A plugin is just the box it ships in. Once installed, these show up
+      individually. Six run themselves on a schedule, one fires on its own while you
+      chat, and three you run when you need them. The skills tab explains each one and
+      what to say to it.</p>
+
+    <div class="cards">
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Run once, re-run any time</span>
+        <h4>Set me up</h4>
+        <p>The guided onboarding. About ten minutes of questions, and it builds your
+          whole folder, wires up every routine, and writes your project instructions.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weekday mornings</span>
+        <h4>Daily briefing</h4>
+        <p>What you owe, what landed overnight sorted by your definition of urgent,
+          today's meetings with context, and numbered questions. Sends a short digest
+          to you by Slack, email or Claude. Tops itself up at midday.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weekday evenings</span>
+        <h4>End-of-day recap</h4>
+        <p>The one record of the day, every line with its source. Grades the morning's
+          claims and checks every draft you were given against what you actually sent.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weeknights</span>
+        <h4>Nightly dream</h4>
+        <p>The one that learns. Files the day into people, projects, orgs and tools,
+          builds the relationships between them, and turns your corrections into rules.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; first workday</span>
+        <h4>Weekly</h4>
+        <p>The week-ahead plan, a "is it getting better?" scorecard, and the
+          librarian's checks with the safe fixes applied.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; three times a workday</span>
+        <h4>Calendar sync</h4>
+        <p>A dated copy of your calendar that records moves and cancellations, so the
+          briefing reads a file instead of guessing what changed.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag demand">Fires while you chat</span>
+        <h4>Capture</h4>
+        <p>When a chat settles a decision, a fact, or a correction, one line lands in
+          today's capture file and the dream files it that night. Drafts get saved too.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Ask for it</span>
+        <h4>Librarian, Schedules, Migrate</h4>
+        <p>A health audit of the folder, a reset of your scheduled routines, and safe
+          upgrades that never overwrite what you edited.</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== SETUP ============================== -->
+  <div class="panel" role="tabpanel" id="panel-setup" aria-labelledby="tab-setup" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="setup-h">
+    <p class="sec-kicker label" style="color:var(--blue)">Getting started</p>
+    <h2 id="setup-h">Say "set me up." Here's exactly what happens.</h2>
+    <p class="lead"><strong>Run this even if you've been using Claude for months.</strong>
+      Onboarding is not about learning Claude, it's about Claude learning you, and it
+      builds files and routines that regular use never creates. It takes about ten
+      minutes, and you never touch a file by hand.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="rcircle stepnum">0</div>
+        <div>
+          <h3>Look at the folder before touching it</h3>
+          <p>An empty folder gets the full build. An existing workbench gets a short
+            "what changed?" instead of the whole interview. An existing notes vault gets
+            adopted: nothing moved, nothing overwritten, and each folder move suggested
+            one at a time for your yes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">1</div>
+        <div>
+          <h3>Who you are</h3>
+          <p>Name, role, team, who you report to, your company and what it does, and
+            where you live, which sets the timezone every routine runs on. It fills in
+            what it can from your account and asks you to confirm. Your role picks a
+            role pack: sales, customer success, marketing, engineering, product,
+            operations, people, IT and security, finance, leadership, or general.</p>
+          <span class="say">"Looks like you're a Senior AE on the Mid-Market East team.
+            I'll set you up with the sales pack. Right?"</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">2</div>
+        <div>
+          <h3>How you work</h3>
+          <p>Your hours and workdays, the tools you live in, the two or three things you
+            need to land this quarter, what "urgent" actually looks like for you, how you
+            like answers written, and any calendar blocks that should never show up in a
+            briefing.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">3</div>
+        <div>
+          <h3>Check what Claude can actually reach</h3>
+          <p>One real, read-only call per tool. Each one is marked connected, needs
+            sign-in, missing, or manual. A broken connection never blocks setup; you get
+            the exact place to fix it, and every routine says "couldn't check" instead of
+            implying nothing happened.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">4</div>
+        <div>
+          <h3>Decide how the day reaches you</h3>
+          <p>A Slack DM to yourself, an email to yourself, a message in the Claude app,
+            or just the file. It sends a test before moving on. It also offers Obsidian,
+            free, for browsing the folder and seeing the graph of who and what connects.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">5</div>
+        <div>
+          <h3>Build the folder</h3>
+          <p>The operating contract at the top, a schema in every folder, and the first
+            pages already linked: you, your manager, your company, one page per tool. A
+            hash of every file it writes is recorded, so later upgrades never overwrite
+            what you change.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">6</div>
+        <div>
+          <h3>Turn on the routines</h3>
+          <p>Six scheduled tasks, all named <code>[Workbench]</code>, timed off your
+            hours. If you already have older tasks doing the same job, it lists them and
+            asks before replacing each one, so you never get two briefings.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="rcircle stepnum">7</div>
+        <div>
+          <h3>Make one project your home</h3>
+          <p>It writes your project instructions and has you paste them into one Claude
+            project with the folder attached. From then on every chat starts from your
+            memory, and everything a chat settles flows back into it. It ends with three
+            things to try today.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="src-h">
+    <p class="sec-kicker label" style="color:var(--pink)">Where your day comes from</p>
+    <h2 id="src-h">Your role decides what gets watched first.</h2>
+    <p class="lead">The recap sweeps every tool Claude can reach, once, at the end of
+      the day. The role pack sets the order and what each routine pays extra attention
+      to, so a seller's briefing leads with deals and a manager's with their people.</p>
+
+    <div class="srcgrid">
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>Sales</h4>
+        <p>Calendar, email, CRM, call recorder, chat. Watches deals closing this month
+          with no activity, and follow-ups promised on calls that haven't gone out.</p>
+        <span class="deft">Pack: sales</span>
+      </div>
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>Customer success</h4>
+        <p>CRM, CS platform, ticketing. Watches renewals in the next 90 days, rising
+          ticket volume, and promises to customers that are past due.</p>
+        <span class="deft">Pack: customer-success</span>
+      </div>
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>Engineering</h4>
+        <p>Code host and issue tracker first. Watches PRs waiting on your review and
+          tickets that changed since yesterday.</p>
+        <span class="deft">Pack: engineering</span>
+      </div>
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>Leadership</h4>
+        <p>Calendar, mail, chat, docs. Watches 1:1s, commitments made to your team, and
+          direct reports you haven't met with in three weeks.</p>
+        <span class="deft">Pack: leadership</span>
+      </div>
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>People and HR</h4>
+        <p>Interviews, debriefs, open roles. Keeps candidate and employee personal data
+          out of the folder entirely, by rule.</p>
+        <span class="deft">Pack: people</span>
+      </div>
+      <div class="rbox" style="--rb:var(--hair)">
+        <h4>Everyone else</h4>
+        <p>Marketing, product, operations, IT and security, finance, and a general pack.
+          If nothing fits, it says so and you pick.</p>
+        <span class="deft">Packs: 11 in all</span>
+      </div>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>Nothing is hardcoded.</strong> The tools above are examples because
+          most people have them. Name whatever you use and setup will probe it. A tool
+          that can't be reached is written down too, so a routine can say it couldn't
+          check rather than implying nothing happened.</p>
+        <p><strong>Routines read, they never act.</strong> No routine replies, posts,
+          updates a record or changes a ticket. The one exception is your own digest,
+          and it only ever goes to you.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">reads everything,<br>sends nothing</span>
+      </aside>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== FOLDER ============================== -->
+  <div class="panel" role="tabpanel" id="panel-folder" aria-labelledby="tab-folder" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="folder-h">
+    <p class="sec-kicker label" style="color:var(--yellow)">Your folder</p>
+    <h2 id="folder-h">One folder tree, about you, in plain text you own.</h2>
+    <p class="lead">Setup creates one folder. The suggestion is <strong>Workbench</strong>,
+      but it's about you, so name it anything you'll recognize. Everything Claude knows
+      about you lives in it, as markdown you can open, edit, back up, or take with you.</p>
+
+    <div class="rbox folder" style="--rb:var(--hair)">
+      <ul>
+        <li><span class="fname">Workbench/</span>
+          <ul>
+            <li>CLAUDE.md <span class="why">&mdash; the operating contract: folder map, who writes what, conventions</span></li>
+            <li>Context/ <span class="why">&mdash; me.md (how you work) and voice.md (how you write)</span></li>
+            <li>Daily/ <span class="why">&mdash; briefings, recaps, calendar copies, weekly plans</span></li>
+            <li>Projects/ <span class="why">&mdash; one page per project, plus INDEX.md</span></li>
+            <li>People/ <span class="why">&mdash; one page per person, plus the name-variants table</span></li>
+            <li>Organizations/ <span class="why">&mdash; your employer, customers, vendors, partners</span></li>
+            <li>Resources/ <span class="why">&mdash; durable reference, Tools/ inside, the glossary</span></li>
+            <li>Tracking/ <span class="why">&mdash; goals, friction, the dream log, improvements</span>
+              <ul>
+                <li>Captures/ <span class="why">&mdash; what your chats settled, one file a day</span></li>
+                <li>Drafts/ <span class="why">&mdash; every draft you were handed to send</span></li>
+                <li>Signals/ <span class="why">&mdash; what each routine claimed, and how it scored</span></li>
+              </ul>
+            </li>
+            <li>Meetings/ <span class="why">&mdash; one file per meeting</span> <span class="why" style="color:var(--orange)">&larr; only if your recorder exports notes</span></li>
+            <li>Archive/ <span class="why">&mdash; closed chapters, read-only</span></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>Every folder carries its own schema.</strong> Each holds a small
+          CLAUDE.md that says what a page in that folder looks like, with a shape you can
+          copy straight out of it. There is deliberately no templates folder. A second
+          copy of a schema drifts from the first, nothing checks the copy, and you find
+          out when half your pages have one shape and half another.</p>
+        <p><strong>One writer per file.</strong> Each routine owns specific files and
+          writes nothing else. Your chats write only to Captures and Drafts. Nothing
+          races anything, which is what keeps a synced folder from silently stalling.</p>
+        <p><strong>Nothing is deleted.</strong> A fact that stops being true is marked
+          superseded, with a link to what replaced it, then archived once nothing points
+          at it.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">the shape lives<br>with the pages</span>
+      </aside>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="ledger-h">
+    <p class="sec-kicker label" style="color:var(--purple)">Read the page, not the source</p>
+    <h2 id="ledger-h">One page per project, person and account, always current.</h2>
+    <p class="lead">A recorded call is an hour of talking. Nobody reads that again, and
+      neither should Claude. So every call, thread, ticket and capture gets folded into
+      the page it's about, kept current overnight. When you ask what's going on, the
+      answer comes off that page in one read, with its sources.</p>
+
+    <div class="ledger" data-px="ledger" role="img" aria-label="Sources feed one page, and everything reads that page instead of the sources. On the left, four inputs: meetings and calls, the record in your CRM or tracker, email and chat, and your own chats in the project. All four feed the middle: the page, holding where things stand, what was decided, what each side owes, and who is involved. On the right, three readers: you before a meeting, tomorrow's briefing, and the weekly plan.">
+      <div class="ledgercol">
+        <div class="rbox ledgersrc" style="--rb:var(--hair)"><b>Meetings and calls</b>
+          <span>What was said, agreed and promised. Summaries, never transcripts.</span></div>
+        <div class="rbox ledgersrc" style="--rb:var(--hair)"><b>The system of record</b>
+          <span>CRM, tracker or CS platform. Stage, dates, health.</span></div>
+        <div class="rbox ledgersrc" style="--rb:var(--hair)"><b>Mail and chat</b>
+          <span>Who's engaged, who's gone quiet, what you said you'd do.</span></div>
+        <div class="rbox ledgersrc" style="--rb:var(--hair)"><b>Your project chats</b>
+          <span>Decisions and facts, captured as you go.</span></div>
+      </div>
+      <div class="rbox ledgerhub"><b>The page</b>
+        <span>Where things stand. What was decided and when. What you owe and what
+          you're owed. Who's involved, linked both ways. Every line carries its source
+          and date.</span></div>
+      <div class="ledgercol">
+        <div class="rbox ledgerout" style="--rb:var(--hair)"><b>You, before a meeting</b>
+          <span>One page, two minutes, no digging.</span></div>
+        <div class="rbox ledgerout" style="--rb:var(--hair)"><b>Tomorrow's briefing</b>
+          <span>Reads the page, not the call.</span></div>
+        <div class="rbox ledgerout" style="--rb:var(--hair)"><b>The weekly plan</b>
+          <span>What moved, what's stuck, what's owed.</span></div>
+      </div>
+    </div>
+    <p class="caption">Open a recording only when the page names something unresolved
+      and points at it.</p>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>Pages link through their properties, not just their prose.</strong> A
+          project lists its <code>owner</code>, <code>people</code>, <code>orgs</code>
+          and <code>tools</code>; a person lists their <code>org</code>,
+          <code>reports_to</code> and <code>projects</code>. Each is a wikilink, so
+          Obsidian's graph and backlinks use it, and every link is kept on both pages.
+          Put Sam on a project and the project shows up on Sam's page the same night.</p>
+        <p><strong>A reversed decision doesn't disappear.</strong> It moves down the page
+          marked superseded, with a link to what replaced it. That's the difference
+          between "we never agreed to that" and "we agreed it on the 12th and changed it
+          on the 19th."</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">linked both<br>ways, always</span>
+      </aside>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== ROUTINES ============================== -->
+  <div class="panel" role="tabpanel" id="panel-routines" aria-labelledby="tab-routines" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="chain-h">
+    <p class="sec-kicker label" style="color:var(--blue)">The whole idea</p>
+    <h2 id="chain-h">Each routine reads what the last one wrote.</h2>
+    <p class="lead">This is what makes it a system instead of six jobs that happen to
+      run on the same calendar. Every handoff is consumed by the next thing along, and
+      the last one feeds tomorrow's first. Nothing gathers the same day twice.</p>
+
+    <div class="chain" data-px="chain" role="img" aria-label="The daily chain. The morning briefing reads last night's dream log and yesterday's recap, then sends you a digest with questions. The evening recap reads this morning's briefing and your replies, then gathers the day against it. The nightly dream reads the recap and your captures, learns from them, and updates your pages. The next morning's briefing reads that dream and asks what it could not settle.">
+      <div class="rbox chainstep" style="--rb:var(--hair)">
+        <span class="when">Weekday morning</span>
+        <b>Daily briefing</b>
+        <span class="what">Reads last night's dream log, yesterday's recap and today's
+          calendar copy, writes your briefing, and sends you the digest with its numbered
+          questions. A midday run adds only what changed.</span>
+      </div>
+      <div class="rbox chainstep" style="--rb:var(--hair)">
+        <span class="when">Weekday evening</span>
+        <b>End-of-day recap</b>
+        <span class="what">Reads the briefing and your replies, sweeps every tool once,
+          and writes the day down with a source on every line. Grades the morning and
+          your drafts.</span>
+      </div>
+      <div class="rbox chainstep" style="--rb:var(--hair)">
+        <span class="when">Weeknight, late</span>
+        <b>Nightly dream</b>
+        <span class="what">Reads the recap and your captures, updates your pages and the
+          links between them, learns from corrections, and queues what it couldn't settle.</span>
+      </div>
+    </div>
+    <p class="caption">The loop closes overnight. Tomorrow's briefing opens with the
+      dream, asks what it couldn't settle, and the chain starts again.</p>
+
+    <div class="note-row">
+      <div class="body">
+        <p>The dream never goes back out to re-read your day. The recap already did that
+          and wrote it down, so the dream learns from the record rather than from the raw
+          feeds. That's why two routines never tell two different stories about the same
+          day, and why a missed evening doesn't break the morning.</p>
+        <p><strong>Calendar sync runs alongside</strong>, keeping a dated copy of today
+          and tomorrow and logging every move and cancellation. <strong>The weekly sits
+          beside the chain</strong>: on your first workday it reads the week's recaps and
+          writes the plan, the scorecard, and the maintenance pass.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">one writer,<br>one file</span>
+      </aside>
+    </div>
+
+    <div class="mem" style="margin-top:30px">
+      <table>
+        <caption class="sr-only">The six scheduled routines plus the librarian, when each one runs by default, and what each one writes.</caption>
+        <thead>
+          <tr><th scope="col">Routine</th><th scope="col">Default time</th><th scope="col">What it writes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Calendar sync</b></td><td>Before work, 11:30, end of day</td><td>A calendar copy for today and the next workday</td></tr>
+          <tr><td><b>Daily briefing</b></td><td>30 minutes before work</td><td>The morning briefing file, and your digest</td></tr>
+          <tr><td><b>Midday update</b></td><td>12:00</td><td>An update appended below the briefing</td></tr>
+          <tr><td><b>End-of-day recap</b></td><td>30 minutes after work</td><td>The daily recap, and the day's scores</td></tr>
+          <tr><td><b>Nightly dream</b></td><td>22:00 on workdays</td><td>Its own blocks on your pages, the links between them, the dream log</td></tr>
+          <tr><td><b>Weekly</b></td><td>Before work, first workday</td><td>The week-ahead plan, the scorecard, structural fixes, archive moves</td></tr>
+          <tr><td><b>Librarian</b></td><td>When you ask, plus inside the weekly</td><td>A report; nothing until you approve a fix</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="dream-h">
+    <p class="sec-kicker label" style="color:var(--purple)">The part that compounds</p>
+    <h2 id="dream-h">The nightly dream</h2>
+    <p class="lead">Every other routine reports. This one learns. While you're asleep it
+      reads what the day's recap and your chats left behind, works out what actually
+      changed, and updates the pages that hold your long-term knowledge. Four things come
+      out of it, all landing in the same place. A system that can't update itself is just
+      six reminders on a timer.</p>
+
+    <div class="loop" data-px="loop" role="img" aria-label="Four things the nightly dream produces, all landing on your pages: it rewrites the current-state block on the pages the day touched, it creates pages and links for people, orgs and tools it keeps seeing, it turns corrections and draft edits into rules about how you work and write, and it spots work you did by hand more than once and proposes automating it. Every change is logged with a Traces to receipt.">
+      <div class="rbox signal" style="--rb:var(--hair)"><b>What moved today</b>
+        <span>It rewrites the current-state block on the pages the day touched, and the
+        decisions and commitments ledgers, so the top of a page is current without you
+        maintaining it.</span></div>
+      <div class="rbox corefile"><b>Your pages</b><span>changed only where the evidence
+        holds, every change logged with a "Traces to" line</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>Who and what connects</b>
+        <span>Someone turning up in two sources gets a page. People, projects, orgs and
+        tools get linked to each other, on both pages. Unfamiliar terms go to the glossary
+        instead of being guessed at.</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>How you actually work and write</b>
+        <span>Your corrections, and the edits you made to drafts before sending, become
+        concrete rules, so drafts going out under your name sound like you.</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>Work you did twice</b>
+        <span>Same assembly by hand more than once? It proposes a skill or a rule, names
+        each time it watched you do it, and tracks whether the fix got built.</span></div>
+    </div>
+    <p class="caption">Your day is the input. Nobody fills in a form.</p>
+
+    <div class="note-row" style="margin-top:26px">
+      <div class="body">
+        <p><strong>Every change carries a receipt.</strong> The dream writes one log entry
+          per run and ends each finding with a "Traces to" line pointing at the evidence.
+          If you disagree with something it changed, you can find out what caused it in
+          one hop.</p>
+        <p><strong>What it can't settle, it asks. Once.</strong> Two people who might be
+          the same person, a term it's never seen, a commitment that looks done: it never
+          guesses on those. Tomorrow's digest asks, numbered, and "1 yes, 2 it's Jo Tan"
+          is enough. The recap reads your answer and the dream acts on it that night.</p>
+        <p><strong>It starts careful.</strong> For its first three nights it only
+          describes what it would change, so you can see how it reads your work. Then it
+          goes live, writing only the blocks marked as its own. Your words, your goals and
+          your notes it never rewrites.</p>
+        <p><strong>"Nothing notable" is a valid result.</strong> A quiet day gets a short
+          log saying so. It does not invent a lesson to justify having run.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand">receipts on<br>everything</span>
+      </aside>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="week-h">
+    <p class="sec-kicker label" style="color:var(--pink)">On autopilot</p>
+    <h2 id="week-h">What your week looks like once it's running</h2>
+
+    <div class="week" data-px="week" role="img" aria-label="Weekly schedule: Monday opens with the week-ahead plan and maintenance, then runs the same daily cycle as the rest of the week. Tuesday through Friday run the briefing, the recap and the dream.">
+      <div class="day"><span class="rcircle daychip">Mon</span><p>plan, scorecard and maintenance, then the daily cycle</p></div>
+      <div class="day"><span class="rcircle daychip">Tue</span><p>briefing, recap, dream</p></div>
+      <div class="day"><span class="rcircle daychip">Wed</span><p>briefing, recap, dream</p></div>
+      <div class="day"><span class="rcircle daychip">Thu</span><p>briefing, recap, dream</p></div>
+      <div class="day"><span class="rcircle daychip">Fri</span><p>briefing, recap, dream</p></div>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p>The repetition is the point. The same steps run every workday, so the chain
+          never has a gap to climb out of. Your part is one digest a day: read it, answer
+          what it asked, and that's the whole of what it needs from you. Your days off
+          stay quiet, and your workweek is whatever you told setup.</p>
+        <p><strong>One honest catch: where the routines run.</strong> As desktop scheduled
+          tasks they need your laptop open when they fire, which is why the briefing runs
+          just before work and the dream at the end of the evening. As cloud routines they
+          run with the laptop closed, but the folder has to live in a private GitHub repo.
+          Setup asks which you want.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">laptop open,<br>or run it in the cloud</span>
+      </aside>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== LEARNING ============================== -->
+  <div class="panel" role="tabpanel" id="panel-learning" aria-labelledby="tab-learning" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="deliver-h">
+    <p class="sec-kicker label" style="color:var(--orange)">Getting the day</p>
+    <h2 id="deliver-h">You don't have to open the folder. The day comes to you.</h2>
+    <p class="lead">Most people won't browse a folder every morning, and they shouldn't
+      have to. Setup asks where the digest should land and sends a test. You answer its
+      questions by replying, and the answers flow back into the folder that night.</p>
+
+    <div class="cards">
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Slack</span>
+        <h4>A DM to yourself</h4>
+        <p>Focus, risks, meetings that need prep, and numbered questions. Reply in the
+          thread.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Email</span>
+        <h4>One email to you</h4>
+        <p>The same digest in your inbox. Reply to answer. Needs an email connector that
+          can send.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Claude</span>
+        <h4>A message in the app</h4>
+        <p>The scheduled task's own message. Answer in your workbench project and it's
+          captured.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">None</span>
+        <h4>Just the file</h4>
+        <p>The full briefing waits in <code>Daily/</code> for whenever you want it.</p>
+      </div>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>The digest is the only thing a routine ever sends, and only to
+          you.</strong> Never to anyone else, never into a shared channel. It's written into
+          your folder's contract as a dated exception, so a later reader can see the
+          decision was made on purpose.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">to you,<br>and only you</span>
+      </aside>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="learn-h">
+    <p class="sec-kicker label" style="color:var(--purple)">Measured, not assumed</p>
+    <h2 id="learn-h">Three ways it learns, and how you'll know it's working.</h2>
+    <p class="lead">"It learns" is easy to claim. Each loop here leaves evidence in the
+      folder, and once a week a scorecard compares this week with the last four.</p>
+
+    <div class="loop" data-px="loop" role="img" aria-label="Three learning loops feeding a weekly scorecard: corrections become rules and are checked for repeats, drafts are compared with what was sent and repeated edits become voice rules, and proposals for skills and rules are tracked until they are built and the problem stops. A fourth input, your answers to the digest questions, settles what the dream could not.">
+      <div class="rbox signal" style="--rb:var(--hair)"><b>Your corrections</b>
+        <span>Say "never open with a pleasantry" once and it's captured, then written as a
+        rule that night. If the same correction comes back after the rule exists, the rule
+        is marked as not working.</span></div>
+      <div class="rbox corefile"><b>The weekly scorecard</b><span>this week against the
+        last four, and one plain sentence on whether it's getting better</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>What you actually send</b>
+        <span>Every draft you're handed is saved. The recap checks what really went out:
+        sent as written, lightly edited, rewritten, or not sent. The same edit twice
+        becomes a voice rule.</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>What it proposes</b>
+        <span>"QBR prep was done by hand four times; build a skill?" Each proposal is
+        tracked from proposed to built to verified, meaning the problem actually stopped.</span></div>
+      <div class="rbox signal" style="--rb:var(--hair)"><b>Your answers</b>
+        <span>Replies to the digest settle what the dream couldn't. If questions keep
+        going unanswered, it asks fewer and sharper ones instead of more.</span></div>
+    </div>
+
+    <div class="mem" style="margin-top:30px">
+      <table>
+        <caption class="sr-only">What the weekly scorecard tracks and which direction is good.</caption>
+        <thead>
+          <tr><th scope="col">The scorecard tracks</th><th scope="col">Good direction</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Drafts sent as written or lightly edited</b></td><td>Up</td></tr>
+          <tr><td><b>Drafts rewritten before sending</b></td><td>Down</td></tr>
+          <tr><td><b>Briefing claims that held up</b></td><td>Up, or steady above 85%</td></tr>
+          <tr><td><b>Repeat corrections on a topic that already has a rule</b></td><td>Down</td></tr>
+          <tr><td><b>Digest questions answered within two days</b></td><td>Up</td></tr>
+          <tr><td><b>Proposals built and verified</b></td><td>Up</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>Silence is not agreement.</strong> If you aren't answering, the
+          confidence bar holds rather than drifting, and the scorecard says there's too
+          little data instead of printing a flattering percentage.</p>
+        <p><strong>You stay in charge of the rules.</strong> Routines can propose a change
+          to the operating contract but never write it. You say yes, and the change is
+          made and logged.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">evidence,<br>not vibes</span>
+      </aside>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="project-h">
+    <p class="sec-kicker label" style="color:var(--blue)">The one project</p>
+    <h2 id="project-h">Work from one project, and everything it settles comes home.</h2>
+    <p class="lead">Separate projects split your memory. One keeps it whole. Setup writes
+      your instructions to <code>.workbench/PROJECT_INSTRUCTIONS.md</code>; paste them into
+      one Claude project with the folder attached and start every piece of work there.
+      They have four parts.</p>
+
+    <div class="cards">
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag demand">Read</span>
+        <h4>The folder first, every time</h4>
+        <p>The contract, then how you work, the name variants, your goals and the glossary,
+          and today's captures. Look things up in the folder and cite the page; if it isn't
+          there, say so instead of guessing.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag demand">Capture</span>
+        <h4>One line per thing settled</h4>
+        <p>Decision, process, fact, correction, or an answer to a digest question, logged
+          on the turn it's settled, in its own words, with people and projects linked. It
+          tells you in one line what it logged.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag demand">Drafts</span>
+        <h4>Saved as handed over</h4>
+        <p>Every email, message or post it drafts for you to send is kept exactly as given,
+          so the recap can see what you changed.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Write</span>
+        <h4>Captures and drafts only</h4>
+        <p>Everything else has an owner. Ask it to change a specific page and it makes that
+          one edit and logs it.</p>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== SKILLS ============================== -->
+  <div class="panel" role="tabpanel" id="panel-skills" aria-labelledby="tab-skills" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="skills-h">
+    <p class="sec-kicker label" style="color:var(--blue)">How you use it</p>
+    <h2 id="skills-h">Ten skills. You rarely type a command.</h2>
+    <p class="lead">A skill runs one of two ways: on a schedule, without you, or from
+      something you say in plain words. Claude picks the skill from your words. Every one
+      also has a command, <code>/workbench:</code> plus its name, if you'd rather be exact.</p>
+
+    <div class="cards">
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Run once, re-run any time</span>
+        <h4>Setup</h4>
+        <p><b>What it does.</b> The guided onboarding: checks your tools, learns your role,
+          your rhythm and how you want the day delivered, builds the folder, turns on the
+          routines, writes your project instructions.</p>
+        <p><b>How you use it.</b> Say "set me up". Later, "my role changed" or "I switched
+          to Outlook" runs it again for just that.</p>
+        <p><b>What it writes.</b> The folder, once. On a re-run, only files you haven't edited.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weekday mornings, midday top-up</span>
+        <h4>Daily briefing</h4>
+        <p><b>What it does.</b> What you owe, what landed overnight sorted by your idea of
+          urgent, today's meetings with context, what the dream learned, and its questions.</p>
+        <p><b>How you use it.</b> Nothing, it arrives. Ask "what's my briefing" any time.</p>
+        <p><b>What it writes.</b> One file a day in <code>Daily/</code>, and your digest.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weekday evenings</span>
+        <h4>End-of-day recap</h4>
+        <p><b>What it does.</b> Sweeps every tool once and writes the day down, every line
+          sourced. Checks the morning's claims and your drafts against what happened.</p>
+        <p><b>How you use it.</b> Nothing. Or "recap my day" to run it early.</p>
+        <p><b>What it writes.</b> The recap in <code>Daily/</code> and the day's scores.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; weeknights</span>
+        <h4>Nightly dream</h4>
+        <p><b>What it does.</b> Files the recap and your captures into the right pages,
+          links people, projects, orgs and tools both ways, and learns from corrections.</p>
+        <p><b>How you use it.</b> Nothing. Its questions arrive in tomorrow's digest.</p>
+        <p><b>What it writes.</b> Only the blocks and links marked as its own, and its log.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; first workday</span>
+        <h4>Weekly</h4>
+        <p><b>What it does.</b> Priorities, carryover, meetings needing prep, the
+          scorecard, and the maintenance pass: frontmatter, links, one-sided relationships,
+          archive moves.</p>
+        <p><b>How you use it.</b> Nothing. Or "plan my week".</p>
+        <p><b>What it writes.</b> The plan, its scores, the improvements list, and
+          structural fixes.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; three times a workday</span>
+        <h4>Calendar sync</h4>
+        <p><b>What it does.</b> Keeps a copy of today and tomorrow and logs every move and
+          cancellation. Passcodes stripped, outside guests shown as a count.</p>
+        <p><b>How you use it.</b> Nothing.</p>
+        <p><b>What it writes.</b> One calendar file per day, frozen once the day's over.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag demand">Fires while you chat</span>
+        <h4>Capture</h4>
+        <p><b>What it does.</b> Logs what a chat settled, one line each, and saves drafts
+          you were handed to send.</p>
+        <p><b>How you use it.</b> It happens on its own. Say "remember this" or "log that
+          decision" to make sure.</p>
+        <p><b>What it writes.</b> Today's capture file and the drafts folder. Nothing else.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Ask for it</span>
+        <h4>Librarian</h4>
+        <p><b>What it does.</b> Audits the folder: stale pages, dead links, duplicates,
+          one-sided relationships, routines that didn't run, two versions of the same fact.</p>
+        <p><b>How you use it.</b> "Run the librarian" or "audit my folder".</p>
+        <p><b>What it writes.</b> A report. Nothing until you approve a fix.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Ask for it</span>
+        <h4>Schedules</h4>
+        <p><b>What it does.</b> Makes your scheduled tasks match the plan. Finds older
+          look-alikes and asks before replacing each, so you never get two briefings.</p>
+        <p><b>How you use it.</b> "My briefing didn't run" or "move the dream to 11pm".</p>
+        <p><b>What it writes.</b> Your scheduled tasks, after you see the plan.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag once">Ask for it</span>
+        <h4>Migrate</h4>
+        <p><b>What it does.</b> Upgrades after a plugin update, merges anything you edited
+          with the new version, or brings an older notes vault into this layout.</p>
+        <p><b>How you use it.</b> "Upgrade my workbench" or "migrate my vault".</p>
+        <p><b>What it writes.</b> Only what you approve, after a snapshot.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="say-h">
+    <p class="sec-kicker label" style="color:var(--orange)">Cheat sheet</p>
+    <h2 id="say-h">Things to say to it</h2>
+
+    <ul class="asklist">
+      <li><code>"set me up"</code> &nbsp;runs onboarding, or updates it when something about you changed</li>
+      <li><code>"what do you know about Sam?"</code> &nbsp;everything on Sam's page and what's open between you, with sources</li>
+      <li><code>"where are we on the Acme rollout?"</code> &nbsp;status, decisions, and what's owed, off the project page</li>
+      <li><code>"remember this..."</code> &nbsp;captures a fact, decision or correction for tonight's dream</li>
+      <li><code>"run the librarian"</code> &nbsp;audits the folder and hands you a fix per finding</li>
+      <li><code>"1 yes, 2 it's Jo Tan"</code> &nbsp;answers this morning's digest questions</li>
+    </ul>
+
+    <div class="note-row" style="margin-top:36px">
+      <div class="body">
+        <p><strong>And one honest expectation.</strong> The first week is the worst week.
+          Claude knows the least about you on day one, and the value compounds from there.
+          Every answer and every correction makes the next week better, and the scorecard
+          shows you whether it is. Give it two weeks before judging it.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand orange">week one is<br>the worst week</span>
+      </aside>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- ============================== MEMORY ============================== -->
+  <div class="panel" role="tabpanel" id="panel-memory" aria-labelledby="tab-memory" tabindex="0" hidden>
+
+  <section class="reveal" aria-labelledby="mem-h">
+    <p class="sec-kicker label" style="color:var(--blue)">Worth understanding once</p>
+    <h2 id="mem-h">Claude has three kinds of memory. Trust them differently.</h2>
+
+    <div class="mem">
+      <table>
+        <caption class="sr-only">Comparison of Claude's three memory surfaces: built-in memory, project instructions, and your folder.</caption>
+        <thead>
+          <tr><th scope="col"></th><th scope="col">Built-in memory</th><th scope="col">Project instructions</th><th scope="col">Your folder</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>What it is</b></td><td>Claude remembers things from chats on its own</td><td>Standing rules in the project's settings</td><td>The pages in your folder tree</td></tr>
+          <tr><td><b>Can you read it?</b></td><td>Not fully</td><td>Yes, one text box</td><td>Yes, plain files</td></tr>
+          <tr><td><b>Who updates it</b></td><td>Claude, silently</td><td>You paste what setup writes, once</td><td>The routines, with a receipt for every change</td></tr>
+          <tr><td><b>Treat it as</b></td><td>A bonus, never the plan</td><td>How to use the folder, nothing more</td><td>The source of truth</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="body" style="margin-top:24px">
+      <p>The guidance in one breath: don't trust the black box with anything important,
+        keep the project instructions about how to use the folder rather than what's in
+        it, and put everything that matters in the folder, because it's the only memory
+        you can read, correct, back up, and take with you. When you wonder "does Claude
+        know this," the answer is whatever's on the page, and you can go look.</p>
+    </div>
+  </section>
+
+  <div class="divider" data-px="divider"></div>
+
+  <section class="reveal" aria-labelledby="mig-h">
+    <p class="sec-kicker label" style="color:var(--orange)">If you set this up before</p>
+    <h2 id="mig-h">Already running an older version, or your own notes? Start here.</h2>
+    <p class="lead">If you have earlier scheduled tasks or a notes vault of your own,
+      <strong>don't just install this on top.</strong> The old tasks keep firing, you get
+      two briefings every morning, and within a week you're ignoring both.</p>
+
+    <div class="cards">
+      <div class="rbox card" style="--rb:var(--hair)">
+        <h4>Say you already have it</h4>
+        <p>Run setup or "migrate my vault". It looks at the folder first, recognizes an
+          existing workbench or notes vault, and adopts it instead of starting over.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <h4>Pause, never delete</h4>
+        <p>Older tasks that do the same job are listed one by one. Each gets paused on your
+          yes, not deleted, so the wording inside survives and you can switch it back on.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <h4>Your edits survive upgrades</h4>
+        <p>The plugin remembers every file it wrote. Files you changed stay as they are, and
+          the new version lands beside them for you to merge, with a snapshot taken first.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <h4>Your old notes come with you</h4>
+        <p>Existing folders get mapped to the new ones, moved one at a time on your yes, with
+          every move logged so it can be undone. Nothing is left stranded.</p>
+      </div>
+    </div>
+
+    <div class="note-row">
+      <div class="body">
+        <p><strong>Switch over in one go rather than running both for a week.</strong> Two
+          systems writing two briefings teaches you to skip both, and the habit is hard to
+          undo once it forms.</p>
+        <p>Open source under the MIT license:
+          <a href="https://github.com/jwm-axoni/claude-workbench" style="color:var(--blue)">github.com/jwm-axoni/claude-workbench</a></p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">pause it,<br>don't bin it</span>
+      </aside>
+    </div>
+  </section>
+
+  </div>
+
+  </div>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var KEY = 'workbench-tab';
+  var list = document.querySelector('.tabs [role="tablist"]');
+  var tabs = [].slice.call(list.querySelectorAll('[role="tab"]'));
+  var panels = document.querySelector('.panels');
+  var mqChips = window.matchMedia('(max-width:900px)');
+
+  function panelOf(tab) { return document.getElementById(tab.getAttribute('aria-controls')); }
+
+  function select(tab, opts) {
+    opts = opts || {};
+    var panel = panelOf(tab), wasHidden = panel.hidden;
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      panelOf(t).hidden = !on;
+    });
+    if (opts.focus) tab.focus();
+    if (mqChips.matches) list.scrollLeft = tab.offsetLeft - (list.clientWidth - tab.offsetWidth) / 2;
+    if (opts.setHash) history.replaceState(null, '', '#' + tab.id);
+    try { localStorage.setItem(KEY, tab.id); } catch (e) {}
+    // On first load the engine has not run init() yet, so the visible panel gets the
+    // normal scroll reveal. After that, a newly shown panel is drawn and revealed here.
+    if (!opts.initial && wasHidden && window.Chalk) Chalk.showIn(panel);
+    if (opts.toTop && panels.getBoundingClientRect().top < 0) window.scrollTo(0, 0);
+  }
+
+  function fromHash() {
+    var id = location.hash.slice(1);
+    if (!id) return null;
+    try { id = decodeURIComponent(id); } catch (e) {}
+    var el = document.getElementById(id);
+    if (!el) return null;
+    if (tabs.indexOf(el) >= 0) return { tab: el };
+    var panel = el.closest('[role="tabpanel"]');
+    if (!panel) return null;
+    return { tab: document.getElementById(panel.getAttribute('aria-labelledby')), el: panel === el ? null : el };
+  }
+
+  function route(initial) {
+    var t = fromHash();
+    if (!t) return false;
+    select(t.tab, { initial: initial });
+    if (t.el) requestAnimationFrame(function () { t.el.scrollIntoView({ block: 'start' }); });
+    return true;
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () { select(t, { setHash: true, toTop: true }); });
+  });
+
+  list.addEventListener('keydown', function (e) {
+    var i = tabs.indexOf(document.activeElement), n = tabs.length, j = -1;
+    if (i < 0) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % n;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + n) % n;
+    else if (e.key === 'Home') j = 0;
+    else if (e.key === 'End') j = n - 1;
+    if (j < 0) return;
+    e.preventDefault();
+    select(tabs[j], { focus: true, setHash: true, toTop: true });
+  });
+
+  window.addEventListener('hashchange', function () { route(false); });
+
+  function orient() { list.setAttribute('aria-orientation', mqChips.matches ? 'horizontal' : 'vertical'); }
+  orient();
+  if (mqChips.addEventListener) mqChips.addEventListener('change', orient);
+  else if (mqChips.addListener) mqChips.addListener(orient);
+
+  if (!route(true)) {
+    var saved = null;
+    try { saved = document.getElementById(localStorage.getItem(KEY) || ''); } catch (e) {}
+    select(tabs.indexOf(saved) >= 0 ? saved : tabs[0], { initial: true });
+  }
+})();
+</script>
+</body>
+</html>

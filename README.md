@@ -5,6 +5,10 @@ folder of plain markdown around your role, company and tools, wires up the sched
 that keep it current, and sets you up to do all your work from a single Claude project. After
 that the workbench maintains itself, and it gets better every time you correct it.
 
+**New here? Start with the visual walkthrough:** [`docs/index.html`](docs/index.html). Download it
+and open it in a browser, or serve the repo with GitHub Pages. It covers setup, the folder, the
+routines, how it learns, and every skill, tab by tab.
+
 It's the public, company-neutral version of a setup that's been running daily since September
 2026. Nothing in it names a company, a person or a tool instance. Everything specific to you is
 gathered during onboarding.

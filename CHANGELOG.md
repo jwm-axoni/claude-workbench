@@ -14,6 +14,8 @@ First public release.
 - Outcome learning: drafts saved to `Tracking/Drafts/` and graded against what was actually sent; voice rules learned from repeated edits; `Tracking/IMPROVEMENTS.md` tracks proposed skills/rules through adoption and verification; weekly learning scorecard
 - Project instructions in READ / CAPTURE / DRAFTS / WRITE form
 - Optional starter Obsidian config
+- Visual explainer at `docs/index.html`
+- Schedules pause older look-alike tasks instead of deleting them
 - Relationship graph in frontmatter: typed, two-way edges (person↔org, person↔project, reports_to↔direct_reports, project↔org/tool) as quoted wikilinks, built nightly by the dream, repaired weekly, audited by the librarian
 
 Content migrations: none.
