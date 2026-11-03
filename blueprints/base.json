@@ -1,0 +1,87 @@
+{
+  "system_dir": ".workbench",
+  "folders": [
+    { "path": "Context",            "template": "folders/Context.md" },
+    { "path": "Daily",              "template": "folders/Daily.md" },
+    { "path": "Projects",           "template": "folders/Projects.md" },
+    { "path": "People",             "template": "folders/People.md" },
+    { "path": "Organizations",      "template": "folders/Organizations.md" },
+    { "path": "Resources",          "template": "folders/Resources.md" },
+    { "path": "Resources/Tools" },
+    { "path": "Tracking",           "template": "folders/Tracking.md" },
+    { "path": "Tracking/Captures" },
+    { "path": "Tracking/Signals" },
+    { "path": "Meetings",           "template": "folders/Meetings.md", "when": "meetings" },
+    { "path": "Archive",            "template": "folders/Archive.md" },
+    { "path": ".workbench" },
+    { "path": ".workbench/routines" }
+  ],
+  "files": [
+    { "path": "CLAUDE.md",                          "template": "pages/root-CLAUDE.md" },
+    { "path": "README.md",                          "template": "pages/README.md" },
+    { "path": "Context/me.md",                      "template": "pages/me.md",               "user_owned": true },
+    { "path": "Context/voice.md",                   "template": "pages/voice.md",            "user_owned": true },
+    { "path": "People/NAME_VARIANTS.md",            "template": "pages/NAME_VARIANTS.md",    "user_owned": true },
+    { "path": "People/{{name}}.md",                 "template": "pages/person-self.md",      "user_owned": true },
+    { "path": "Organizations/{{company}}.md",       "template": "pages/org-employer.md",     "user_owned": true, "when": "company" },
+    { "path": "Projects/INDEX.md",                  "template": "pages/INDEX.md",            "user_owned": true },
+    { "path": "Resources/GLOSSARY.md",              "template": "pages/GLOSSARY.md",         "user_owned": true },
+    { "path": "Tracking/GOALS.md",                  "template": "pages/GOALS.md",            "user_owned": true },
+    { "path": "Tracking/FRICTION_LOG.md",           "template": "pages/FRICTION_LOG.md",     "user_owned": true },
+    { "path": "Tracking/DREAM_LOG.md",              "template": "pages/DREAM_LOG.md",        "user_owned": true },
+    { "path": "Tracking/Captures/README.md",        "template": "pages/Captures-README.md" },
+    { "path": "Tracking/Signals/README.md",         "template": "pages/Signals-README.md" },
+    { "path": ".workbench/PROJECT_INSTRUCTIONS.md", "template": "pages/PROJECT_INSTRUCTIONS.md" }
+  ],
+  "routines": [
+    {
+      "id": "calendar-sync",
+      "name": "[Workbench] Calendar Sync",
+      "skill": "calendar-sync",
+      "when": "workdays at {{cal_times}}",
+      "cron": "{{cal_minute}} {{cal_hours}} * * {{workdays_cron}}",
+      "writes": "Daily/YYYY-MM-DD_CALENDAR.md (today and the next workday)"
+    },
+    {
+      "id": "daily-briefing",
+      "name": "[Workbench] Morning Briefing",
+      "skill": "daily-briefing",
+      "when": "workdays at {{brief_time}}",
+      "cron": "{{brief_minute}} {{brief_hour}} * * {{workdays_cron}}",
+      "writes": "Daily/YYYY-MM-DD_MORNING_BRIEFING.md"
+    },
+    {
+      "id": "midday-update",
+      "name": "[Workbench] Midday Update",
+      "skill": "daily-briefing",
+      "mode": "midday",
+      "when": "workdays at {{midday_time}}",
+      "cron": "{{midday_minute}} {{midday_hour}} * * {{workdays_cron}}",
+      "writes": "appends to Daily/YYYY-MM-DD_MORNING_BRIEFING.md"
+    },
+    {
+      "id": "eod-recap",
+      "name": "[Workbench] End-of-Day Recap",
+      "skill": "eod-recap",
+      "when": "workdays at {{recap_time}}",
+      "cron": "{{recap_minute}} {{recap_hour}} * * {{workdays_cron}}",
+      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md, Tracking/Signals/YYYY-MM-DD_recap.md"
+    },
+    {
+      "id": "nightly-dream",
+      "name": "[Workbench] Nightly Dream",
+      "skill": "nightly-dream",
+      "when": "workday nights at {{dream_time}}",
+      "cron": "{{dream_minute}} {{dream_hour}} * * {{workdays_cron}}",
+      "writes": "named (dream) blocks and ledgers on pages; Tracking/DREAM_LOG.md; Tracking/Signals/YYYY-MM-DD_dream.md"
+    },
+    {
+      "id": "weekly",
+      "name": "[Workbench] Weekly Plan & Maintenance",
+      "skill": "weekly-review",
+      "when": "first workday at {{weekly_time}}",
+      "cron": "{{weekly_minute}} {{weekly_hour}} * * {{first_workday_cron}}",
+      "writes": "Daily/YYYY-MM-DD_NEXT_WEEK_PLAN.md, Tracking/Signals/YYYY-MM-DD_weekly.md, frontmatter/links/index repairs, every move to Archive/"
+    }
+  ]
+}

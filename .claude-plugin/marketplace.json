@@ -1,0 +1,13 @@
+{
+  "name": "claude-workbench",
+  "owner": { "name": "John Mbwambo" },
+  "metadata": { "description": "One plugin that sets up and runs your personal Claude Workbench." },
+  "plugins": [
+    {
+      "name": "workbench",
+      "source": "./",
+      "description": "Onboarding, folder structure, CLAUDE.md files, scheduled jobs, Librarian, and a self-improvement loop for your personal workbench.",
+      "version": "0.1.0"
+    }
+  ]
+}

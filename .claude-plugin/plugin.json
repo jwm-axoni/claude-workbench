@@ -1,0 +1,19 @@
+{
+  "name": "workbench",
+  "version": "0.1.0",
+  "description": "Builds and runs your personal Claude Workbench: an onboarding interview, a role-aware markdown vault with a CLAUDE.md in every folder, connector checks, six managed scheduled routines, a librarian, and a nightly loop that learns from your corrections.",
+  "author": {
+    "name": "John Mbwambo"
+  },
+  "repository": "https://github.com/jwm-axoni/claude-workbench",
+  "license": "MIT",
+  "keywords": [
+    "workbench",
+    "second-brain",
+    "onboarding",
+    "librarian",
+    "scheduled-tasks",
+    "claude-md",
+    "productivity"
+  ]
+}
