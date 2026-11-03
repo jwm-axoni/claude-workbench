@@ -11,7 +11,7 @@ One plugin interviews you, builds a folder of markdown around your role and tool
 ![Role packs: 11](https://img.shields.io/badge/role_packs-11-232323)
 ![License: MIT](https://img.shields.io/badge/license-MIT-FF824D)
 
-[Install](#install) · [Setup](#say-set-me-up) · [The folder](#your-folder) · [The routines](#the-routines) · [How it learns](#how-it-learns) · [Skills](#the-skills) · [Visual explainer](docs/index.html)
+[Quick start](#quick-start) · [Setup](#say-set-me-up) · [The folder](#your-folder) · [The routines](#the-routines) · [How it learns](#how-it-learns) · [Skills](#the-skills) · [Visual explainer](docs/index.html)
 
 </div>
 
@@ -23,16 +23,56 @@ The Workbench gives Claude a memory that lives in plain files you own, six routi
 
 It's the public, company-neutral version of a setup that's been running daily since September 2026. Nothing in it names a company, a person or a tool instance. Everything specific to you is gathered during onboarding.
 
-## Install
+## Quick start
 
-In Claude Code or Cowork:
+You need Claude Code or Cowork, and Python 3 on the same machine (macOS and most Linux installs already have it).
+
+**1. Install the plugin.** Type these two lines into Claude:
 
 ```
 /plugin marketplace add jwm-axoni/claude-workbench
 /plugin install workbench@claude-workbench
 ```
 
-Then run `/workbench:setup`, or just say "set me up". You need Python 3 on the machine that runs setup; macOS and most Linux installs already have it.
+**2. Start onboarding.** Type the command:
+
+```
+/workbench:setup
+```
+
+Or just say it in plain words. Any of these work:
+
+```
+Set up my workbench
+```
+
+```
+Set me up. I'm a Senior AE at Acme Data in Austin, I work 8:30 to 5:30, and I live in Gmail, Slack and Salesforce.
+```
+
+The second one is the fast version: the more you tell it up front, the fewer questions it asks.
+
+**3. Answer its questions (about 10 minutes).** It asks where the folder should live, who you are, how you work, which tools you use (and checks each one), and how you want your morning digest: Slack, email, a Claude message, or nothing. It shows you a preview before it builds anything.
+
+**4. Make one project your home.** When setup finishes, it shows you your project instructions. Create one Claude project named after you, attach the workbench folder, and paste them in. Start all your work there from now on.
+
+**5. Try it on day one.** Inside that project:
+
+```
+What do you know about Pat Lee?
+```
+
+```
+We decided to push the Acme pilot to January. Remember that.
+```
+
+```
+Run the librarian.
+```
+
+The first one shows what it already knows. The second gets captured and filed into the right page that night. The third gives you a health check of the folder. Your first morning digest arrives the next workday.
+
+**Changed roles, tools or hours later?** Say "redo my setup" or run `/workbench:setup` again. It only asks about what changed.
 
 ![What's in the box: ten skills, six of which run themselves on a schedule](docs/assets/workbench-whats-in-the-box.png)
 
