@@ -29,5 +29,12 @@ const shots = [
     const pad=36;
     await p.screenshot({ path: out + name + '.png', fullPage:true, clip:{x:Math.max(0,r.x-pad),y:Math.max(0,r.y-pad),width:r.w+pad*2,height:r.h+pad*2} });
   }
+  // header banner and plugin icon, each from its own HTML source in docs/assets/
+  const h = await b.newPage({ viewport:{width:1280,height:470}, deviceScaleFactor:2 });
+  await h.goto('file://' + require('path').join(__dirname, 'assets', 'workbench-header.html')); await h.waitForTimeout(400);
+  await h.locator('#header').screenshot({ path: out + 'workbench-header.png' });
+  const i = await b.newPage({ viewport:{width:512,height:512}, deviceScaleFactor:1 });
+  await i.goto('file://' + require('path').join(__dirname, 'assets', 'workbench-icon.html')); await i.waitForTimeout(300);
+  await i.locator('#icon').screenshot({ path: require('path').join(__dirname, '..', '.claude-plugin', 'icon.png') });
   await b.close();
 })();

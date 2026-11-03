@@ -1,10 +1,6 @@
 <div align="center">
 
-<img alt="Claude Workbench mark: a folder with a small linked graph inside" src=".claude-plugin/icon.png" width="112">
-
-# Claude Workbench
-
-### A second brain Claude runs for you, in plain files you own.
+<img alt="Claude Workbench: a second brain Claude runs for you, in plain markdown files you own. Hand-drawn loop: morning briefing, evening recap, nightly dream, your pages, every workday." src="docs/assets/workbench-header.png" width="100%">
 
 One plugin interviews you, builds a folder of markdown around your role and tools, schedules the routines that keep it current, and learns from what you correct and what you actually send.
 
