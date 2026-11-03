@@ -36,5 +36,11 @@ const shots = [
   const i = await b.newPage({ viewport:{width:512,height:512}, deviceScaleFactor:1 });
   await i.goto('file://' + require('path').join(__dirname, 'assets', 'workbench-icon.html')); await i.waitForTimeout(300);
   await i.locator('#icon').screenshot({ path: require('path').join(__dirname, '..', '.claude-plugin', 'icon.png') });
+  // 1280x640 social preview for GitHub (Settings > Social preview)
+  const g = await b.newPage({ viewport:{width:1280,height:640}, deviceScaleFactor:1 });
+  await g.goto('file://' + require('path').join(__dirname, 'assets', 'workbench-header.html'));
+  await g.addStyleTag({content:'html,body{height:640px;display:grid;place-items:center;background:#232323} svg rect[filter]{display:none}'});
+  await g.waitForTimeout(300);
+  await g.screenshot({ path: out + 'workbench-social.png' });
   await b.close();
 })();
