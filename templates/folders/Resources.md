@@ -26,6 +26,9 @@ category: data | security | gtm | ai | productivity | devtools | hr | finance | 
 tags: [tool, <category>]
 status: active
 connected: yes | no | manual   # can Claude reach it from this workbench?
+owner: "[[Person]]"            # who owns it internally, if known
+vendor: "[[Organization]]"     # only if the vendor is a live relationship with its own page
+projects: ["[[Project]]"]
 updated: YYYY-MM-DD
 ---
 ```
@@ -57,6 +60,7 @@ category: productivity
 tags: [tool, productivity]
 status: active
 connected: yes
+projects: []
 updated: YYYY-MM-DD
 ---
 

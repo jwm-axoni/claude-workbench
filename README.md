@@ -25,6 +25,12 @@ gathered during onboarding.
 └── Archive/             closed chapters, read-only
 ```
 
+Pages are connected through **relationship properties** in their frontmatter: a person's `org`,
+`reports_to` and `projects`; a project's `owner`, `people`, `orgs` and `tools`; an org's `people`.
+Values are quoted wikilinks, so Obsidian's graph and backlinks use them, and every edge is kept on
+both pages. The nightly dream builds them from each day's recap and captures, and the weekly repairs
+any edge that's one-sided.
+
 Every folder carries its own `CLAUDE.md` with the schema and a page shape to copy, so there's no
 templates folder to drift out of sync.
 

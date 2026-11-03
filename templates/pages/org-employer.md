@@ -1,6 +1,9 @@
 ---
 type: organization
 relationship: employer
+people: ["[[{{name}}]]"{{manager_yaml_item}}]
+projects: []
+tools: []
 tags: [organization, employer]
 status: current
 updated: {{created_date}}

@@ -113,6 +113,39 @@ page against current sources. Routine-only types: `morning-briefing`, `daily-rec
 moves; path links break the first time a file moves. Link a person, org, project or tool the
 first time it appears on a page. Don't link a page that doesn't exist unless you're creating it.
 
+### Relationships
+
+The graph is built from **relationship properties in frontmatter**, not just links in prose. Each
+property value is a quoted bare wikilink (`"[[Pat Lee]]"`), so Obsidian draws it in the graph, lists it
+in backlinks, and a query (Dataview, Bases) can read it. The `## Related` section in the body mirrors
+the properties for humans; when they disagree, the properties win and the weekly fixes the body.
+
+| On a… | Property | Points to | Inverse kept on the other page |
+|---|---|---|---|
+| person | `org` | organization (or tool page for a same-name vendor) | org `people` |
+| person | `reports_to` | person | that person's `direct_reports` |
+| person | `projects` | projects | project `people` |
+| person | `relationship` | `manager · direct-report · peer · collaborator · exec · customer · partner · vendor · vault-owner` (a value, not a link) | — |
+| project | `owner` | person | that person's `projects` |
+| project | `people` | people | each person's `projects` |
+| project | `orgs` | organizations | each org's `projects` |
+| project | `tools` | tools | each tool's `projects` |
+| organization | `relationship` | `employer · customer · vendor · partner · prospect` | — |
+| organization | `people`, `projects`, `tools` | as named | the inverse on each |
+| tool | `owner`, `projects`, `vendor` | person, projects, org | the inverse on each |
+
+Rules:
+
+1. **Every edge is two-way.** Whoever adds `people: ["[[Pat Lee]]"]` to a project also adds that project
+   to Pat's `projects` in the same change. A one-sided edge is a bug the librarian reports.
+2. **Only link pages that exist.** A name with no page stays plain text in the body until the dream
+   creates the page (two sources in 30 days), then the edge is added on both sides.
+3. **Edges carry evidence when they could be wrong.** Put the source in the body's `## Related` line:
+   `- [[Pat Lee]] — owner, since 2026-10-02 (`source: 2026-10-02_DAILY_RECAP`)`.
+4. **Ended relationships are demoted, not deleted.** Move the link from the live property to
+   `former_people` / `former_orgs` / `former_projects`, and note the end date in `## Related`.
+5. Lists are YAML lists: `projects: ["[[Acme Expansion]]", "[[Q4 Forecast]]"]`.
+
 ### Tags
 
 Lowercase kebab-case. Function tags describe what something does; relationship tags describe

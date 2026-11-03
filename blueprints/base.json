@@ -24,6 +24,7 @@
     { "path": "Context/voice.md",                   "template": "pages/voice.md",            "user_owned": true },
     { "path": "People/NAME_VARIANTS.md",            "template": "pages/NAME_VARIANTS.md",    "user_owned": true },
     { "path": "People/{{name}}.md",                 "template": "pages/person-self.md",      "user_owned": true },
+    { "path": "People/{{manager}}.md",              "template": "pages/person-manager.md",   "user_owned": true, "when": "manager" },
     { "path": "Organizations/{{company}}.md",       "template": "pages/org-employer.md",     "user_owned": true, "when": "company" },
     { "path": "Projects/INDEX.md",                  "template": "pages/INDEX.md",            "user_owned": true },
     { "path": "Resources/GLOSSARY.md",              "template": "pages/GLOSSARY.md",         "user_owned": true },

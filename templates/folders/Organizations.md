@@ -20,8 +20,10 @@ ambiguous. Check `Resources/Tools/` before creating a page here.
 ```yaml
 ---
 type: organization
-relationship: employer | customer | vendor | partner
-tags: [organization, <relationship>]
+relationship: employer | customer | vendor | partner | prospect
+people: ["[[Person]]"]
+projects: ["[[Project]]"]
+tools: ["[[Tool]]"]
 status: current | former | archived
 updated: YYYY-MM-DD
 reviewed: YYYY-MM-DD
@@ -42,6 +44,9 @@ reviewed: YYYY-MM-DD
 ---
 type: organization
 relationship: customer
+people: []
+projects: []
+tools: []
 tags: [organization, customer]
 status: current
 updated: YYYY-MM-DD

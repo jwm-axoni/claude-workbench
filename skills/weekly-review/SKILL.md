@@ -73,6 +73,10 @@ and list the rest in the plan's Health section:
 | page confirmed current | set `reviewed:` to today |
 | capture lines unfiled > 2 workdays | list them in Health; the dream files them |
 | near-duplicate pages | list them, propose a survivor; never merge unattended |
+| one-sided relationship edge (project lists Pat, Pat doesn't list the project) | add the missing inverse |
+| `## Related` disagrees with the relationship properties | rewrite the body lines from the properties |
+| relationship property pointing at a page that doesn't exist | move it to plain text in `## Related`; list it for the dream |
+| YAML wikilink not quoted (`org: [[Acme]]`) | quote it (`org: "[[Acme]]"`); unquoted breaks the YAML |
 
 ## 3. Archive moves
 

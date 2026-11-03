@@ -108,6 +108,35 @@ class FreshBuild(Base):
         self.assertEqual((self.root / ".obsidian/app.json").read_text(), "{}")
 
 
+class Relationships(Base):
+    def test_starter_edges_parse_and_are_two_way(self):
+        try:
+            import yaml
+        except ImportError:
+            self.skipTest("PyYAML not installed")
+        self.apply()
+        pages = {}
+        for p in self.root.rglob("*.md"):
+            text = p.read_text()
+            if text.startswith("---\n") and "/Archive/" not in str(p):
+                fm = yaml.safe_load(text.split("---\n")[1])
+                pages[p.stem] = fm
+        link = lambda v: v.strip("[]") if isinstance(v, str) else v
+        jane, pat, acme = pages["Jane Rivera"], pages["Pat Lee"], pages["Acme Data"]
+        self.assertEqual(link(jane["org"]), "Acme Data")
+        self.assertIn("[[Jane Rivera]]", acme["people"])
+        self.assertIn("[[Pat Lee]]", acme["people"])
+        self.assertEqual(link(jane["reports_to"]), "Pat Lee")
+        self.assertIn("[[Jane Rivera]]", pat["direct_reports"])
+
+    def test_no_manager_means_no_dangling_edge(self):
+        p = dict(PROFILE)
+        p.pop("manager")
+        self.apply(p)
+        self.assertIn('reports_to: ""', (self.root / "People/Jane Rivera.md").read_text())
+        self.assertNotIn("Pat Lee", (self.root / "Organizations/Acme Data.md").read_text())
+
+
 class Upgrades(Base):
     def test_reapply_is_a_noop(self):
         self.apply()

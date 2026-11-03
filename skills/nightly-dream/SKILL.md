@@ -18,12 +18,12 @@ anything outside the vault.
 |---|---|
 | `Tracking/DREAM_LOG.md` | a new entry at the top of `## Entries`, `## Processed captures` lines |
 | `Tracking/Signals/<today>_dream.md` | the whole file (new each night) |
-| `Projects/*` | `## Open commitments (mine)`, `## Decisions`, `## Current state (dream)`; new project pages |
+| `Projects/*` | `## Open commitments (mine)`, `## Decisions`, `## Current state (dream)`; relationship properties (`owner`, `people`, `orgs`, `tools`); new project pages |
 | `Projects/INDEX.md` | status cells, new rows, moving rows (never change a row's link) |
-| `People/*` | `## Recent (dream)`; new stubs; `role:`/`role_confirmed:`/`role_source:`/`status:` on a stated change |
+| `People/*` | `## Recent (dream)`; new stubs; `role:`/`role_confirmed:`/`role_source:`/`status:` on a stated change; relationship properties (`org`, `reports_to`, `direct_reports`, `projects`, `relationship`) and `last_contact` |
 | `People/NAME_VARIANTS.md` | new rows |
-| `Organizations/*` | new pages; `## Recent (dream)`; `status:` |
-| `Resources/Tools/*` | new tool pages; `## Current state (dream)` |
+| `Organizations/*` | new pages; `## Recent (dream)`; `status:`; `people`, `projects`, `tools` |
+| `Resources/Tools/*` | new tool pages; `## Current state (dream)`; `owner`, `vendor`, `projects` |
 | `Resources/GLOSSARY.md` | `## Needs confirmation` entries; promoting confirmed terms into the table |
 | `Context/me.md`, other `Context/` org pages | `## Current state (dream)` |
 | `Context/voice.md` | `## Learned rules (dream)` |
@@ -79,6 +79,23 @@ again for 30 days.
   `NAME_VARIANTS.md` unless the owner confirmed it, then `confirmed`.
 - Projects index: keep `INDEX.md` rows in step with project pages' status.
 
+**b2. Build the relationships.** This is what turns notes into a graph. For every person, org,
+project and tool touched tonight, follow **Relationships** in the root `CLAUDE.md`:
+- Add each edge the day's sources state or clearly show: who works on which project, who owns it,
+  which org it involves, which tools it uses, who someone reports to, which org they're at.
+  "Pat and Sam discussed the Acme rollout" puts Pat and Sam on that project's `people` and the project
+  on both their `projects`, and Acme on the project's `orgs`.
+- **Always write both sides in the same pass** (project `people` ↔ person `projects`, org `people` ↔
+  person `org`, `reports_to` ↔ `direct_reports`), and mirror the edge as a line in each page's
+  `## Related` with its source.
+- Set `last_contact` on a person to the date of the newest recap line, meeting or capture involving
+  them and the owner directly (not just a mention).
+- Edges below the person/decision confidence bar (a guess from one ambiguous line) go under Needs your
+  yes instead: "Is [[Sam Ortiz]] on [[Acme Expansion]]?"
+- A relationship a source says has ended (left the company, rolled off the project, churned) moves to
+  `former_*` with the end date; never just deleted.
+- Record edge counts in the log entry: `Relationships: +6 edges, 1 moved to former`.
+
 **c. Learn.** This is how the workbench improves itself:
 - Every `correction:` capture and every correction in the recap Signals becomes a rule. Writing
   preferences → `## Learned rules (dream)` in `Context/voice.md`. How-they-work facts →
@@ -119,6 +136,8 @@ the cap becomes a question for tomorrow's briefing.
 
 **New**
 - [[New Person]] stub — named in recap and capture. Traces to: …
+
+**Relationships:** +6 edges (Sam Ortiz ↔ Acme Expansion, Acme Expansion ↔ Acme Data, …), 1 moved to former
 
 **Needs your yes**
 - [ ] Mark "Send pricing to Sam" done? (sent mail 16:10 looks like it) — [[Acme Expansion]]

@@ -22,7 +22,10 @@ links there. Top level holds projects with activity in the last 30 days; the res
 type: project
 tags: [project, <domain>]
 status: active | paused | shipped | archived
-owner: <who drives it>
+owner: "[[Person]]"
+people: ["[[Person]]"]
+orgs: ["[[Organization]]"]
+tools: ["[[Tool]]"]
 repo: <local folder holding the code, optional>
 artifacts: <local folder holding decks/docs, optional>
 updated: YYYY-MM-DD
@@ -36,7 +39,8 @@ record; the folder is the workshop. Never copy code, media or transcripts into t
 ## Who writes what
 
 - `nightly-dream` owns `## Open commitments (mine)`, `## Decisions` and `## Current state (dream)`
-  on project pages, plus the status cells and rows of `INDEX.md`. Nothing else on them.
+  on project pages, the relationship properties (`owner`, `people`, `orgs`, `tools`) and their inverses,
+plus the status cells and rows of `INDEX.md`. Nothing else on them.
 - `weekly-review` fixes frontmatter and links, repairs index rows the dream missed, and moves
   quiet `shipped` projects to `Archive/Projects/`.
 - {{preferred_name}} edits everything freely. Their edits to the commitments ledger are the label
@@ -49,7 +53,10 @@ record; the folder is the workshop. Never copy code, media or transcripts into t
 type: project
 tags: [project, <domain>]
 status: active
-owner: {{name}}
+owner: "[[{{name}}]]"
+people: []
+orgs: []
+tools: []
 updated: YYYY-MM-DD
 ---
 

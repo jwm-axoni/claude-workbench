@@ -195,6 +195,10 @@ def build_context(profile: dict, root: Path):
         "company_description": profile.get("company_description") or "not recorded yet.",
         "industry": profile.get("industry") or "not recorded",
         "team_suffix": f", {team} team" if team else "",
+        "manager": (profile.get("manager") or "").strip(),
+        "reports_to_yaml": f'"[[{profile["manager"]}]]"' if profile.get("manager") else '""',
+        "manager_related": f"- [[{profile['manager']}]] — manager `source: workbench-setup`" if profile.get("manager") else "",
+        "manager_yaml_item": f', "[[{profile["manager"]}]]"' if profile.get("manager") else "",
         "manager_line": f"Reports to [[{profile['manager']}]]." if profile.get("manager") else "",
         "location": profile.get("location") or "location not recorded",
         "timezone": profile.get("timezone") or "UTC",
@@ -261,6 +265,7 @@ category: {category}
 tags: [tool]
 status: active
 connected: {connected}
+projects: []
 updated: {{{{created_date}}}}
 ---
 
@@ -283,7 +288,7 @@ _Maintained nightly by nightly-dream._
 def desired_state(profile: dict, root: Path):
     ctx, base, _pack = build_context(profile, root)
     flags = {"meetings": bool(profile.get("meetings_source")), "company": bool(profile.get("company")),
-             "obsidian": profile.get("obsidian", True) is not False}
+             "obsidian": profile.get("obsidian", True) is not False, "manager": bool(profile.get("manager"))}
     dirs, files = [], []
 
     def add(path: str, content: str, user_owned: bool):

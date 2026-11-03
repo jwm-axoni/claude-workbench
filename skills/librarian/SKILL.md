@@ -41,6 +41,14 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
 11. Orphans: live pages nothing links to (excluding `CLAUDE.md`, logs, `INDEX.md`).
 12. Active pages linking forward into `Archive/` without the history being the point.
 
+**Relationships**
+13a. One-sided edges: a property on one page with no inverse on the other (see the table under
+     Relationships in the root `CLAUDE.md`).
+13b. Relationship properties that are unquoted, path-style, or point at missing pages.
+13c. Entity pages with no edges at all: a person with no `org` or `projects`, a project with no
+     `owner` or `people`, an org with no `people`. These are graph islands.
+13d. People with `last_contact` older than 45 days who are still on an active project's `people`.
+
 **Ledgers and freshness**
 13. Ledger entries (commitments, decisions, role claims, glossary terms) missing `source`, a date,
     or `state`.

@@ -15,10 +15,15 @@ recur in a second source.
 ---
 type: person
 tags: [person, <function>, <relationship>]
-org: <company>
+org: "[[Organization]]"
 role: <title>              # omit entirely if unknown, never guess
 role_confirmed: YYYY-MM-DD # when a source last stated it
 role_source: <file>
+relationship: manager | direct-report | peer | collaborator | exec | customer | partner | vendor
+reports_to: "[[Person]]"   # only if a source says so
+direct_reports: []
+projects: ["[[Project]]"]
+last_contact: YYYY-MM-DD
 status: active | former
 updated: YYYY-MM-DD
 reviewed: YYYY-MM-DD
@@ -39,10 +44,18 @@ Relationship to {{preferred_name}}: `manager`, `direct-report`, `peer`, `collabo
 
 If a person's function has no tag here, add one to this list rather than forcing a bad fit.
 
+## Relationships
+
+See **Relationships** in the root `CLAUDE.md`: `org`, `reports_to`, `direct_reports`, `projects` are
+quoted wikilinks, and every one has its inverse on the other page. `last_contact` is the date of the
+most recent recap line, meeting or capture involving them; it's what lets the briefing say "you
+haven't talked to Pat in five weeks".
+
 ## Who writes what
 
 `nightly-dream` creates stubs for anyone named in two sources within 30 days, rewrites
-`## Recent (dream)`, and updates `role:`/`status:` when a source states a change. It adds rows
+`## Recent (dream)`, updates `role:`/`status:` when a source states a change, and maintains the
+relationship properties and `last_contact`. It adds rows
 to `NAME_VARIANTS.md` when it sees a misspelling. `weekly-review` fixes frontmatter and links.
 
 ## Page shape
@@ -51,7 +64,10 @@ to `NAME_VARIANTS.md` when it sees a misspelling. `weekly-review` fixes frontmat
 ---
 type: person
 tags: [person, <function>, <relationship>]
-org: <company>
+org: "[[Organization]]"
+relationship: collaborator
+projects: ["[[Project]]"]
+last_contact: YYYY-MM-DD
 status: active
 updated: YYYY-MM-DD
 ---

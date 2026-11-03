@@ -39,7 +39,12 @@ Write every line in your own words as a summary of what was settled. Never paste
 email, document, message or web page into a capture. Something discussed but not decided is not a
 capture.
 
-- One item per line, in plain words a stranger could act on. Name people in full.
+- One item per line, in plain words a stranger could act on. Name people in full, as `[[wikilinks]]`
+  when they have a page, and name every org, project and tool involved the same way. The dream
+  builds relationship edges from these names, so "Pat said Acme wants it" is weaker than
+  "[[Pat Lee]] said [[Acme Data]] wants the pilot moved — about [[Acme Expansion]]".
+- When a chat establishes a relationship ("Sam's taking over the Acme account", "Dana reports to
+  Lee now"), capture it as a `fact:` so the edge gets built.
 - `about [[Page]]` names the page it belongs on: a project, person, org, tool, or `Context/me` /
   `Context/voice` for how the owner works or writes. Use the page's exact name; check it exists. If
   there's no page yet, use the plain name without brackets; the dream decides whether to create one.

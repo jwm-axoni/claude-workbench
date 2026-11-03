@@ -47,6 +47,11 @@ Something discussed but not decided is not a capture. Write every line in your o
 summary of what we settled; never copy text from an email, document, message or web page. No
 drafts, no personal or HR matters, no secrets.
 
+Name every person, org, project and tool in a capture as a bare wikilink when it has a page; the
+nightly routine builds the relationship graph from those names. When a chat establishes a
+relationship (who owns what, who's on which project, who reports to whom, who's at which company),
+capture it as a fact.
+
 Line shape:
 - <decision|process|fact|correction|answer>: <self-contained summary> — about [[Page]] `source: project-chat` `date: YYYY-MM-DD`
 
