@@ -167,9 +167,11 @@ the frontmatter and say so under the title: "_Ran at 23:05, scheduled 18:00. Sou
 
 ## A missed day: the reconstructed recap
 
-Check `Tracking/Signals/RUN_LEDGER.md` for the previous workday. If its recap never ran (no
-`eod-recap` line and no `_DAILY_RECAP.md` for that date), cover that day in a **separate, short
-file**, `Daily/<that date>_RECONSTRUCTED_RECAP.md`, before writing today's:
+Check the previous workday. If it has no `Daily/<that date>_DAILY_RECAP.md` and no
+`_RECONSTRUCTED_RECAP.md` yet, it has no record, whatever `Tracking/Signals/RUN_LEDGER.md` says:
+no `eod-recap` line at all, or a `failed` line from a run that died before writing its file. Cover
+that day in a **separate, short file**, `Daily/<that date>_RECONSTRUCTED_RECAP.md`, before writing
+today's. A ledger line is never proof the day was recorded; only the file is.
 
 ```markdown
 ---

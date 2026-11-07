@@ -59,9 +59,13 @@ Step 0 runs even when tonight's recap is missing (see Inputs): filing captures d
    decision/person/term 0.90).
 3. Today's `Daily/<date>_DAILY_RECAP.md`. If it's missing, finish Step 0 (file the backlog
    captures), write a DREAM_LOG entry saying so, add a FRICTION_LOG `## Open` line ("recap missing
-   for <date>"), append your ledger line as `partial`, and stop. Don't rebuild the day yourself. A
-   `_RECONSTRUCTED_RECAP.md` counts as a source for its date, but file only what it states and
-   mark what you file from it `source: reconstructed recap`.
+   for <date>"), append your ledger line as `partial`, and stop. Don't rebuild the day yourself.
+3b. Every `Daily/*_RECONSTRUCTED_RECAP.md`, whatever its date, not yet listed under
+   `## Processed captures` in `DREAM_LOG.md`. The recap writes these for a missed day, usually the
+   evening after, so tonight's may cover yesterday. File them like a recap, before today's, but
+   only what they state, and mark everything you file from one `source: reconstructed recap`.
+   Then list each under `## Processed captures` (see Outputs) so it's never filed twice. Do this
+   even when today's recap is missing.
 4. `Tracking/Signals/<date>_recap.md`: graded claims, graded drafts, answers to the digest, corrections.
 5. Every `Tracking/Captures/*.md` file with lines not yet listed under `## Processed captures`.
 6. If `Meetings/` exists, today's meeting files above `## Transcript` only, to cross-check the
@@ -210,7 +214,9 @@ the cap becomes a question for tomorrow's briefing.
 ```
 
 Then append under `## Processed captures`: `- YYYY-MM-DD.md · N lines · filed YYYY-MM-DD`, one line
-per capture file you filed from, backlog files included.
+per capture file you filed from, backlog files included, and
+`- YYYY-MM-DD_RECONSTRUCTED_RECAP.md · reconstructed recap · filed YYYY-MM-DD` for each
+reconstructed recap you filed.
 
 **`Tracking/Signals/RUN_LEDGER.md`**: last of all, append exactly one line to the bottom, and never
 edit or delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. Say how many backlog captures you filed:
