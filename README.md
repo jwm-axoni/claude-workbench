@@ -25,7 +25,7 @@ It's the public, company-neutral version of a setup that's been running daily si
 
 ## Quick start
 
-You need Claude Code or Cowork, and Python 3 on the same machine (macOS and most Linux installs already have it).
+You need Claude Code or Cowork, and Python 3 on the same machine (macOS and most Linux installs already have it). If you want routines that run with the laptop closed, or you use more than one computer, you'll also want a GitHub account for a private repo; setup explains the choice.
 
 **1. Install the plugin.** Type these two lines into Claude:
 
@@ -52,7 +52,7 @@ Set me up. I'm a Senior AE at Acme Data in Austin, I work 8:30 to 5:30, and I li
 
 The second one is the fast version: the more you tell it up front, the fewer questions it asks.
 
-**3. Answer its questions (about 10 minutes).** It asks where the folder should live, who you are, how you work, which tools you use (and checks each one), and how you want your morning digest: Slack, email, a Claude message, or nothing. It shows you a preview before it builds anything.
+**3. Answer its questions (about 10 minutes).** It asks who you are, how you work, which tools you use (and checks each one), whether you record meetings, which Claude you have, whether the folder should be a local folder or a private GitHub repo, and how you want your morning digest: Slack, email, a Claude message, or nothing. From those answers it works out where your routines run and tells you what that guarantees. It shows you a preview before it builds anything.
 
 **4. Make one project your home.** When setup finishes, it shows you your project instructions. Create one Claude project named after you, attach the workbench folder, and paste them in. Start all your work there from now on.
 
@@ -70,7 +70,11 @@ We decided to push the Acme pilot to January. Remember that.
 Run the librarian.
 ```
 
-The first one shows what it already knows. The second gets captured and filed into the right page that night. The third gives you a health check of the folder. Your first morning digest arrives the next workday.
+```
+Why do you think the Acme pilot starts in January?
+```
+
+The first one shows what it already knows. The second gets captured and filed into the right page that night. The third gives you a health check of the folder. The fourth, a day or two in, shows the evidence behind a fact and what it replaced. Your first morning digest arrives the next workday.
 
 **Changed roles, tools or hours later?** Say "redo my setup" or run `/workbench:setup` again. It only asks about what changed.
 
@@ -144,6 +148,7 @@ Most people won't open a folder every morning. Setup asks where your digest shou
 ![Three learning loops and the weekly scorecard that tracks whether it's working](docs/assets/workbench-learning.png)
 
 - **Corrections** become rules in `Context/voice.md` or `Context/me.md`. If the same correction comes back after the rule exists, the rule is flagged as not working.
+- **Briefing feedback** ("stop telling me about X", "always show pipeline numbers first") becomes a rule in `Context/surfacing.md` once you've said it twice.
 - **Drafts** are saved when handed over and compared with what you actually sent. The same edit twice becomes a voice rule.
 - **Proposals** for skills, rules or connectors are tracked in `Tracking/IMPROVEMENTS.md` from proposed to built to verified.
 
@@ -178,6 +183,8 @@ After setup, create one Claude project named after you, attach the folder, and p
 
 **Meetings come in through your recorder, not a script.** If Claude can connect to your recording tool, setup uses that: the recap reads each day's summaries, decisions and next steps, and no transcripts land in your folder. If it can't connect but the tool can export notes to a folder, setup shows you how to point the export at `Meetings/`, which the workbench then only reads. Full transcripts are kept only if you ask, after setup explains that they hold other people's exact words.
 
+**Upgrading from 0.1?** Run `/workbench:migrate`. It adds the three new files (commitments, surfacing, run ledger), asks which Claude you have and where the folder lives so it can pick the right runner, and updates your scheduled tasks. Nothing you wrote is touched, and older claims and meeting exports keep working as they are.
+
 **Safe upgrades.** The plugin records a hash of every file it writes in `.workbench/manifest.json`. Files nobody touched are refreshed; files you edited stay as they are and the new version lands beside them as `*.workbench-new`; content pages (people, projects, goals, logs) are never rewritten by the plugin. `/workbench:migrate` walks you through merging.
 
 ## Privacy
@@ -194,6 +201,7 @@ claude plugin validate .
 - `scripts/workbench.py` is the stdlib-only scaffolder every skill calls.
 - `blueprints/` defines the layout, routines and role packs.
 - `templates/` holds the pages it renders.
+- The test suite includes a package hygiene check: it fails if the plugin ever gains a `bin/` folder, an LSP server, output styles, themes or a `settings` component, any of which makes Cowork refuse to install it. One package serves Claude Code and Cowork; keep it that way.
 - `docs/index.html` is the visual explainer. The images in `docs/assets/` are rendered from it by `node docs/render-assets.js`; re-run it whenever the explainer changes.
 
 See [`CLAUDE.md`](CLAUDE.md) for contributor notes and [`CHANGELOG.md`](CHANGELOG.md) for what changed.
