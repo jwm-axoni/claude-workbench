@@ -147,6 +147,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |
 | `/workbench:project <name>` | Where a project stands, what's decided, what's owed. |
 | `/workbench:vault-search <question>` | Search with the folder's own rules: name variants, trust order, sources cited. |
+| `/workbench:why <claim>` | Why the folder believes something: the evidence, confidence, date it came in, and what it replaced. |
 
 ## Memory and moving over
 
