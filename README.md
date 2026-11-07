@@ -90,6 +90,14 @@ Your title picks one of 11 role packs: sales, customer success, marketing, engin
 
 ![The folder layout, with a CLAUDE.md schema in every folder](docs/assets/workbench-folder.png)
 
+Three files keep the memory honest rather than just full:
+
+- `Tracking/COMMITMENTS.md`: every promise in flight, both ways, one row each. The dream adds rows and flags ones that look done or stale; the briefing asks about overdue ones as questions; only the weekly closes a row, on evidence.
+- `Context/surfacing.md`: what your briefing should always raise, never raise, when to stay quiet, and the shape you want per topic. Edit it yourself, or just correct a briefing twice and the dream writes the rule.
+- `Tracking/Signals/RUN_LEDGER.md`: one line per routine run, so a missed run is visible (see [The routines](#the-routines)).
+
+When two sources disagree, the page gets a `## Needs reconciling` section instead of a guess. The weekly turns the oldest three into numbered questions, and your answer becomes a supersession with the losing claim's history kept. New briefing and recap claims carry an `evidence:` quote or page reference and a `confidence:`, so `/workbench:why` can show you where any fact came from.
+
 Every folder carries its own `CLAUDE.md` with the schema and a page shape to copy, so there is no templates folder to drift out of sync. Each routine owns specific files and writes nothing else; your chats write only to `Tracking/Captures/` and `Tracking/Drafts/`. Nothing is ever deleted: a fact that stops being true is marked superseded with a link to what replaced it, then archived.
 
 ![Sources feed one page per project, person and account, and everything reads the page instead of the source](docs/assets/workbench-read-the-page.png)
@@ -110,7 +118,18 @@ tools: ["[[Salesforce]]"]
 
 ![The daily chain: the briefing, recap and nightly dream each read what the one before wrote](docs/assets/workbench-daily-chain.png)
 
-Times come from your working hours and timezone, and you can switch any routine off. They run either as scheduled tasks in the Claude desktop app or Cowork, which need the computer awake, or as cloud routines, which need the folder in a private GitHub repo. Setup asks which.
+Times come from your working hours and timezone, and you can switch any routine off. Where they run follows from two setup answers: which Claude you have, and where the folder lives. You don't pick a runner; setup works it out:
+
+| You have | The vault lives in | Routines run on | What's guaranteed |
+|---|---|---|---|
+| Cowork only | a local folder | Cowork local | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. |
+| Cowork only | a private GitHub repo, worked from a local clone | Cowork local, on the clone | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. The repo adds backup, history and safe use from more than one computer. |
+| Claude Code | a local folder | Code Desktop local | Runs while the desktop app is open. Exactly one catch-up run for the most recent missed run within 7 days. |
+| Claude Code | a private GitHub repo, worked from a local clone | Code cloud | Runs with the laptop closed. Research preview: fresh clone per run, pushes to `claude/` branches, minimum interval one hour. No documented catch-up: the run ledger and gap detection cover misses. |
+
+On Team and Enterprise plans, Cowork can run sessions in the cloud only if your organization turns on "Run Cowork in the cloud" (Organization settings > Cowork), and a task that needs local files still runs locally. So a folder on your laptop always means routines that need the laptop. For a team rollout, or more than one computer, setup recommends the private repo.
+
+**Missed runs show up instead of vanishing.** Every routine appends one line to `Tracking/Signals/RUN_LEDGER.md` when it finishes. The next morning's briefing checks that ledger before anything else and tells you in plain words what didn't run and what that cost ("the dream didn't run last night, so 4 captures are unfiled"). The dream then files every unfiled capture whatever its date, a recap for a day that never got one is written as a short file marked reconstructed that says what it couldn't sweep, and a routine that runs late says so in its own file. None of that depends on a scheduler promising to catch up.
 
 ![The nightly dream: four things it produces, all landing on your pages with a receipt](docs/assets/workbench-nightly-dream.png)
 
@@ -141,8 +160,8 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:setup` | Onboard, or change your role, tools, hours, delivery or routines. |
 | `/workbench:schedules` | Make your scheduled tasks match the plan. Older look-alikes are paused, not deleted. |
 | `/workbench:migrate` | Upgrade after a plugin update without losing your edits, or adopt an older vault. |
-| `/workbench:librarian` | Get a health report: stale pages, broken links, duplicates, one-sided relationships, missed routines. |
-| `/workbench:capture` | Log what a chat settled. Usually happens on its own. |
+| `/workbench:librarian` | Get a health report across 33 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled. |
+| `/workbench:capture` | Log what a chat settled, from any chat in any surface. Usually happens on its own. |
 | `/workbench:daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |
 | `/workbench:project <name>` | Where a project stands, what's decided, what's owed. |
@@ -159,7 +178,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 
 ## Privacy
 
-The folder holds real names and internal detail on your machine or in your private repo. Calendar copies strip passcodes and show outside guests as a count and domain only. No secrets are ever written. Keep any repo private and never commit credentials.
+The folder holds real names and internal detail on your machine or in your private repo. Setup creates the repo as private and checks before the first push; repo vaults get a `.gitignore` that keeps out Obsidian workspace state, OS files and `.env` files. Never put the folder in OneDrive, Google Drive or iCloud underneath a `.git` folder: sync clients duplicate files instead of merging them. Calendar copies strip passcodes and show outside guests as a count and domain only. No secrets are ever written. Keep any repo private and never commit credentials.
 
 ## Development
 

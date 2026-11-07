@@ -1082,17 +1082,17 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <li><span class="fname">Workbench/</span>
           <ul>
             <li>CLAUDE.md <span class="why">&mdash; the operating contract: folder map, who writes what, conventions</span></li>
-            <li>Context/ <span class="why">&mdash; me.md (how you work) and voice.md (how you write)</span></li>
+            <li>Context/ <span class="why">&mdash; me.md (how you work), voice.md (how you write), surfacing.md (what your briefing always or never raises)</span></li>
             <li>Daily/ <span class="why">&mdash; briefings, recaps, calendar copies, weekly plans</span></li>
             <li>Projects/ <span class="why">&mdash; one page per project, plus INDEX.md</span></li>
             <li>People/ <span class="why">&mdash; one page per person, plus the name-variants table</span></li>
             <li>Organizations/ <span class="why">&mdash; your employer, customers, vendors, partners</span></li>
             <li>Resources/ <span class="why">&mdash; durable reference, Tools/ inside, the glossary</span></li>
-            <li>Tracking/ <span class="why">&mdash; goals, friction, the dream log, improvements</span>
+            <li>Tracking/ <span class="why">&mdash; goals, commitments both ways, friction, the dream log, improvements</span>
               <ul>
                 <li>Captures/ <span class="why">&mdash; what your chats settled, one file a day</span></li>
                 <li>Drafts/ <span class="why">&mdash; every draft you were handed to send</span></li>
-                <li>Signals/ <span class="why">&mdash; what each routine claimed, and how it scored</span></li>
+                <li>Signals/ <span class="why">&mdash; what each routine claimed, how it scored, and the run ledger</span></li>
               </ul>
             </li>
             <li>Meetings/ <span class="why">&mdash; one file per meeting</span> <span class="why" style="color:var(--orange)">&larr; only if your recorder exports notes</span></li>
@@ -1111,7 +1111,18 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
           out when half your pages have one shape and half another.</p>
         <p><strong>One writer per file.</strong> Each routine owns specific files and
           writes nothing else. Your chats write only to Captures and Drafts. Nothing
-          races anything, which is what keeps a synced folder from silently stalling.</p>
+          races anything, which is what keeps a synced folder from silently stalling. The
+          one deliberate exception is the run ledger, where every routine appends a dated
+          line and none edits one.</p>
+        <p><strong>Promises get a register.</strong> COMMITMENTS.md holds every commitment in
+          flight, yours and other people's. The dream adds rows and flags the ones that look
+          done or stale, the briefing asks about overdue ones as questions, and only the
+          weekly closes a row, on evidence.</p>
+        <p><strong>Conflicts become questions.</strong> When two sources disagree, the page
+          gets a Needs reconciling section instead of a guess. The weekly asks you about the
+          oldest three, and your answer supersedes the losing claim without erasing it. New
+          claims carry their evidence and confidence, so <code>/workbench:why</code> can show
+          you where any fact came from.</p>
         <p><strong>Nothing is deleted.</strong> A fact that stops being true is marked
           superseded, with a link to what replaced it, then archived once nothing points
           at it.</p>
@@ -1324,14 +1335,47 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
           never has a gap to climb out of. Your part is one digest a day: read it, answer
           what it asked, and that's the whole of what it needs from you. Your days off
           stay quiet, and your workweek is whatever you told setup.</p>
-        <p><strong>One honest catch: where the routines run.</strong> As desktop scheduled
-          tasks they need your laptop open when they fire, which is why the briefing runs
-          just before work and the dream at the end of the evening. As cloud routines they
-          run with the laptop closed, but the folder has to live in a private GitHub repo.
-          Setup asks which you want.</p>
+        <p><strong>One honest catch: where the routines run.</strong> That follows from two
+          setup answers, which Claude you have and where the folder lives, and setup works
+          it out rather than asking you to pick. A folder on your laptop means routines that
+          need the laptop. Only a private GitHub repo with Claude Code lets them run with the
+          laptop closed. For a team rollout or more than one computer, setup recommends the repo.</p>
+        <p>On Team and Enterprise plans, Cowork runs sessions in the cloud only if your
+          organization turns on "Run Cowork in the cloud" (Organization settings &gt; Cowork),
+          and a task that needs local files still runs locally.</p>
       </div>
       <aside class="margin-note">
-        <span class="hand sm">laptop open,<br>or run it in the cloud</span>
+        <span class="hand sm">where it lives<br>decides when it runs</span>
+      </aside>
+    </div>
+
+    <div class="mem" style="margin-top:30px">
+      <table>
+        <caption class="sr-only">Which runner the routines use, from which Claude you have and where the folder lives, and what each one guarantees.</caption>
+        <thead>
+          <tr><th scope="col">You have</th><th scope="col">The vault lives in</th><th scope="col">Routines run on</th><th scope="col">What's guaranteed</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>Cowork only</b></td><td>a local folder</td><td>Cowork local</td><td>Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs.</td></tr>
+          <tr><td><b>Cowork only</b></td><td>a private GitHub repo, worked from a local clone</td><td>Cowork local, on the clone</td><td>Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. The repo adds backup, history and safe use from more than one computer.</td></tr>
+          <tr><td><b>Claude Code</b></td><td>a local folder</td><td>Code Desktop local</td><td>Runs while the desktop app is open. Exactly one catch-up run for the most recent missed run within 7 days.</td></tr>
+          <tr><td><b>Claude Code</b></td><td>a private GitHub repo, worked from a local clone</td><td>Code cloud</td><td>Runs with the laptop closed. Research preview: fresh clone per run, pushes to <code>claude/</code> branches, minimum interval one hour. No documented catch-up: the run ledger and gap detection cover misses.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note-row" style="margin-top:26px">
+      <div class="body">
+        <p><strong>Missed runs show up instead of vanishing.</strong> Every routine appends
+          one line to a run ledger when it finishes. The next briefing checks it before
+          anything else and says in plain words what didn't run and what that cost: "the
+          dream didn't run last night, so 4 captures are unfiled." The dream then files every
+          unfiled capture whatever its date, a day with no recap gets a short file marked
+          reconstructed that lists what it couldn't sweep, and a late run says so in its own
+          file. None of it depends on a scheduler promising to catch up.</p>
+      </div>
+      <aside class="margin-note">
+        <span class="hand sm">a missing line<br>is a missed run</span>
       </aside>
     </div>
   </section>
@@ -1554,8 +1598,8 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag demand">Fires while you chat</span>
         <h4>Capture</h4>
-        <p><b>What it does.</b> Logs what a chat settled, one line each, and saves drafts
-          you were handed to send.</p>
+        <p><b>What it does.</b> Logs what a chat settled, one line each, from any chat in
+          any surface, and saves drafts you were handed to send.</p>
         <p><b>How you use it.</b> It happens on its own. Say "remember this" or "log that
           decision" to make sure.</p>
         <p><b>What it writes.</b> Today's capture file and the drafts folder. Nothing else.</p>
@@ -1563,8 +1607,9 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag once">Ask for it</span>
         <h4>Librarian</h4>
-        <p><b>What it does.</b> Audits the folder: stale pages, dead links, duplicates,
-          one-sided relationships, routines that didn't run, two versions of the same fact.</p>
+        <p><b>What it does.</b> Audits the folder across 33 checks: stale pages, dead links,
+          duplicates, one-sided relationships, routines missing from the run ledger, a
+          malformed commitments register, conflicts left unreconciled.</p>
         <p><b>How you use it.</b> "Run the librarian" or "audit my folder".</p>
         <p><b>What it writes.</b> A report. Nothing until you approve a fix.</p>
       </div>
@@ -1599,6 +1644,7 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
       <li><code>"where are we on the Acme rollout?"</code> &nbsp;status, decisions, and what's owed, off the project page</li>
       <li><code>"remember this..."</code> &nbsp;captures a fact, decision or correction for tonight's dream</li>
       <li><code>"run the librarian"</code> &nbsp;audits the folder and hands you a fix per finding</li>
+      <li><code>"why do you think the pilot starts in January?"</code> &nbsp;runs <code>/workbench:why</code>: the evidence, confidence, and what that fact replaced</li>
       <li><code>"1 yes, 2 it's Jo Tan"</code> &nbsp;answers this morning's digest questions</li>
     </ul>
 
