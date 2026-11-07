@@ -5,6 +5,8 @@
 > the line into the project's instructions. From now on, start your work in that project. One
 > project, one memory: every chat there reads the same vault and feeds the same routines.
 > `/workbench:setup` regenerates this file when your details change; paste it again when it does.
+> Setup keeps only the blocks below that apply to you (where you work, whether the vault is a git
+> repository), so what you paste is already trimmed.
 
 ---
 
@@ -75,6 +77,20 @@ Bare wikilinks only, like [[Pat Lee]], never path-style.
 Deliverables (docs, decks, code) go wherever I say, never inside the vault; a project page can
 point at them with `artifacts:`.
 
+<!-- workbench:cowork-only -->
+WHERE THIS WORKS
+Claude on the web and on my phone is for reviewing, chatting, and answering the digest's
+questions. The workbench folder is worked from the Claude desktop app. Captures can be dictated
+from any chat in this project; if a chat can't reach the folder, give me the capture lines to
+paste instead of pretending they were saved.
+
+<!-- /workbench:cowork-only -->
+<!-- workbench:repo-vault -->
+GIT
+This workbench is a git repository. Cloud routine runs push to `claude/` branches. Pull and merge
+those branches before the first briefing of the day reads the vault. Never force-push.
+
+<!-- /workbench:repo-vault -->
 TOOLS
 Only use tools that `Context/me.md` marks reachable. If something needs a tool that isn't
 connected, say which one. Read freely; send, post or change anything in another tool only when I

@@ -11,7 +11,7 @@ a record.
 
 **You own exactly two files per run:** `Daily/<today>_CALENDAR.md` and
 `Daily/<next workday>_CALENDAR.md`. Never touch an earlier date: a past day is frozen at its last
-sync. Never write anything else.
+sync. Never write anything else, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`.
 
 ## Steps
 
@@ -25,6 +25,17 @@ sync. Never write anything else.
    sync`, append one dated line per moved, added or cancelled event
    (`- 11:32 moved: Pipeline review 14:00 → 15:30`). Never remove earlier change lines.
 4. Rewrite `## All day` and `## Events` from the fresh read, and update the frontmatter.
+5. Append this run's line to `Tracking/Signals/RUN_LEDGER.md` (format below). A failed read in
+   step 2 still appends a line, with status `failed`, before stopping.
+
+## Run ledger
+
+When you finish, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and
+never edit or delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. It's the one file with more than one writer (see the root `CLAUDE.md`).
+
+```
+- YYYY-MM-DD HH:MM | calendar-sync | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
 
 ## Privacy rules
 

@@ -17,27 +17,68 @@ text) and `prompt`. The prompt is deliberately short: it invokes the plugin skil
 `.workbench/routines/` as a fallback, so upgrading the plugin upgrades the routines without
 touching the schedule.
 
-## 1. Pick where routines run
+## 1. Pick the runner
 
-The routines need to read and write the workbench folder, so where they run matters. Find out
-what this session can schedule:
+The routines need to read and write the workbench folder, so where they run decides what's
+guaranteed. The runner follows from two facts in `.workbench/profile.json`: which surface the owner
+has (`surface`: `cowork` or `code`) and where the vault lives (`vault_home`: `local` or `repo`).
+Setup records both. Don't ask the owner to pick a runner; derive it:
 
-| Option | How to tell you have it | Fits when |
-|---|---|---|
-| **Desktop scheduled tasks** (Cowork / Claude desktop) | a scheduled-tasks tool: list / create / update | The workbench is a local folder. The computer must be on and the app running at those times; missed runs fire when it wakes. |
-| **Cloud routines** (claude.ai/code) | a tool that creates triggers or routines in the cloud | The workbench is a **private GitHub repo**. Each run clones it, writes, commits, pushes. Runs even when the laptop is closed. |
+| You have | The vault lives in | Routines run on | What's guaranteed |
+|---|---|---|---|
+| Cowork only | a local folder | Cowork local | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. |
+| Cowork only | a private GitHub repo, worked from a local clone | Cowork local, on the clone | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. The repo adds backup, history and safe use from more than one computer. |
+| Claude Code | a local folder | Code Desktop local | Runs while the desktop app is open. Exactly one catch-up run for the most recent missed run within 7 days. |
+| Claude Code | a private GitHub repo, worked from a local clone | Code cloud | Runs with the laptop closed. Research preview: fresh clone per run, pushes to `claude/` branches, minimum interval one hour. No documented catch-up: the run ledger and gap detection cover misses. |
 
-If both exist, ask which they want and explain the tradeoff in one line each. A session-only cron
-(one that dies when the chat closes) is **not** a scheduler for this; don't use it.
+Store the result as `runner` in the profile (`cowork-local`, `code-desktop`, `code-cloud`).
 
-For cloud routines, add this to the end of each prompt: "The workbench is the repository
-`<owner/repo>`. Pull first. When done, commit only the files this routine owns with message
-`<routine-id>: YYYY-MM-DD`, push to the default branch, and if the push is rejected, pull with
-rebase and push again. Never force-push."
+**Runner 1, Cowork local** (Cowork-only users). Scheduled tasks in Cowork, against the local vault
+folder (or the local clone of a repo vault). They run only while the computer is on and the
+desktop app is open. A task that needs local files runs locally even where Cowork can run tasks in
+the cloud. Anthropic documents no catch-up, retry or failure notice for this case, so recovery is
+built into the routines: each one appends to `Tracking/Signals/RUN_LEDGER.md`, the briefing names
+any routine missing from it, the dream files every unprocessed capture whatever its date, and the
+recap writes a reconstructed file for a missed day.
 
-If neither exists, write the table from `schedules.json` into your reply and tell them how to
-create the tasks by hand in the Claude desktop app (the Scheduled section) with each prompt.
-Stop there.
+**Runner 2, Code Desktop local** (Code users, local vault). Scheduled tasks in the Claude Code
+desktop app. Documented behavior: on wake or app start, exactly one catch-up run for the most
+recent missed run within 7 days; older misses are skipped and listed in the task's History. The
+run ledger still records every run, so the briefing can tell a catch-up from a skip.
+
+**Runner 3, Code cloud** (Code users, repo vault). Cloud scheduled tasks against the private
+GitHub repo. A research preview. Each run starts from a fresh clone, can push only to `claude/`
+branches, and the minimum interval is one hour. No catch-up and no automatic retry are documented.
+Add this to the end of each prompt:
+
+"The workbench is the repository `<owner/repo>`. Before reading anything, fetch and merge every
+unmerged `claude/workbench-*` branch into your working copy, so you see the earlier runs' work;
+if a merge conflicts, stop, append a `failed` line to the run ledger naming the branches, and
+push nothing else. When done, commit only the files this routine owns, with message
+`<routine-id>: YYYY-MM-DD`, and push to the branch `claude/workbench-<routine-id>-YYYY-MM-DD`.
+Never force-push."
+
+The owner's side is one ritual: **the first local session of the day pulls and merges the
+`claude/` branches before the briefing reads the vault** (or the owner merges the newest one in
+one click on GitHub; each branch already contains the earlier ones). Because each routine commits
+only files it owns, merges conflict only where git can show it. If cloud tasks are unavailable or
+switched off for the account, fall back to Runner 2 against the local clone; never run both for the
+same routine.
+
+**Plan notes.** On Team and Enterprise plans, Cowork sessions run in the cloud only if the
+organization turns on "Run Cowork in the cloud" (Organization settings > Cowork), and even then a
+task that requires local files runs locally. On personal plans there's no location choice. Either
+way, a workbench in a local folder runs locally.
+
+**What isn't a scheduler.** A session-only cron (one that dies when the chat closes) is not a
+scheduler for this; don't use it. If the tools for the derived runner aren't in this session
+(for example, Cowork-only and you're in a plain chat), write the table from `schedules.json` into
+your reply and tell them how to create the tasks by hand in the Claude desktop app (the Scheduled
+section) with each prompt. Stop there.
+
+**Duplicates across surfaces.** The same routine can exist on more than one surface (a Cowork task
+and a Code Desktop task, or a desktop task and a cloud task). Inventory every surface you can see
+in step 2, and keep exactly one per routine, on the derived runner.
 
 ## 2. Inventory what exists
 

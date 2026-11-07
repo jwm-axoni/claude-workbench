@@ -29,11 +29,27 @@ anything outside the vault.
 | `Context/voice.md` | `## Learned rules (dream)` |
 | `Tracking/GOALS.md` | `## Current state (dream)` |
 | `Tracking/FRICTION_LOG.md` | entries under `## Open` and `## Resolved` |
+| `Tracking/COMMITMENTS.md` | new rows; `Due`, `Who owes`, `Last evidence` and `State` on existing rows. `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on evidence. Never delete or close a row yourself. |
+| `Context/surfacing.md` | learned rules, appended as dated lines; marking a line `(superseded YYYY-MM-DD)`. You append learned rules; the owner edits it directly. |
+| `Tracking/Signals/RUN_LEDGER.md` | one appended line when you finish. Every routine appends here and none edits or deletes a line; it's the one documented exception to one writer per file. |
 
 Never write any `CLAUDE.md`, any `Daily/` file, any `Meetings/` file, anything in `Captures/`, or
 anything in `Archive/`. Never delete. Never move files (the weekly does that). If the root
 `CLAUDE.md` lists a **standing exception** for you, it applies; otherwise these limits are absolute.
 Whenever you write to a page, bump its `updated:` to today.
+
+## Step 0: gap recovery
+
+Before anything else, scan **every** file in `Tracking/Captures/`, whatever its date, and list each
+capture line not yet recorded under `## Processed captures` in `Tracking/DREAM_LOG.md`. File all of
+them in this run, oldest first, along with tonight's. A night the dream didn't run must never
+strand a capture: the next run picks up everything.
+
+Also read `Tracking/Signals/RUN_LEDGER.md` for your own last line. If one or more nights were
+missed, say so in the log entry (`**Backlog:** 2 missed nights, 7 captures from 11-05 and 11-06
+filed tonight`).
+
+Step 0 runs even when tonight's recap is missing (see Inputs): filing captures doesn't depend on it.
 
 ## Inputs
 
@@ -41,8 +57,15 @@ Whenever you write to a page, bump its `updated:` to today.
 2. The confidence bar: the newest `Tracking/Signals/*_weekly.md` "Thresholds in force" table if one
    exists, otherwise the defaults in `DREAM_LOG.md` (status 0.70 · commitment 0.80 ·
    decision/person/term 0.90).
-3. Today's `Daily/<date>_DAILY_RECAP.md`. If it's missing, write a DREAM_LOG entry saying so, add a
-   FRICTION_LOG `## Open` line ("recap missing for <date>"), and stop. Don't rebuild the day yourself.
+3. Today's `Daily/<date>_DAILY_RECAP.md`. If it's missing, finish Step 0 (file the backlog
+   captures), write a DREAM_LOG entry saying so, add a FRICTION_LOG `## Open` line ("recap missing
+   for <date>"), append your ledger line as `partial`, and stop. Don't rebuild the day yourself.
+3b. Every `Daily/*_RECONSTRUCTED_RECAP.md`, whatever its date, not yet listed under
+   `## Processed captures` in `DREAM_LOG.md`. The recap writes these for a missed day, usually the
+   evening after, so tonight's may cover yesterday. File them like a recap, before today's, but
+   only what they state, and mark everything you file from one `source: reconstructed recap`.
+   Then list each under `## Processed captures` (see Outputs) so it's never filed twice. Do this
+   even when today's recap is missing.
 4. `Tracking/Signals/<date>_recap.md`: graded claims, graded drafts, answers to the digest, corrections.
 5. Every `Tracking/Captures/*.md` file with lines not yet listed under `## Processed captures`.
 6. If `Meetings/` exists, today's meeting files above `## Transcript` only, to cross-check the
@@ -53,11 +76,23 @@ Whenever you write to a page, bump its `updated:` to today.
 8. For drafts graded `light-edit` or `heavy-edit`: the draft file in `Tracking/Drafts/`, and the
    recap's note of what changed.
 9. `Tracking/IMPROVEMENTS.md` `## Open`, so you don't re-propose what's already pending or declined.
+10. `Tracking/COMMITMENTS.md`, `Archive/Superseded/COMMITMENTS ledger.md` if it exists (closed rows,
+    for the duplicate check only), and `Context/surfacing.md`.
+11. The newest `Daily/*_NEXT_WEEK_PLAN.md`, for contradiction-queue questions, and any answers to
+    them (captures or digest replies like "reconcile 2: the March date is right").
 
 ## What to do
 
 **a. Apply answers.** Ticked items: write them. Deleted items: drop them and don't propose them
 again for 30 days.
+
+**Contradiction-queue answers.** When the owner answers one of the weekly's numbered reconcile
+questions, file the answer as a supersession on each affected page: the winning claim stays
+`live`, the losing claim is demoted to `superseded` with a forward link to the winner and the
+answer as its source (`source: answer 2026-11-09 reconcile 2`). Keep the losing claim's history;
+nothing is deleted. Then remove that conflict from the page's `## Needs reconciling` section, and
+drop the section when it's empty. This is the one edit you make to a `## Needs reconciling`
+section other than adding to it.
 
 **b. File the day.** For each line in the recap and each unprocessed capture line:
 - Decision → the project's `## Decisions` ledger (`source`, `since`, `state: live`). If it reverses
@@ -96,6 +131,40 @@ project and tool touched tonight, follow **Relationships** in the root `CLAUDE.m
   `former_*` with the end date; never just deleted.
 - Record edge counts in the log entry: `Relationships: +6 edges, 1 moved to former`.
 
+**b3. Contradictions.** When two sources disagree about the same thing (two dates, two owners, two
+figures), add both to a `## Needs reconciling` section on the page, each with its source and the
+date you added it (`added: YYYY-MM-DD`). Never pick one. The weekly queues these for the owner.
+
+**b4. Commitments maintenance.** After the contradiction pass, scan tonight's recap (both `### Owed by` and `### Owed to`, since
+**Owed to** lines reach no page otherwise), any reconstructed recaps filed this run (3b), the pages
+you touched tonight, and today's captures (plus any backlog captures from Step 0) for commitment language: promises,
+deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
+
+- **Below the bar**: a candidate under the commitment confidence bar (the same bar as step b) is
+  not a row. It stays a **Needs your yes** item, and becomes a row only once the owner approves it
+  (ticked, or an `answer:` capture). The register holds confirmed commitments only.
+- **New** commitment, at or above the bar: add a row to `Tracking/COMMITMENTS.md`: `Commitment` in plain words,
+  `Who owes` (`me`, a person's name, or `them:<name>` when someone else owes the owner), `Due`
+  (`none` if no date was given; never guess), `Source` (the page or capture), `State: open`,
+  `Last evidence` set to the date of the newest dated mention in the sources, never the date
+  you're filing it (a backlog capture from two weeks ago gives a two-week-old date, so an overdue
+  promise still surfaces). Skip it if a row for the same commitment already exists, **or if it was
+  already closed**: check `Archive/Superseded/COMMITMENTS ledger.md` (the weekly's closed rows; read
+  it for this check only) and skip anything ticked `- [x]` on its page. A closed commitment comes
+  back only when a newer source than its closure date makes a genuinely new promise.
+- **Changed**: when a capture or recap line states a new deadline or a new owner for an existing
+  row ("pushed the Q4 draft to the 15th", "Sam's taking over the MSA review"), update `Due` or
+  `Who owes` and keep the old value in `Source` with its provenance
+  (`capture 11-03; due 11-05→11-15: capture 11-07`). Only on a stated change, never on a guess. A
+  `looks-stale` row whose new date is in the future goes back to `open`.
+- **Mentioned tonight**: set its `Last evidence` to the date of the newest mention (the source's date, not tonight's).
+- **Past due, no evidence in 7 or more days**: set `State` to `looks-stale`.
+- **A page tonight shows it done** (sent mail, a ticked item, a recap line): set `State` to
+  `looks-done` and put the evidence in `Source` alongside the original (`capture 11-03; done: recap 11-07`).
+
+You never delete a row and never close one. Closure is the weekly's job, on evidence. Record the
+counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 rescheduled, 1 looks-done, 1 looks-stale`.
+
 **c. Learn.** This is how the workbench improves itself:
 - Every `correction:` capture and every correction in the recap Signals becomes a rule. Writing
   preferences → `## Learned rules (dream)` in `Context/voice.md`. How-they-work facts →
@@ -108,6 +177,13 @@ project and tool touched tonight, follow **Relationships** in the root `CLAUDE.m
   edit is an anecdote; write a rule into `## Learned rules (dream)` in `Context/voice.md` only when
   the same change shows up in two or more drafts, citing them. If a learned rule is contradicted by
   later edits, demote it to `superseded`. `verbatim` drafts are evidence a rule works; note them.
+- **Surfacing rules.** Same machinery as voice rules, different target. When the owner says a
+  topic should always or never be in the briefing, says when not to be bothered, or corrects a
+  briefing's shape for a topic ("put the numbers first for pipeline"), append the rule to the
+  right section of `Context/surfacing.md` as a dated line with its source, marked `pending`. When
+  the same signal shows up a second time, drop `pending`: the rule is standing and the briefing
+  follows it. A rule the owner later contradicts is marked `(superseded YYYY-MM-DD)` and the new
+  one goes below it. Never delete a line, and never touch lines the owner wrote.
 - **Questions answered or ignored.** Act on answers. If questions keep going unanswered for a week,
   that's friction: log it, and ask fewer, sharper questions.
 - **Proposals.** Notice repeated manual work (the same kind of task three times in two weeks),
@@ -152,7 +228,19 @@ the cap becomes a question for tomorrow's briefing.
 - none
 ```
 
-Then append under `## Processed captures`: `- YYYY-MM-DD.md · N lines · filed YYYY-MM-DD`.
+Then append under `## Processed captures`: `- YYYY-MM-DD.md · N lines · filed YYYY-MM-DD`, one line
+per capture file you filed from, backlog files included, and
+`- YYYY-MM-DD_RECONSTRUCTED_RECAP.md · reconstructed recap · filed YYYY-MM-DD` for each
+reconstructed recap you filed.
+
+**`Tracking/Signals/RUN_LEDGER.md`**: last of all, append exactly one line to the bottom, and never
+edit or delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. Say how many backlog captures you filed:
+
+```
+- YYYY-MM-DD HH:MM | nightly-dream | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
+
+Example: `- 2026-11-07 22:14 | nightly-dream | ok | wrote: DREAM_LOG.md, 2026-11-07_dream.md, COMMITMENTS.md, Acme Expansion.md | gaps: none; backlog: 3 captures from 11-06 filed`
 
 **`Tracking/Signals/<today>_dream.md`**: what you claimed tonight, for future grading:
 
@@ -177,7 +265,7 @@ routine: nightly-dream
 ## Quality bar
 
 - Everything you write traces to a recap line, capture line or meeting file, and says which.
-- When two sources disagree, add a `## Needs reconciling` section to the page with both, not a pick.
+- When two sources disagree, add a `## Needs reconciling` section to the page with both, not a pick (b3).
 - Position on a page follows state (live above superseded), not recency of writing.
 - Keep `Recent (dream)` and `Current state (dream)` blocks short: five lines or fewer, newest first.
 - Report-only is fine: on the first three nights of a new workbench, or if anything looks off

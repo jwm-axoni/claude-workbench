@@ -9,6 +9,11 @@ One file per meeting, exported from {{meetings_source}}. This folder is the reco
 said, decided and assigned. It is **append-only and machine-written**: don't hand-edit a file
 here; the next export may overwrite it, and the fix belongs on the project page anyway.
 
+**{{meetings_source}} owns this folder; the workbench only reads it.** No routine writes, moves or
+archives a file here, whatever its age. The routines read only recent files, and what matters in a
+meeting (decisions, next steps) is lifted onto project and people pages by the recap and the
+dream, so old files cost nothing.
+
 ## The rule that matters most
 
 **Read only what is above the `## Transcript` marker** (or the export's equivalent). Summaries,

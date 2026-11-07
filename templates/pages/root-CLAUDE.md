@@ -23,7 +23,7 @@ and the routines keep it current so {{preferred_name}} doesn't have to.
 | `People/` | One page per person | Someone recurs enough to be worth tracking |
 | `Organizations/` | Live relationships: employer, customers, vendors, partners | An org generates ongoing decisions |
 | `Resources/` | Durable reference, `Tools/` nested, `GLOSSARY.md` | Knowledge that outlives one project |
-| `Tracking/` | Goals, friction, the dream log; `Captures/` and `Signals/` nested | Something is tracked over time |{{meetings_row}}
+| `Tracking/` | Goals, commitments, friction, the dream log; `Captures/` and `Signals/` nested | Something is tracked over time |{{meetings_row}}
 | `Archive/` | Closed chapters, read-only | Only the weekly moves things here |
 
 Each folder has its own `CLAUDE.md` with the schema and a copyable page shape for pages
@@ -51,6 +51,22 @@ writer per file** is the rule most worth respecting: two writers racing one file
 conflicts, and if the vault syncs through git a conflict can silently halt the sync.
 
 {{routine_table}}
+
+**Three files with more than one writer, each on purpose:**
+
+- **`Tracking/Signals/RUN_LEDGER.md` is the one exception to one writer per file.** Every routine
+  appends one line when it finishes, and none edits or deletes a line. The librarian reads it.
+  It's safe because every write is a new dated line at the bottom, never an edit, so two routines
+  can't overwrite each other. A missing line is how a missed run becomes visible.
+- **`Tracking/COMMITMENTS.md`**: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
+  `weekly-review` alone removes rows, closing `looks-done` rows on evidence. The two never touch
+  the same cell: the dream never deletes or closes, the weekly never adds.
+- **`Context/surfacing.md`**: `nightly-dream` appends learned rules; {{preferred_name}} edits it
+  directly. Same split as `voice.md`.
+
+Any routine may run late, twice, or after a gap, and must still leave the vault correct. That's
+why each one opens by checking the run ledger for what's missing, and why a routine that runs
+late says so in its file.
 
 **The Claude project → `Tracking/Captures/YYYY-MM-DD.md` and `Tracking/Drafts/`, and nothing
 else.** Chats in the project are invisible to the routines, so each time a chat settles a
@@ -190,6 +206,24 @@ Any routine that writes to a page bumps that page's `updated:` in the same chang
    {{preferred_name}} asks in that session. Routines read; they don't act. The one standing
    exception is the briefing digest to the owner, below.
 {{guardrails_rules}}
+
+## How memory works
+
+The folders are layers of memory, from what was said an hour ago to what's true for good. Each
+layer has one way in and a stated rule for how long it stays live. Nothing is deleted from any of
+them; old material either stays where it is as history or moves to `Archive/` on a rule below.
+
+| Layer | Where | Holds | Stays live | What moves it |
+|---|---|---|---|---|
+| Working memory | `Tracking/Captures/` | what chats settled today | until the dream files it, normally that night | the dream files each line; the capture file stays as the record |
+| Diary | `Daily/` | what happened on each date: briefings, recaps, calendar copies, weekly plans | routines read the last two weeks | nothing; a past day is frozen and kept as history |
+| Long-term | `People/`, `Projects/`, `Organizations/`, `Resources/`, `Context/`, `Tracking/GOALS.md`, `Tracking/COMMITMENTS.md` | the current truth about people, work and how {{preferred_name}} operates | as long as it's true | the weekly's archive rules (below); a page nobody has mentioned in 90 days is flagged `dormant` by the librarian, never moved |
+| Measurement | `Tracking/Signals/`, `Tracking/Drafts/` | what each routine claimed, how it scored, drafts and their grades | the weekly reads the last four weeks | nothing; append-only |{{meetings_memory_row}}
+| Cold storage | `Archive/` | closed chapters | read only when the question is historical | only the weekly moves files in |
+
+The top of each long-term page is kept current by state, not by hand: `live` entries sit above
+`superseded` ones, and `(dream)` blocks hold five lines or fewer, newest first. Nothing is archived
+by age alone; it has to be superseded, shipped, or former first.
 
 ## Archive policy
 

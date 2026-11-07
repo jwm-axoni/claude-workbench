@@ -9,8 +9,9 @@ The recap is **the record of the day**. Every source reaches the vault through i
 the weekly read it instead of forming their own picture, so two routines never describe the same
 day differently. Completeness and provenance matter more here than polish.
 
-**You own two files:** `Daily/<today>_DAILY_RECAP.md` and `Tracking/Signals/<today>_recap.md`.
-Nothing else.
+**You own two files:** `Daily/<today>_DAILY_RECAP.md` and `Tracking/Signals/<today>_recap.md`,
+plus `Daily/<date>_RECONSTRUCTED_RECAP.md` for a workday whose recap never ran (see below). Nothing
+else, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`.
 
 ## Read first
 
@@ -18,12 +19,31 @@ Root `CLAUDE.md`, `Context/me.md`, `People/NAME_VARIANTS.md`, `Resources/GLOSSAR
 `Daily/<today>_MORNING_BRIEFING.md` (including intraday updates) and `_CALENDAR.md` if present.
 Then `Tracking/Captures/<today>.md` if it exists: the owner's project chats from today.
 
+## Source order (binding)
+
+Read in this order, and let the earlier source win when it already settles something:
+
+1. **Today's captures** (`Tracking/Captures/<today>.md`), first. Cite the capture for any claim it
+   supports (`source: capture 14:20`). A settled fact that's already in a capture is never
+   re-derived from scratch from email or chat; the capture is the owner's own account of it.
+2. **Calendar events**: what actually happened, from today's calendar file or the connector.
+3. **Meeting notes**: files in `Meetings/` if it exists, or, when `.workbench/profile.json` has
+   `meetings_via: connector`, today's meetings through the recorder's connector (summary,
+   decisions and next steps only; never pull a transcript).
+4. **Project and people pages**, for what was already known going in.
+5. **Git activity**, if the vault is a git repository: commits made today, including cloud
+   routine branches.
+
+The live sweep below fills in what those don't cover.
+
 ## Sweep the sources
 
 Every tool `Context/me.md` marks reachable, for the whole workday, in the role pack's order:
 calendar (what actually happened, not what was planned), email (received **and sent**: sent items
 are how you learn what the owner did), chat DMs, mentions and key channels, tickets and tasks,
-CRM or other role sources, code host, docs edited. If `Meetings/` exists, every meeting file dated
+CRM or other role sources, code host, docs edited. If meetings come through the recorder's connector, read today's
+meetings there the same way: summary, decisions, next steps, cited as `source: <tool> meeting
+<title> HH:MM`. If `Meetings/` exists, every meeting file dated
 today, **above the `## Transcript` marker only**, plus their `Next Steps` and `Decisions` lines.
 
 Skip personal email and personal meetings entirely. Skip anything in "Calendar blocks that never
@@ -43,13 +63,13 @@ source: claude-routine
 # Daily recap — YYYY-MM-DD (Weekday)
 
 ## Decisions made today
-- Moved the Acme pilot to January — decided by [[Pat Lee]] `source: email 14:02` `date: YYYY-MM-DD`
+- Moved the Acme pilot to January — decided by [[Pat Lee]] `source: email 14:02` `date: YYYY-MM-DD` `evidence: "let's move the pilot to January"` `confidence: 0.95`
 
 ## Commitments
 ### Owed by {owner}
-- [ ] Send revised pricing — to [[Sam Ortiz]], by Fri `source: meeting 2026-…-acme-sync` `date: …`
+- [ ] Send revised pricing — to [[Sam Ortiz]], by Fri `source: meeting 2026-…-acme-sync` `date: …` `evidence: "I'll send revised pricing by Friday"` `confidence: 0.90`
 ### Owed to {owner}
-- [ ] Legal review of MSA — [[Dana Kim]], no date `source: chat DM 11:40` `date: …`
+- [ ] Legal review of MSA — [[Dana Kim]], no date `source: chat DM 11:40` `date: …` `evidence: [[Acme MSA]] Open commitments (mine)/line 2` `confidence: 0.80`
 
 ## What happened
 Grouped by project or relationship, each line with `source:` and `date:`. People, orgs, projects
@@ -70,7 +90,10 @@ Sources unreachable or skipped, and anything ambiguous the dream should know abo
 
 Every line under Decisions, Commitments and What happened carries `source:` (which tool, which
 message/meeting/time) and `date:`. A line without provenance can't be filed by the dream, so it's a
-bug. Don't merge two sources' versions of an event into one claim; if they disagree, write both and
+bug. Every new line there also carries its lineage: `evidence:`, a verbatim quote of 25 words or
+fewer in double quotes or a page reference in the form `[[Page]] section/line`, and `confidence:`,
+the same 0–1 grade the briefing's claims use. Lines written before v0.2.0 don't have them; leave
+those as they are. Don't merge two sources' versions of an event into one claim; if they disagree, write both and
 say they disagree.
 
 ## Grade the briefing
@@ -139,3 +162,56 @@ answer to a numbered question goes under `## Answers` in the Signals file:
 
 Append an `## Update — HH:MM` section with only what's new since; don't rewrite. Same for the
 Signals file.
+
+## Late runs
+
+If you run more than 2 hours after the scheduled time, add `late: true` and `scheduled: HH:MM` to
+the frontmatter and say so under the title: "_Ran at 23:05, scheduled 18:00. Sources read up to
+23:05._" Never present a late recap as if it ran on time.
+
+## A missed day: the reconstructed recap
+
+Check the previous workday. If it has no `Daily/<that date>_DAILY_RECAP.md` and no
+`_RECONSTRUCTED_RECAP.md` yet, it has no record, whatever `Tracking/Signals/RUN_LEDGER.md` says:
+no `eod-recap` line at all, or a `failed` line from a run that died before writing its file. Cover
+that day in a **separate, short file**, `Daily/<that date>_RECONSTRUCTED_RECAP.md`, before writing
+today's. A ledger line is never proof the day was recorded; only the file is.
+
+```markdown
+---
+type: daily-recap
+date: YYYY-MM-DD
+tags: [daily, recap]
+status: reconstructed
+source: claude-routine
+reconstructed_on: YYYY-MM-DD
+---
+
+# Reconstructed recap — YYYY-MM-DD (Weekday)
+
+_Reconstructed on YYYY-MM-DD because this day's recap didn't run. Not a full record._
+
+## Could not be swept
+- Chat history for that day isn't reachable now
+- No calendar history: only the copy in `Daily/YYYY-MM-DD_CALENDAR.md`, last synced HH:MM
+
+## Decisions made / Commitments / What happened
+Only what the sources still show, same line shape as a normal recap (`source:`, `date:`,
+`evidence:`, `confidence:`).
+```
+
+List every source you couldn't sweep for that date, honestly. Don't grade that day's briefing
+(nobody can tell now what was kept). Never present it as a normal recap, and never reconstruct
+more than the one previous workday; older gaps go under Notes in today's recap as days with no
+record.
+
+## Finish: the run ledger
+
+Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
+delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it:
+
+```
+- YYYY-MM-DD HH:MM | eod-recap | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
+
+Name the reconstructed file under `wrote:` when you wrote one, and the missed day under `gaps:`.

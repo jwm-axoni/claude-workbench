@@ -7,7 +7,7 @@
       "name": "workbench",
       "source": "./",
       "description": "Onboarding, folder structure, CLAUDE.md files, scheduled jobs, Librarian, and a self-improvement loop for your personal workbench.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

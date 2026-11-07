@@ -22,6 +22,7 @@
     { "path": "README.md",                          "template": "pages/README.md" },
     { "path": "Context/me.md",                      "template": "pages/me.md",               "user_owned": true },
     { "path": "Context/voice.md",                   "template": "pages/voice.md",            "user_owned": true },
+    { "path": "Context/surfacing.md",               "template": "pages/surfacing.md",        "user_owned": true, "on_collision": "conflict" },
     { "path": "People/NAME_VARIANTS.md",            "template": "pages/NAME_VARIANTS.md",    "user_owned": true },
     { "path": "People/{{name}}.md",                 "template": "pages/person-self.md",      "user_owned": true },
     { "path": "People/{{manager}}.md",              "template": "pages/person-manager.md",   "user_owned": true, "when": "manager" },
@@ -35,6 +36,9 @@
     { "path": "Tracking/Signals/README.md",         "template": "pages/Signals-README.md" },
     { "path": "Tracking/Drafts/README.md",          "template": "pages/Drafts-README.md" },
     { "path": "Tracking/IMPROVEMENTS.md",           "template": "pages/IMPROVEMENTS.md",     "user_owned": true },
+    { "path": "Tracking/COMMITMENTS.md",            "template": "pages/COMMITMENTS.md",      "user_owned": true, "on_collision": "conflict" },
+    { "path": "Tracking/Signals/RUN_LEDGER.md",     "template": "pages/RUN_LEDGER.md",       "user_owned": true, "on_collision": "conflict" },
+    { "path": ".gitignore",                         "template": "repo/gitignore",            "user_owned": true, "on_collision": "conflict", "when": "repo" },
     { "path": ".obsidian/app.json",                 "template": "obsidian/app.json",         "user_owned": true, "when": "obsidian" },
     { "path": ".obsidian/graph.json",               "template": "obsidian/graph.json",       "user_owned": true, "when": "obsidian" },
     { "path": ".workbench/PROJECT_INSTRUCTIONS.md", "template": "pages/PROJECT_INSTRUCTIONS.md" }
@@ -46,7 +50,7 @@
       "skill": "calendar-sync",
       "when": "workdays at {{cal_times}}",
       "cron": "{{cal_minute}} {{cal_hours}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_CALENDAR.md (today and the next workday)"
+      "writes": "Daily/YYYY-MM-DD_CALENDAR.md (today and the next workday); appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "daily-briefing",
@@ -54,7 +58,7 @@
       "skill": "daily-briefing",
       "when": "workdays at {{brief_time}}",
       "cron": "{{brief_minute}} {{brief_hour}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends the digest to the owner only, by their chosen channel"
+      "writes": "Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends the digest to the owner only, by their chosen channel; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "midday-update",
@@ -63,7 +67,7 @@
       "mode": "midday",
       "when": "workdays at {{midday_time}}",
       "cron": "{{midday_minute}} {{midday_hour}} * * {{workdays_cron}}",
-      "writes": "appends to Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends a short update to the owner only if something changed"
+      "writes": "appends to Daily/YYYY-MM-DD_MORNING_BRIEFING.md; sends a short update to the owner only if something changed; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "eod-recap",
@@ -71,7 +75,7 @@
       "skill": "eod-recap",
       "when": "workdays at {{recap_time}}",
       "cron": "{{recap_minute}} {{recap_hour}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md, Tracking/Signals/YYYY-MM-DD_recap.md (briefing claims and drafts graded)"
+      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md (plus Daily/YYYY-MM-DD_RECONSTRUCTED_RECAP.md for a missed day), Tracking/Signals/YYYY-MM-DD_recap.md (briefing claims and drafts graded); appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "nightly-dream",
@@ -79,7 +83,7 @@
       "skill": "nightly-dream",
       "when": "workday nights at {{dream_time}}",
       "cron": "{{dream_minute}} {{dream_hour}} * * {{workdays_cron}}",
-      "writes": "named (dream) blocks and ledgers on pages; Tracking/DREAM_LOG.md; Tracking/Signals/YYYY-MM-DD_dream.md"
+      "writes": "named (dream) blocks and ledgers on pages; Tracking/DREAM_LOG.md; Tracking/Signals/YYYY-MM-DD_dream.md; Tracking/COMMITMENTS.md (adds rows, updates Due, Who owes, Last evidence and State); learned rules in Context/surfacing.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "weekly",
@@ -87,7 +91,7 @@
       "skill": "weekly-review",
       "when": "first workday at {{weekly_time}}",
       "cron": "{{weekly_minute}} {{weekly_hour}} * * {{first_workday_cron}}",
-      "writes": "Daily/YYYY-MM-DD_NEXT_WEEK_PLAN.md, Tracking/Signals/YYYY-MM-DD_weekly.md, Tracking/IMPROVEMENTS.md, frontmatter/links/index repairs, every move to Archive/"
+      "writes": "Daily/YYYY-MM-DD_NEXT_WEEK_PLAN.md, Tracking/Signals/YYYY-MM-DD_weekly.md, Tracking/IMPROVEMENTS.md, frontmatter/links/index repairs, closing rows in Tracking/COMMITMENTS.md (the only routine that removes one), every move to Archive/; appends one line to Tracking/Signals/RUN_LEDGER.md"
     }
   ]
 }

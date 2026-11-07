@@ -103,6 +103,31 @@ def cron_days(days: list[int]) -> str:
     return ",".join(map(str, days))
 
 
+BLOCK = re.compile(r"<!-- workbench:([a-z-]+) -->\n(.*?)<!-- /workbench:\1 -->\n?", re.S)
+
+
+def apply_blocks(text: str, keep: set[str]) -> str:
+    """Keep the body of each `<!-- workbench:NAME -->` block whose NAME is in `keep`; drop the rest."""
+    return BLOCK.sub(lambda m: m.group(2) if m.group(1) in keep else "", text)
+
+
+def meetings_via_of(profile: dict) -> str:
+    """How meetings reach the workbench: 'connector', 'export' (files into Meetings/), or ''.
+
+    Profiles from before 0.2.0 name a recorder in `meetings_source` without `meetings_via`; that always
+    meant an export folder, so it still does.
+    """
+    via = (profile.get("meetings_via") or "").strip().lower()
+    if via in ("connector", "export"):
+        return via
+    return "export" if (profile.get("meetings_source") or "").strip() else ""
+
+
+def is_repo_vault(profile: dict, root: Path) -> bool:
+    home = (profile.get("vault_home") or "").strip().lower()
+    return home == "repo" if home else (root / ".git").exists()
+
+
 def strip_frontmatter(text: str) -> str:
     return re.sub(r"^---\n.*?\n---\n", "", text, count=1, flags=re.S).lstrip()
 
@@ -164,7 +189,9 @@ def build_context(profile: dict, root: Path):
                     f"{c.get('via') or c.get('notes') or '—'} |")
 
     guardrails = pack.get("guardrails", []) + profile.get("guardrails", [])
-    meetings_source = (profile.get("meetings_source") or "").strip()
+    meetings_tool = (profile.get("meetings_source") or "").strip()
+    meetings_via = meetings_via_of(profile)
+    meetings_source = meetings_tool if meetings_via == "export" else ""  # only an export makes Meetings/
     function_tags = list(dict.fromkeys(pack.get("function_tags", []) + profile.get("extra_tags", [])))
 
     delivery = profile.get("delivery") or {}
@@ -221,6 +248,9 @@ def build_context(profile: dict, root: Path):
         "function_tags": ", ".join(f"`{x}`" for x in function_tags),
         "guardrails_rules": "\n".join(f"{4 + i}. {g}" for i, g in enumerate(guardrails)),
         "meetings_source": meetings_source or "a meeting recorder",
+        "meetings_memory_row": ("\n| Source records | `Meetings/` | " + meetings_source + "'s notes, one file per meeting "
+                                "| owned by " + meetings_source + " | never moved, archived or edited by the workbench |")
+                               if meetings_source else "",
         "meetings_row": ("\n| `Meetings/` | One file per meeting, exported from " + meetings_source +
                          " | Never by hand: the export writes it |") if meetings_source else "",
         "workbench_path": str(profile.get("workbench_path") or root),
@@ -287,12 +317,16 @@ _Maintained nightly by nightly-dream._
 
 def desired_state(profile: dict, root: Path):
     ctx, base, _pack = build_context(profile, root)
-    flags = {"meetings": bool(profile.get("meetings_source")), "company": bool(profile.get("company")),
-             "obsidian": profile.get("obsidian", True) is not False, "manager": bool(profile.get("manager"))}
+    flags = {"meetings": meetings_via_of(profile) == "export", "company": bool(profile.get("company")),
+             "obsidian": profile.get("obsidian", True) is not False, "manager": bool(profile.get("manager")),
+             "repo": is_repo_vault(profile, root)}
+    blocks = {name for name, on in {"repo-vault": flags["repo"],
+                                    "cowork-only": (profile.get("surface") or "").lower() == "cowork"}.items() if on}
     dirs, files = [], []
 
-    def add(path: str, content: str, user_owned: bool):
-        files.append({"path": path, "content": content, "user_owned": user_owned})
+    def add(path: str, content: str, user_owned: bool, collision: str = "keep"):
+        files.append({"path": path, "content": apply_blocks(content, blocks), "user_owned": user_owned,
+                      "collision": collision})
 
     routines = desired_routines(profile, ctx, base)
     table = ["| Routine (scheduled task) | When | Owns, and writes nothing else |", "|---|---|---|"]
@@ -311,7 +345,8 @@ def desired_state(profile: dict, root: Path):
         if f.get("when") and not flags.get(f["when"]):
             continue
         path = render(f["path"], {k: safe_filename(str(v)) for k, v in ctx.items()})
-        add(path, render((TEMPLATES / f["template"]).read_text(), ctx), bool(f.get("user_owned")))
+        add(path, render((TEMPLATES / f["template"]).read_text(), ctx), bool(f.get("user_owned")),
+            f.get("on_collision", "keep"))
 
     conns = {c.get("tool"): c for c in profile.get("connections", []) if c.get("tool")}
     for tool in profile.get("tools", []):
@@ -417,6 +452,9 @@ def plan(root: Path, profile: dict) -> dict:
         current = sha(target.read_text(encoding="utf-8", errors="replace"))
         if current == new_hash:
             actions.append({"op": "keep", "path": f["path"], "hash": new_hash, "reason": "already current"})
+        elif f["user_owned"] and not entry and f["collision"] == "conflict":
+            actions.append({"op": "conflict", "path": f["path"], "write": f["path"] + NEW_SUFFIX,
+                            "hash": None, "reason": "a file with this name existed before the workbench"})
         elif f["user_owned"] or entry.get("pinned"):
             actions.append({"op": "keep", "path": f["path"], "hash": entry.get("hash", current),
                             "pinned": bool(entry.get("pinned")),
@@ -499,7 +537,19 @@ def pin(root: Path, rel: str | None, on: bool) -> int:
 
 # ---------------------------------------------------------------- status
 
+RUN_LEDGER = "Tracking/Signals/RUN_LEDGER.md"
+LEDGER_LINE = re.compile(r"^- (\d{4}-\d{2}-\d{2}) \d{2}:\d{2} \| ([a-z-]+) \| (ok|partial|failed) \|")
+LEDGER_IDS = {"recap": "eod-recap", "dream": "nightly-dream", "weekly": "weekly"}
+
+
 def last_signal(root: Path, routine: str) -> str | None:
+    """Date of the routine's last finished run: the run ledger first, then its Signals files."""
+    ledger, rid = root / RUN_LEDGER, LEDGER_IDS.get(routine, routine)
+    if ledger.exists():
+        dates = [m.group(1) for m in map(LEDGER_LINE.match, ledger.read_text(errors="replace").splitlines())
+                 if m and m.group(2) == rid and m.group(3) != "failed"]
+        if dates:
+            return max(dates)
     files = sorted((root / "Tracking" / "Signals").glob(f"*_{routine}.md"))
     return files[-1].name[:10] if files else None
 
