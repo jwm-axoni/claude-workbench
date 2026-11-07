@@ -139,7 +139,10 @@ date you added it (`added: YYYY-MM-DD`). Never pick one. The weekly queues these
 and today's captures (plus any backlog captures from Step 0) for commitment language: promises,
 deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
 
-- **New** commitment: add a row to `Tracking/COMMITMENTS.md`: `Commitment` in plain words,
+- **Below the bar**: a candidate under the commitment confidence bar (the same bar as step b) is
+  not a row. It stays a **Needs your yes** item, and becomes a row only once the owner approves it
+  (ticked, or an `answer:` capture). The register holds confirmed commitments only.
+- **New** commitment, at or above the bar: add a row to `Tracking/COMMITMENTS.md`: `Commitment` in plain words,
   `Who owes` (`me`, a person's name, or `them:<name>` when someone else owes the owner), `Due`
   (`none` if no date was given; never guess), `Source` (the page or capture), `State: open`,
   `Last evidence` set to the date of the newest dated mention in the sources, never the date
