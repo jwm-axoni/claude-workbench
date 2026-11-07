@@ -111,6 +111,18 @@ def apply_blocks(text: str, keep: set[str]) -> str:
     return BLOCK.sub(lambda m: m.group(2) if m.group(1) in keep else "", text)
 
 
+def meetings_via_of(profile: dict) -> str:
+    """How meetings reach the workbench: 'connector', 'export' (files into Meetings/), or ''.
+
+    Profiles from before 0.2.0 name a recorder in `meetings_source` without `meetings_via`; that always
+    meant an export folder, so it still does.
+    """
+    via = (profile.get("meetings_via") or "").strip().lower()
+    if via in ("connector", "export"):
+        return via
+    return "export" if (profile.get("meetings_source") or "").strip() else ""
+
+
 def is_repo_vault(profile: dict, root: Path) -> bool:
     home = (profile.get("vault_home") or "").strip().lower()
     return home == "repo" if home else (root / ".git").exists()
@@ -177,7 +189,9 @@ def build_context(profile: dict, root: Path):
                     f"{c.get('via') or c.get('notes') or '—'} |")
 
     guardrails = pack.get("guardrails", []) + profile.get("guardrails", [])
-    meetings_source = (profile.get("meetings_source") or "").strip()
+    meetings_tool = (profile.get("meetings_source") or "").strip()
+    meetings_via = meetings_via_of(profile)
+    meetings_source = meetings_tool if meetings_via == "export" else ""  # only an export makes Meetings/
     function_tags = list(dict.fromkeys(pack.get("function_tags", []) + profile.get("extra_tags", [])))
 
     delivery = profile.get("delivery") or {}
@@ -234,6 +248,9 @@ def build_context(profile: dict, root: Path):
         "function_tags": ", ".join(f"`{x}`" for x in function_tags),
         "guardrails_rules": "\n".join(f"{4 + i}. {g}" for i, g in enumerate(guardrails)),
         "meetings_source": meetings_source or "a meeting recorder",
+        "meetings_memory_row": ("\n| Source records | `Meetings/` | " + meetings_source + "'s notes, one file per meeting "
+                                "| owned by " + meetings_source + " | never moved, archived or edited by the workbench |")
+                               if meetings_source else "",
         "meetings_row": ("\n| `Meetings/` | One file per meeting, exported from " + meetings_source +
                          " | Never by hand: the export writes it |") if meetings_source else "",
         "workbench_path": str(profile.get("workbench_path") or root),
@@ -300,7 +317,7 @@ _Maintained nightly by nightly-dream._
 
 def desired_state(profile: dict, root: Path):
     ctx, base, _pack = build_context(profile, root)
-    flags = {"meetings": bool(profile.get("meetings_source")), "company": bool(profile.get("company")),
+    flags = {"meetings": meetings_via_of(profile) == "export", "company": bool(profile.get("company")),
              "obsidian": profile.get("obsidian", True) is not False, "manager": bool(profile.get("manager")),
              "repo": is_repo_vault(profile, root)}
     blocks = {name for name, on in {"repo-vault": flags["repo"],

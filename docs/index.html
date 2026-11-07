@@ -1095,7 +1095,7 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
                 <li>Signals/ <span class="why">&mdash; what each routine claimed, how it scored, and the run ledger</span></li>
               </ul>
             </li>
-            <li>Meetings/ <span class="why">&mdash; one file per meeting</span> <span class="why" style="color:var(--orange)">&larr; only if your recorder exports notes</span></li>
+            <li>Meetings/ <span class="why">&mdash; one file per meeting</span> <span class="why" style="color:var(--orange)">&larr; only if your recorder exports notes instead of connecting</span></li>
             <li>Archive/ <span class="why">&mdash; closed chapters, read-only</span></li>
           </ul>
         </li>
@@ -1126,6 +1126,12 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <p><strong>Nothing is deleted.</strong> A fact that stops being true is marked
           superseded, with a link to what replaced it, then archived once nothing points
           at it.</p>
+        <p><strong>Short-term and long-term memory are different folders.</strong> Captures
+          hold what your chats settled until the dream files them that night. Daily files are
+          a diary, frozen once the day is over. People, project and org pages are the long-term
+          memory, kept current by state rather than age, and a page nobody has mentioned in
+          90 days gets flagged for you to confirm, never moved. Meeting notes come through
+          your recorder's connector when there is one, so transcripts don't pile up here.</p>
       </div>
       <aside class="margin-note">
         <span class="hand sm">the shape lives<br>with the pages</span>
@@ -1607,9 +1613,9 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag once">Ask for it</span>
         <h4>Librarian</h4>
-        <p><b>What it does.</b> Audits the folder across 33 checks: stale pages, dead links,
+        <p><b>What it does.</b> Audits the folder across 34 checks: stale pages, dead links,
           duplicates, one-sided relationships, routines missing from the run ledger, a
-          malformed commitments register, conflicts left unreconciled.</p>
+          malformed commitments register, conflicts left unreconciled, pages gone quiet.</p>
         <p><b>How you use it.</b> "Run the librarian" or "audit my folder".</p>
         <p><b>What it writes.</b> A report. Nothing until you approve a fix.</p>
       </div>

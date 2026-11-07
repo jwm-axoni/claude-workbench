@@ -207,6 +207,24 @@ Any routine that writes to a page bumps that page's `updated:` in the same chang
    exception is the briefing digest to the owner, below.
 {{guardrails_rules}}
 
+## How memory works
+
+The folders are layers of memory, from what was said an hour ago to what's true for good. Each
+layer has one way in and a stated rule for how long it stays live. Nothing is deleted from any of
+them; old material either stays where it is as history or moves to `Archive/` on a rule below.
+
+| Layer | Where | Holds | Stays live | What moves it |
+|---|---|---|---|---|
+| Working memory | `Tracking/Captures/` | what chats settled today | until the dream files it, normally that night | the dream files each line; the capture file stays as the record |
+| Diary | `Daily/` | what happened on each date: briefings, recaps, calendar copies, weekly plans | routines read the last two weeks | nothing; a past day is frozen and kept as history |
+| Long-term | `People/`, `Projects/`, `Organizations/`, `Resources/`, `Context/`, `Tracking/GOALS.md`, `Tracking/COMMITMENTS.md` | the current truth about people, work and how {{preferred_name}} operates | as long as it's true | the weekly's archive rules (below); a page nobody has mentioned in 90 days is flagged `dormant` by the librarian, never moved |
+| Measurement | `Tracking/Signals/`, `Tracking/Drafts/` | what each routine claimed, how it scored, drafts and their grades | the weekly reads the last four weeks | nothing; append-only |{{meetings_memory_row}}
+| Cold storage | `Archive/` | closed chapters | read only when the question is historical | only the weekly moves files in |
+
+The top of each long-term page is kept current by state, not by hand: `live` entries sit above
+`superseded` ones, and `(dream)` blocks hold five lines or fewer, newest first. Nothing is archived
+by age alone; it has to be superseded, shipped, or former first.
+
 ## Archive policy
 
 `Archive/` is read-only history. Move something there when it stops being referenced, not

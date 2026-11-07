@@ -85,6 +85,7 @@ and list the rest in the plan's Health section:
 | `## Related` disagrees with the relationship properties | rewrite the body lines from the properties |
 | relationship property pointing at a page that doesn't exist | move it to plain text in `## Related`; list it for the dream |
 | YAML wikilink not quoted (`org: [[Acme]]`) | quote it (`org: "[[Acme]]"`); unquoted breaks the YAML |
+| dormant page (librarian check 30) | list at most three in Health as yes/no questions; never change `status` or move it unattended |
 
 ## 3. Archive moves
 

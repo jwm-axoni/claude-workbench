@@ -63,7 +63,8 @@ Missing files are created. A file the person already has under one of those name
 overwritten**: `apply` reports it as a `conflict` and writes `<file>.workbench-new` beside it. Merge
 it like any other conflict (step 4): usually keep theirs, add the template's headings or columns
 the routines need, then `pin` it. While you're in the profile, set `surface` and `vault_home` if
-they're missing (ask; detect's `git_repo` is a hint, not an answer), so the `schedules` skill can
+they're missing, and `meetings_via` if they record meetings (offer the connector-first choice from
+`setup` step 3; an existing `Meetings/` export keeps working if they'd rather leave it) (ask; detect's `git_repo` is a hint, not an answer), so the `schedules` skill can
 derive the runner.
 
 ### 4. Resolve conflicts

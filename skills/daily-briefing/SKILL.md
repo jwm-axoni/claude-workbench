@@ -55,7 +55,9 @@ reading is behind.
    - today's `Daily/<today>_CALENDAR.md` if it exists and isn't `stale`; otherwise the calendar connector
 3. Then the live sources, **only tools `Context/me.md` marks reachable**, since the last recap:
    email, chat DMs and mentions, tickets or tasks due today or tomorrow, the role-specific sources
-   (CRM, code host, etc.). If `Meetings/` exists, yesterday's meeting files, **above the
+   (CRM, code host, etc.). If meetings come through the recorder's connector
+   (`meetings_via: connector` in the profile), yesterday's meeting summaries and next steps there,
+   never transcripts. If `Meetings/` exists, yesterday's meeting files, **above the
    `## Transcript` marker only**.
 
 If a source can't be reached, say so in one line under Notes. Never fill a gap with a guess.

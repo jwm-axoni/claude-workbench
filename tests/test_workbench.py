@@ -95,6 +95,23 @@ class FreshBuild(Base):
         self.assertIn("`Meetings/`", (self.root / "CLAUDE.md").read_text())
         self.assertIn("## Transcript", instructions.read_text())
 
+    def test_meetings_by_connector_make_no_folder(self):
+        self.apply(dict(PROFILE, meetings_source="Granola", meetings_via="connector"))
+        self.assertFalse((self.root / "Meetings").exists(), "a connector needs no Meetings/ folder")
+        self.assertNotIn("`Meetings/`", (self.root / "CLAUDE.md").read_text())
+        self.assertNotIn("## Transcript", (self.root / ".workbench/PROJECT_INSTRUCTIONS.md").read_text())
+        self.apply(dict(PROFILE, meetings_source="Granola", meetings_via="export"))
+        self.assertIn("Granola", (self.root / "Meetings/CLAUDE.md").read_text())
+        self.assertIn("| Source records | `Meetings/` | Granola's notes", (self.root / "CLAUDE.md").read_text())
+
+    def test_root_contract_explains_memory_layers(self):
+        self.apply()
+        claude = (self.root / "CLAUDE.md").read_text()
+        self.assertIn("## How memory works", claude)
+        for layer in ["Working memory", "Diary", "Long-term", "Measurement", "Cold storage"]:
+            self.assertIn(f"| {layer} |", claude)
+        self.assertNotIn("Source records", claude, "no Meetings row without an export")
+
     def test_delivery_channel_lands_in_the_contract(self):
         self.apply(dict(PROFILE, delivery={"channel": "slack", "target": "DM to myself"}))
         self.assertIn("a Slack message (DM to myself)", (self.root / "CLAUDE.md").read_text())

@@ -13,12 +13,14 @@ Dual-runtime support and memory that behaves more like judgment than storage.
 - Claim lineage: new briefing and recap claims carry `evidence:` (a quote of 25 words or fewer, or a page reference) and `confidence:`. New read-only command `/workbench:why <claim>` shows the evidence, confidence, entry date and supersession chain
 - Capture works from any chat in any surface; a chat that can't reach the folder hands back the capture lines to paste
 - Project instructions gain Cowork-only and repo-vault blocks, kept or dropped by the scaffolder to match the profile
-- Librarian: 33 checks (four new: commitments register shape, surfacing page sections, reconciling sections older than 14 days, repo clone behind its remote)
+- Librarian: 34 checks (five new: commitments register shape, surfacing page sections, reconciling sections older than 14 days, repo clone behind its remote, dormant pages nobody has mentioned in 90 days)
+- How memory works: the root `CLAUDE.md` gains a table of the memory layers (captures, diary, long-term pages, measurement, meetings, archive), what each holds, how long it stays live, and what moves it. Nothing new is archived by age
+- Meetings, connector first: setup uses the recorder's connector when it works (no `Meetings/` folder, no transcripts in the vault; the recap and briefing read summaries, decisions and next steps through it), falls back to pointing the tool's own export at `Meetings/`, and keeps full transcripts only on request, after explaining the privacy cost. No sync script. `Meetings/` is owned by the recorder and never moved by the workbench
 - Package hygiene test: fails if the package ever gains a `bin/` folder, an LSP server, output styles, themes, or a `settings` component, any of which makes Cowork refuse the plugin
 
 Content migrations:
 - New files, created by `/workbench:migrate` through the normal `apply` path: `Tracking/COMMITMENTS.md`, `Tracking/Signals/RUN_LEDGER.md`, `Context/surfacing.md`, and `.gitignore` for repo vaults. A file you already have under one of those names is never overwritten; it becomes a `.workbench-new` conflict to merge.
-- Profile gains `surface`, `vault_home` and `repo`; migrate asks for them if missing.
+- Profile gains `surface`, `vault_home`, `repo` and `meetings_via` (`connector` or `export`); migrate asks for them if missing. A profile that names a `meetings_source` without `meetings_via` keeps its `Meetings/` folder, as before.
 - Claim lines written before 0.2.0 keep their old shape (bare confidence, no evidence). Nothing is rewritten.
 - Scheduled task prompts change (each routine's "writes" now names its run-ledger line); `/workbench:schedules` updates them in place.
 

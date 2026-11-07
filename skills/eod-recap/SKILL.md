@@ -27,7 +27,9 @@ Read in this order, and let the earlier source win when it already settles somet
    supports (`source: capture 14:20`). A settled fact that's already in a capture is never
    re-derived from scratch from email or chat; the capture is the owner's own account of it.
 2. **Calendar events**: what actually happened, from today's calendar file or the connector.
-3. **Meeting notes**, if `Meetings/` exists.
+3. **Meeting notes**: files in `Meetings/` if it exists, or, when `.workbench/profile.json` has
+   `meetings_via: connector`, today's meetings through the recorder's connector (summary,
+   decisions and next steps only; never pull a transcript).
 4. **Project and people pages**, for what was already known going in.
 5. **Git activity**, if the vault is a git repository: commits made today, including cloud
    routine branches.
@@ -39,7 +41,9 @@ The live sweep below fills in what those don't cover.
 Every tool `Context/me.md` marks reachable, for the whole workday, in the role pack's order:
 calendar (what actually happened, not what was planned), email (received **and sent**: sent items
 are how you learn what the owner did), chat DMs, mentions and key channels, tickets and tasks,
-CRM or other role sources, code host, docs edited. If `Meetings/` exists, every meeting file dated
+CRM or other role sources, code host, docs edited. If meetings come through the recorder's connector, read today's
+meetings there the same way: summary, decisions, next steps, cited as `source: <tool> meeting
+<title> HH:MM`. If `Meetings/` exists, every meeting file dated
 today, **above the `## Transcript` marker only**, plus their `Next Steps` and `Decisions` lines.
 
 Skip personal email and personal meetings entirely. Skip anything in "Calendar blocks that never

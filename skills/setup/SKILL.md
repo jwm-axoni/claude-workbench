@@ -53,8 +53,8 @@ from the account, the company from an email domain.
 - What counts as urgent for you
 - How you like answers: length, tone, format, pet peeves
 - Any calendar blocks that should never show up in a briefing (personal, focus time)
-- Do you record meetings with a tool that can export notes into a folder? If yes, which one?
-  That turns on `Meetings/`.
+- Do you record meetings? If yes, with which tool? (How the notes reach the workbench is settled
+  in step 3, connector first.)
 
 **Round 2b: which Claude, and where the vault lives.** Ask this before the routines, because it
 decides where they run.
@@ -127,6 +127,29 @@ For each tool they named:
 3. Nothing matches → `missing`. No connector exists anywhere for it (an internal system) → `manual`.
 4. If you can suggest connectors to install, do that for the missing ones.
 
+### Meetings: connector first
+
+If they record meetings, settle how the notes reach the workbench, in this order. There's no
+sync script and never will be; every recorder is different, so the workbench only reads.
+
+1. **A connector for the recorder works** (it passed the read-only call above): use it. Set
+   `meetings_source` to the tool and `meetings_via` to `connector`. No `Meetings/` folder is made.
+   The recap reads each day's meeting summaries, decisions and next steps through the connector,
+   never the transcripts. This is the default and the right answer for most people.
+2. **No connector, but the tool can export notes to a folder**: show them how to point that
+   export at `<workbench>/Meetings/` (from the tool's own settings; you don't know every tool, so
+   say what to look for rather than inventing menu names). Set `meetings_via` to `export`. That
+   turns on `Meetings/`, which the tool writes and the workbench only reads.
+3. **Neither**: if a connector exists for the tool but isn't installed, suggest it. Otherwise
+   skip meetings (`meetings_source: ""`). Say plainly that the recap still sees meetings through
+   the calendar, email and chat; it just won't have the recorder's notes.
+
+Only if they ask to keep **full transcripts** in the vault (they need exact quotes long-term)
+does an export make sense when a connector also works. Say the cost once before they choose:
+transcripts hold other people's exact words, some employers don't allow keeping them outside the
+recording tool, recording-consent rules vary by place, and in a repo vault they'd sit in git
+history. Then let them decide.
+
 Never send, post or change anything in another tool during setup. Tell them plainly what's missing
 and where to fix it: **Settings → Connectors** in the Claude apps, or `claude mcp add` in Claude
 Code. Missing tools don't block setup; every routine skips what it can't reach and says so.
@@ -155,6 +178,7 @@ Write the profile as JSON to a scratch file:
     { "tool": "Salesforce", "status": "missing" }
   ],
   "meetings_source": "",
+  "meetings_via": "",
   "goals": ["Hit 120% of Q4 quota"],
   "urgent_means": ["A customer escalation", "Anything from my manager marked today"],
   "private_blocks": ["School pickup 15:00"],

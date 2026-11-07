@@ -1,6 +1,6 @@
 ---
 name: librarian
-description: Audit the workbench vault against 33 checks and report what's wrong with it: missing frontmatter, broken or path-style links, orphan and duplicate pages, superseded entries without forward links, stale pages, ledger entries missing provenance, unfiled captures, missed routines from the run ledger, a malformed commitments register or surfacing page, unreconciled conflicts, a repo clone behind its remote, one-writer violations, files in the wrong folder. Read-only by default; the weekly routine runs these checks and fixes what's safe. Use for "audit my vault", "is my workbench healthy", "clean up my notes", "find duplicates", or /workbench:librarian.
+description: Audit the workbench vault against 34 checks and report what's wrong with it: missing frontmatter, broken or path-style links, orphan and duplicate pages, superseded entries without forward links, stale pages, ledger entries missing provenance, unfiled captures, missed routines from the run ledger, a malformed commitments register or surfacing page, unreconciled conflicts, a repo clone behind its remote, one-writer violations, files in the wrong folder. Read-only by default; the weekly routine runs these checks and fixes what's safe. Use for "audit my vault", "is my workbench healthy", "clean up my notes", "find duplicates", or /workbench:librarian.
 ---
 
 # Librarian
@@ -21,7 +21,7 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
 
 ## Checks
 
-33 checks, numbered 1–29, with the relationship checks as 13a–13d.
+34 checks, numbered 1–30, with the relationship checks as 13a–13d.
 
 **Structure**
 1. Files in the wrong folder: an entity page in `Daily/`, a dated note in `Resources/`, a person
@@ -91,6 +91,11 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
     behind its remote by more than one day of commits: fetch read-only (`git fetch --dry-run` or
     compare `git log HEAD..@{u}`), and include unmerged `claude/` branches from cloud runs. If it's
     behind, report the gap: how many commits, how old the oldest, which branches.
+30. Dormant pages: a person, project, organization or tool page with `status: active` that no
+    recap, capture, meeting or other live page has mentioned in 90 days, and whose `updated:` is
+    90+ days old. Report each as a question ("still current, or has this ended?"). Never change its
+    status or move it; a quiet page may still be true. The answer comes back as a capture and the
+    dream applies it.
 
 ## Report
 

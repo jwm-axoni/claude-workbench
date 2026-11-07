@@ -160,7 +160,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:setup` | Onboard, or change your role, tools, hours, delivery or routines. |
 | `/workbench:schedules` | Make your scheduled tasks match the plan. Older look-alikes are paused, not deleted. |
 | `/workbench:migrate` | Upgrade after a plugin update without losing your edits, or adopt an older vault. |
-| `/workbench:librarian` | Get a health report across 33 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled. |
+| `/workbench:librarian` | Get a health report across 34 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled, pages gone quiet. |
 | `/workbench:capture` | Log what a chat settled, from any chat in any surface. Usually happens on its own. |
 | `/workbench:daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |
@@ -173,6 +173,10 @@ After setup, create one Claude project named after you, attach the folder, and p
 ![Claude's three kinds of memory and how much to trust each](docs/assets/workbench-memory.png)
 
 ![Moving over from an older version or your own notes vault](docs/assets/workbench-moving-over.png)
+
+**How long things stay.** The folders are layers. Captures are working memory until the dream files them that night. `Daily/` is a diary: past days are frozen and kept. People, project and org pages are long-term memory, kept current by state (live above superseded) rather than by age. Only superseded, shipped or former things move to `Archive/`, on the weekly's rules, and a page nobody has mentioned in 90 days is flagged for you to confirm, never moved. The full table is in your folder's root `CLAUDE.md`.
+
+**Meetings come in through your recorder, not a script.** If Claude can connect to your recording tool, setup uses that: the recap reads each day's summaries, decisions and next steps, and no transcripts land in your folder. If it can't connect but the tool can export notes to a folder, setup shows you how to point the export at `Meetings/`, which the workbench then only reads. Full transcripts are kept only if you ask, after setup explains that they hold other people's exact words.
 
 **Safe upgrades.** The plugin records a hash of every file it writes in `.workbench/manifest.json`. Files nobody touched are refreshed; files you edited stay as they are and the new version lands beside them as `*.workbench-new`; content pages (people, projects, goals, logs) are never rewritten by the plugin. `/workbench:migrate` walks you through merging.
 
