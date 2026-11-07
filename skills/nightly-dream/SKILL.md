@@ -76,7 +76,8 @@ Step 0 runs even when tonight's recap is missing (see Inputs): filing captures d
 8. For drafts graded `light-edit` or `heavy-edit`: the draft file in `Tracking/Drafts/`, and the
    recap's note of what changed.
 9. `Tracking/IMPROVEMENTS.md` `## Open`, so you don't re-propose what's already pending or declined.
-10. `Tracking/COMMITMENTS.md` and `Context/surfacing.md`.
+10. `Tracking/COMMITMENTS.md`, `Archive/Superseded/COMMITMENTS ledger.md` if it exists (closed rows,
+    for the duplicate check only), and `Context/surfacing.md`.
 11. The newest `Daily/*_NEXT_WEEK_PLAN.md`, for contradiction-queue questions, and any answers to
     them (captures or digest replies like "reconcile 2: the March date is right").
 
@@ -143,7 +144,10 @@ deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
   (`none` if no date was given; never guess), `Source` (the page or capture), `State: open`,
   `Last evidence` set to the date of the newest dated mention in the sources, never the date
   you're filing it (a backlog capture from two weeks ago gives a two-week-old date, so an overdue
-  promise still surfaces). Skip it if a row for the same commitment already exists.
+  promise still surfaces). Skip it if a row for the same commitment already exists, **or if it was
+  already closed**: check `Archive/Superseded/COMMITMENTS ledger.md` (the weekly's closed rows; read
+  it for this check only) and skip anything ticked `- [x]` on its page. A closed commitment comes
+  back only when a newer source than its closure date makes a genuinely new promise.
 - **Changed**: when a capture or recap line states a new deadline or a new owner for an existing
   row ("pushed the Q4 draft to the 15th", "Sam's taking over the MSA review"), update `Due` or
   `Who owes` and keep the old value in `Source` with its provenance
