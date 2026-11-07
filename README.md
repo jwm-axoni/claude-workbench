@@ -198,6 +198,8 @@ python3 -m unittest discover -s tests
 claude plugin validate .
 ```
 
+CI runs the test suite on Python 3.9 and 3.13 for every pull request and every push to `main` (`.github/workflows/tests.yml`). Run `claude plugin validate .` yourself before a release; CI doesn't.
+
 - `scripts/workbench.py` is the stdlib-only scaffolder every skill calls.
 - `blueprints/` defines the layout, routines and role packs.
 - `templates/` holds the pages it renders.
