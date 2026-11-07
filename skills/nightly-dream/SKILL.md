@@ -135,8 +135,9 @@ project and tool touched tonight, follow **Relationships** in the root `CLAUDE.m
 figures), add both to a `## Needs reconciling` section on the page, each with its source and the
 date you added it (`added: YYYY-MM-DD`). Never pick one. The weekly queues these for the owner.
 
-**b4. Commitments maintenance.** After the contradiction pass, scan the pages you touched tonight
-and today's captures (plus any backlog captures from Step 0) for commitment language: promises,
+**b4. Commitments maintenance.** After the contradiction pass, scan tonight's recap (both `### Owed by` and `### Owed to`, since
+**Owed to** lines reach no page otherwise), any reconstructed recaps filed this run (3b), the pages
+you touched tonight, and today's captures (plus any backlog captures from Step 0) for commitment language: promises,
 deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
 
 - **Below the bar**: a candidate under the commitment confidence bar (the same bar as step b) is
