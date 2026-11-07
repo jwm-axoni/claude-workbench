@@ -10,6 +10,10 @@ updated: {{created_date}}
 The measurement layer. One append-only file per date per routine: `YYYY-MM-DD_<routine>.md`.
 The name fixes the writer, so two routines never contend for one file.
 
+The one exception is `RUN_LEDGER.md`: every routine appends one line when it finishes, and none
+edits or deletes a line. The librarian reads it. Appends are dated lines, never edits, so nothing
+contends.
+
 ## What goes in
 
 A routine's **claims** (what it asserted and how confident it was), the **outcomes** (what

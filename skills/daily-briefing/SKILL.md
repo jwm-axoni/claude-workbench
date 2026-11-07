@@ -75,8 +75,8 @@ Numbered, one line each, answerable in one word where possible. Max five.
 Sources skipped or unreachable.
 
 ## Claims
-- c-0001 | commitment | Send Pat the Q4 draft today | 0.85
-- c-0002 | status | Acme renewal call moved to Thursday | 0.95
+- c-0001 | commitment | Send Pat the Q4 draft today | confidence: 0.85 | evidence: "can you get me the Q4 draft by Friday" (email from [[Pat Lee]] 09:12)
+- c-0002 | status | Acme renewal call moved to Thursday | confidence: 0.95 | evidence: [[Acme Data]] Current state (dream)/line 1
 ```
 
 Rules:
@@ -90,6 +90,10 @@ Rules:
   owner owes it), `status` (a fact about the state of something), `priority` (what you said
   matters most), `question`. Number them `c-0001` upward per day, with your confidence 0–1. The
   recap grades them; that is how the system measures whether its briefings are right.
+- **Every new claim carries its lineage.** `confidence:` is the 0–1 grade. `evidence:` is either a
+  verbatim quote of 25 words or fewer in double quotes, with where it came from, or a page
+  reference in the form `[[Page]] section/line`. Claims written before v0.2.0 have the confidence
+  as a bare fourth field and no evidence; leave them as they are, never rewrite them.
 
 ## Midday mode
 
@@ -103,7 +107,7 @@ connector), new actions. **Append** at the bottom:
 ### Calendar changes
 ### Newly surfaced actions
 ### Claims
-- c-00NN | … (continue numbering)
+- c-00NN | … | confidence: … | evidence: … (continue numbering)
 ```
 
 Never edit anything above it. What was known in the morning has value precisely because it

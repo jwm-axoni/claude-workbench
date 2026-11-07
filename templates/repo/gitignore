@@ -1,0 +1,19 @@
+# Workbench vault kept as a git repository. Written once by the Claude Workbench plugin; yours to edit.
+
+# Obsidian workspace state (changes every time you open a note)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Workbench local state: backups and temporary writes stay on this computer.
+# The rest of .workbench/ (manifest, profile, routine copies) is tracked on purpose:
+# cloud runs and your other computers need it.
+.workbench/backup-*/
+*.tmp-wb
+
+# Never commit secrets
+.env
+.env.*

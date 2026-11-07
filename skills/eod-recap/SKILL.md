@@ -43,13 +43,13 @@ source: claude-routine
 # Daily recap — YYYY-MM-DD (Weekday)
 
 ## Decisions made today
-- Moved the Acme pilot to January — decided by [[Pat Lee]] `source: email 14:02` `date: YYYY-MM-DD`
+- Moved the Acme pilot to January — decided by [[Pat Lee]] `source: email 14:02` `date: YYYY-MM-DD` `evidence: "let's move the pilot to January"` `confidence: 0.95`
 
 ## Commitments
 ### Owed by {owner}
-- [ ] Send revised pricing — to [[Sam Ortiz]], by Fri `source: meeting 2026-…-acme-sync` `date: …`
+- [ ] Send revised pricing — to [[Sam Ortiz]], by Fri `source: meeting 2026-…-acme-sync` `date: …` `evidence: "I'll send revised pricing by Friday"` `confidence: 0.90`
 ### Owed to {owner}
-- [ ] Legal review of MSA — [[Dana Kim]], no date `source: chat DM 11:40` `date: …`
+- [ ] Legal review of MSA — [[Dana Kim]], no date `source: chat DM 11:40` `date: …` `evidence: [[Acme MSA]] Open commitments (mine)/line 2` `confidence: 0.80`
 
 ## What happened
 Grouped by project or relationship, each line with `source:` and `date:`. People, orgs, projects
@@ -70,7 +70,10 @@ Sources unreachable or skipped, and anything ambiguous the dream should know abo
 
 Every line under Decisions, Commitments and What happened carries `source:` (which tool, which
 message/meeting/time) and `date:`. A line without provenance can't be filed by the dream, so it's a
-bug. Don't merge two sources' versions of an event into one claim; if they disagree, write both and
+bug. Every new line there also carries its lineage: `evidence:`, a verbatim quote of 25 words or
+fewer in double quotes or a page reference in the form `[[Page]] section/line`, and `confidence:`,
+the same 0–1 grade the briefing's claims use. Lines written before v0.2.0 don't have them; leave
+those as they are. Don't merge two sources' versions of an event into one claim; if they disagree, write both and
 say they disagree.
 
 ## Grade the briefing

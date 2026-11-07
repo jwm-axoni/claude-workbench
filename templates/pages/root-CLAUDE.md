@@ -23,7 +23,7 @@ and the routines keep it current so {{preferred_name}} doesn't have to.
 | `People/` | One page per person | Someone recurs enough to be worth tracking |
 | `Organizations/` | Live relationships: employer, customers, vendors, partners | An org generates ongoing decisions |
 | `Resources/` | Durable reference, `Tools/` nested, `GLOSSARY.md` | Knowledge that outlives one project |
-| `Tracking/` | Goals, friction, the dream log; `Captures/` and `Signals/` nested | Something is tracked over time |{{meetings_row}}
+| `Tracking/` | Goals, commitments, friction, the dream log; `Captures/` and `Signals/` nested | Something is tracked over time |{{meetings_row}}
 | `Archive/` | Closed chapters, read-only | Only the weekly moves things here |
 
 Each folder has its own `CLAUDE.md` with the schema and a copyable page shape for pages
@@ -51,6 +51,22 @@ writer per file** is the rule most worth respecting: two writers racing one file
 conflicts, and if the vault syncs through git a conflict can silently halt the sync.
 
 {{routine_table}}
+
+**Three files with more than one writer, each on purpose:**
+
+- **`Tracking/Signals/RUN_LEDGER.md` is the one exception to one writer per file.** Every routine
+  appends one line when it finishes, and none edits or deletes a line. The librarian reads it.
+  It's safe because every write is a new dated line at the bottom, never an edit, so two routines
+  can't overwrite each other. A missing line is how a missed run becomes visible.
+- **`Tracking/COMMITMENTS.md`**: `nightly-dream` adds rows and updates `Last evidence` and `State`;
+  `weekly-review` alone removes rows, closing `looks-done` rows on evidence. The two never touch
+  the same cell: the dream never deletes or closes, the weekly never adds.
+- **`Context/surfacing.md`**: `nightly-dream` appends learned rules; {{preferred_name}} edits it
+  directly. Same split as `voice.md`.
+
+Any routine may run late, twice, or after a gap, and must still leave the vault correct. That's
+why each one opens by checking the run ledger for what's missing, and why a routine that runs
+late says so in its file.
 
 **The Claude project → `Tracking/Captures/YYYY-MM-DD.md` and `Tracking/Drafts/`, and nothing
 else.** Chats in the project are invisible to the routines, so each time a chat settles a
