@@ -31,8 +31,7 @@ sync. Never write anything else, except your one appended line in `Tracking/Sign
 ## Run ledger
 
 When you finish, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and
-never edit or delete an existing line. Every routine does this; it's the one file with more than
-one writer (see the root `CLAUDE.md`).
+never edit or delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. It's the one file with more than one writer (see the root `CLAUDE.md`).
 
 ```
 - YYYY-MM-DD HH:MM | calendar-sync | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>

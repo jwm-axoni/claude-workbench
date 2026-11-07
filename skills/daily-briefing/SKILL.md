@@ -210,7 +210,7 @@ title: "_Ran at 11:40, scheduled 08:00._" Items already past by then go under No
 ## Finish: the run ledger
 
 Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
-delete an existing line. The routine is `daily-briefing` in morning mode and `midday-update` in
+delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. The routine is `daily-briefing` in morning mode and `midday-update` in
 midday mode. Include every gap Step 0 found.
 
 ```

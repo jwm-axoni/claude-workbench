@@ -12,8 +12,9 @@ nothing else does, which is why you're the one routine allowed to move files and
 `Tracking/IMPROVEMENTS.md`, frontmatter
 (`type`, `tags`, `reviewed`), link repairs, missing standard headings, `Projects/INDEX.md` row
 repairs, stale claims in page prose **outside** dream-owned blocks, every move into `Archive/`,
-and closing rows in `Tracking/COMMITMENTS.md`: the dream adds rows and updates `Last evidence` and
-`State`; you alone remove rows, closing `looks-done` rows on evidence. You also append your one
+and closing rows in `Tracking/COMMITMENTS.md`: `nightly-dream` adds rows and updates
+`Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on
+evidence. You also append your one
 line to `Tracking/Signals/RUN_LEDGER.md`.
 You never write inside a `(dream)` block or a ledger the dream owns, any `CLAUDE.md`, another
 routine's `Daily/` file, `Captures/`, or the contents of `Archive/`. You never delete.
@@ -180,7 +181,7 @@ Never close an `open` or `looks-stale` row.
 ## Finish: the run ledger
 
 Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
-delete an existing line:
+delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it:
 
 ```
 - YYYY-MM-DD HH:MM | weekly | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>

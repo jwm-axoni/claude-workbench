@@ -29,7 +29,7 @@ anything outside the vault.
 | `Context/voice.md` | `## Learned rules (dream)` |
 | `Tracking/GOALS.md` | `## Current state (dream)` |
 | `Tracking/FRICTION_LOG.md` | entries under `## Open` and `## Resolved` |
-| `Tracking/COMMITMENTS.md` | new rows; `Last evidence` and `State` on existing rows. You add rows and update `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on evidence. Never delete or close a row yourself. |
+| `Tracking/COMMITMENTS.md` | new rows; `Last evidence` and `State` on existing rows. `nightly-dream` adds rows and updates `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on evidence. Never delete or close a row yourself. |
 | `Context/surfacing.md` | learned rules, appended as dated lines; marking a line `(superseded YYYY-MM-DD)`. You append learned rules; the owner edits it directly. |
 | `Tracking/Signals/RUN_LEDGER.md` | one appended line when you finish. Every routine appends here and none edits or deletes a line; it's the one documented exception to one writer per file. |
 
@@ -213,7 +213,7 @@ Then append under `## Processed captures`: `- YYYY-MM-DD.md · N lines · filed 
 per capture file you filed from, backlog files included.
 
 **`Tracking/Signals/RUN_LEDGER.md`**: last of all, append exactly one line to the bottom, and never
-edit or delete an existing line. Say how many backlog captures you filed:
+edit or delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it. Say how many backlog captures you filed:
 
 ```
 - YYYY-MM-DD HH:MM | nightly-dream | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>

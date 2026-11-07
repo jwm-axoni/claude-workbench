@@ -202,7 +202,7 @@ record.
 ## Finish: the run ledger
 
 Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
-delete an existing line:
+delete an existing line. Every routine appends one line when it finishes, and none edits or deletes a line; the librarian reads it:
 
 ```
 - YYYY-MM-DD HH:MM | eod-recap | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
