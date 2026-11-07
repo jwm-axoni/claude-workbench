@@ -17,7 +17,7 @@ One row per commitment. Rules for each column:
 - State: exactly one of `open`, `looks-done`, `looks-stale`.
 - Last evidence: the most recent date any vault page mentioned progress.
 
-Who writes this file: `nightly-dream` adds rows and updates `Last evidence` and `State`;
+Who writes this file: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
 `weekly-review` alone removes rows, closing `looks-done` rows on evidence. The dream never
 deletes a row and never closes one. A closed row is moved to `Archive/Superseded/COMMITMENTS ledger.md`, not deleted.
 -->

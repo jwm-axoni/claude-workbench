@@ -40,7 +40,7 @@ updated: YYYY-MM-DD
 - `Signals/`: each file has one writer, fixed by its name (`YYYY-MM-DD_<routine>.md`).
 - `Signals/RUN_LEDGER.md`: every routine appends one line when it finishes, and none edits or
   deletes a line. The librarian reads it. The one documented exception to one writer per file.
-- `COMMITMENTS.md`: `nightly-dream` adds rows and updates `Last evidence` and `State`;
+- `COMMITMENTS.md`: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
   `weekly-review` alone removes rows, closing `looks-done` rows on evidence.
 - `Drafts/`: the project (and the briefing, for reply drafts). Final once its chat ends.
 - `IMPROVEMENTS.md`: `weekly-review` only. The dream proposes in `DREAM_LOG.md`; the weekly logs and follows up.

@@ -58,7 +58,7 @@ conflicts, and if the vault syncs through git a conflict can silently halt the s
   appends one line when it finishes, and none edits or deletes a line. The librarian reads it.
   It's safe because every write is a new dated line at the bottom, never an edit, so two routines
   can't overwrite each other. A missing line is how a missed run becomes visible.
-- **`Tracking/COMMITMENTS.md`**: `nightly-dream` adds rows and updates `Last evidence` and `State`;
+- **`Tracking/COMMITMENTS.md`**: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
   `weekly-review` alone removes rows, closing `looks-done` rows on evidence. The two never touch
   the same cell: the dream never deletes or closes, the weekly never adds.
 - **`Context/surfacing.md`**: `nightly-dream` appends learned rules; {{preferred_name}} edits it

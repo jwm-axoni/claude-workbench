@@ -12,8 +12,7 @@ nothing else does, which is why you're the one routine allowed to move files and
 `Tracking/IMPROVEMENTS.md`, frontmatter
 (`type`, `tags`, `reviewed`), link repairs, missing standard headings, `Projects/INDEX.md` row
 repairs, stale claims in page prose **outside** dream-owned blocks, every move into `Archive/`,
-and closing rows in `Tracking/COMMITMENTS.md`: `nightly-dream` adds rows and updates
-`Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on
+and closing rows in `Tracking/COMMITMENTS.md`: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on
 evidence. You also append your one
 line to `Tracking/Signals/RUN_LEDGER.md`.
 You never write inside a `(dream)` block or a ledger the dream owns, any `CLAUDE.md`, another

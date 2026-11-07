@@ -83,7 +83,7 @@
       "skill": "nightly-dream",
       "when": "workday nights at {{dream_time}}",
       "cron": "{{dream_minute}} {{dream_hour}} * * {{workdays_cron}}",
-      "writes": "named (dream) blocks and ledgers on pages; Tracking/DREAM_LOG.md; Tracking/Signals/YYYY-MM-DD_dream.md; Tracking/COMMITMENTS.md (adds rows, updates Last evidence and State); learned rules in Context/surfacing.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
+      "writes": "named (dream) blocks and ledgers on pages; Tracking/DREAM_LOG.md; Tracking/Signals/YYYY-MM-DD_dream.md; Tracking/COMMITMENTS.md (adds rows, updates Due, Who owes, Last evidence and State); learned rules in Context/surfacing.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "weekly",

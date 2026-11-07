@@ -29,7 +29,7 @@ anything outside the vault.
 | `Context/voice.md` | `## Learned rules (dream)` |
 | `Tracking/GOALS.md` | `## Current state (dream)` |
 | `Tracking/FRICTION_LOG.md` | entries under `## Open` and `## Resolved` |
-| `Tracking/COMMITMENTS.md` | new rows; `Last evidence` and `State` on existing rows. `nightly-dream` adds rows and updates `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on evidence. Never delete or close a row yourself. |
+| `Tracking/COMMITMENTS.md` | new rows; `Due`, `Who owes`, `Last evidence` and `State` on existing rows. `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`; `weekly-review` alone removes rows, closing `looks-done` rows on evidence. Never delete or close a row yourself. |
 | `Context/surfacing.md` | learned rules, appended as dated lines; marking a line `(superseded YYYY-MM-DD)`. You append learned rules; the owner edits it directly. |
 | `Tracking/Signals/RUN_LEDGER.md` | one appended line when you finish. Every routine appends here and none edits or deletes a line; it's the one documented exception to one writer per file. |
 
@@ -141,14 +141,21 @@ deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
 - **New** commitment: add a row to `Tracking/COMMITMENTS.md`: `Commitment` in plain words,
   `Who owes` (`me`, a person's name, or `them:<name>` when someone else owes the owner), `Due`
   (`none` if no date was given; never guess), `Source` (the page or capture), `State: open`,
-  `Last evidence` today. Skip it if a row for the same commitment already exists.
-- **Mentioned tonight**: set its `Last evidence` to the date of the newest mention.
+  `Last evidence` set to the date of the newest dated mention in the sources, never the date
+  you're filing it (a backlog capture from two weeks ago gives a two-week-old date, so an overdue
+  promise still surfaces). Skip it if a row for the same commitment already exists.
+- **Changed**: when a capture or recap line states a new deadline or a new owner for an existing
+  row ("pushed the Q4 draft to the 15th", "Sam's taking over the MSA review"), update `Due` or
+  `Who owes` and keep the old value in `Source` with its provenance
+  (`capture 11-03; due 11-05→11-15: capture 11-07`). Only on a stated change, never on a guess. A
+  `looks-stale` row whose new date is in the future goes back to `open`.
+- **Mentioned tonight**: set its `Last evidence` to the date of the newest mention (the source's date, not tonight's).
 - **Past due, no evidence in 7 or more days**: set `State` to `looks-stale`.
 - **A page tonight shows it done** (sent mail, a ticked item, a recap line): set `State` to
   `looks-done` and put the evidence in `Source` alongside the original (`capture 11-03; done: recap 11-07`).
 
 You never delete a row and never close one. Closure is the weekly's job, on evidence. Record the
-counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 looks-done, 1 looks-stale`.
+counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 rescheduled, 1 looks-done, 1 looks-stale`.
 
 **c. Learn.** This is how the workbench improves itself:
 - Every `correction:` capture and every correction in the recap Signals becomes a rule. Writing
