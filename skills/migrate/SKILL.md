@@ -49,6 +49,23 @@ Summarize the plan before applying: folders to add, files to update, conflicts. 
 - `conflict`: a plugin-managed file someone edited. Theirs stays; the new version lands beside it
   as `<file>.workbench-new`.
 
+#### New vault files in v0.2.0
+
+Upgrading from 0.1.x, `apply` creates four files additively, through the same hash-manifest path:
+
+- `Tracking/COMMITMENTS.md` — the commitments register (dream maintains, weekly closes)
+- `Tracking/Signals/RUN_LEDGER.md` — the run ledger (every routine appends one line)
+- `Context/surfacing.md` — what the briefing always or never raises
+- `.gitignore` — only if the vault is a git repository (`vault_home: repo`, or a `.git` folder when
+  the profile doesn't say)
+
+Missing files are created. A file the person already has under one of those names is **never
+overwritten**: `apply` reports it as a `conflict` and writes `<file>.workbench-new` beside it. Merge
+it like any other conflict (step 4): usually keep theirs, add the template's headings or columns
+the routines need, then `pin` it. While you're in the profile, set `surface` and `vault_home` if
+they're missing (ask; detect's `git_repo` is a hint, not an answer), so the `schedules` skill can
+derive the runner.
+
 ### 4. Resolve conflicts
 
 For each `.workbench-new` (also run `status` to catch older leftovers):

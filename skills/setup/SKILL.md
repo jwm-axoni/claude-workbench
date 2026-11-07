@@ -56,6 +56,34 @@ from the account, the company from an email domain.
 - Do you record meetings with a tool that can export notes into a folder? If yes, which one?
   That turns on `Meetings/`.
 
+**Round 2b: which Claude, and where the vault lives.** Ask this before the routines, because it
+decides where they run.
+
+- **Which Claude do you have?** Claude Code (the desktop app's Code tab or the CLI), or Cowork
+  only. Infer it from this session where you can (a Code session means they have Code) and confirm.
+  Record it as `surface`: `code` or `cowork`.
+- **Where should the vault live?** A local folder, or a private GitHub repo with a local clone as
+  the working folder (Obsidian and the desktop app open the clone, so day to day it feels the same).
+  Recommend the **repo** for anyone rolling the workbench out to a team or using more than one
+  computer: it adds backup, version history, safe multi-device use, and the only route for routines
+  that run with the laptop closed. A **local folder** is fine for one person on one machine.
+  Record it as `vault_home`: `local` or `repo`, and the repo as `repo` (`owner/name`).
+
+Then derive the runner from those two answers with this table (the same table the `schedules`
+skill uses). Don't ask them to pick a runner; tell them which one they get and what it guarantees,
+in one line:
+
+| You have | The vault lives in | Routines run on | What's guaranteed |
+|---|---|---|---|
+| Cowork only | a local folder | Cowork local | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. |
+| Cowork only | a private GitHub repo, worked from a local clone | Cowork local, on the clone | Runs only while the computer is on and the desktop app is open. No documented catch-up: the run ledger and gap detection recover missed runs. The repo adds backup, history and safe use from more than one computer. |
+| Claude Code | a local folder | Code Desktop local | Runs while the desktop app is open. Exactly one catch-up run for the most recent missed run within 7 days. |
+| Claude Code | a private GitHub repo, worked from a local clone | Code cloud | Runs with the laptop closed. Research preview: fresh clone per run, pushes to `claude/` branches, minimum interval one hour. No documented catch-up: the run ledger and gap detection cover misses. |
+
+On Team and Enterprise plans, Cowork sessions run in the cloud only if the organization turns on
+"Run Cowork in the cloud" (Organization settings > Cowork), and even then a task that needs local
+files runs locally. Mention it only if they ask why their routines need the laptop.
+
 **Round 3: routines** (show the defaults with times in their timezone, let them switch any off)
 
 | Routine | Default | Why |
@@ -135,6 +163,9 @@ Write the profile as JSON to a scratch file:
   "guardrails": [],
   "extra_tags": [],
   "delivery": { "channel": "slack", "target": "DM to myself", "midday": "if-changed" },
+  "surface": "code",
+  "vault_home": "repo",
+  "repo": "jrivera/workbench",
   "obsidian": true,
   "routines": { "calendar-sync": true, "daily-briefing": true, "midday-update": true,
                 "eod-recap": true, "nightly-dream": true, "weekly": true },
@@ -148,6 +179,14 @@ Run `plan --root "<folder>" --profile "<file>"`. Show a short preview: the top-l
 files will be created, any conflicts, and the routine list with times. Get a yes.
 
 ## 5. Build it
+
+**Repo vaults, before `apply`:** create the repository as **private** (with the GitHub tools or
+`gh repo create --private`), clone it, and use the clone as the folder. Verify privacy before the
+first push (`gh repo view --json visibility` must say `PRIVATE`); if you can't verify it, stop and
+ask them to check on GitHub. Never push a workbench to a public repo, even briefly. `apply` writes a
+`.gitignore` for repo vaults (Obsidian workspace state, OS files, local backups, `.env`). Never
+put credentials or `.env` files in the vault. After `apply`, make the first commit with message
+`setup: YYYY-MM-DD` and push to the default branch. Never force-push.
 
 Run `apply` with the same arguments. It creates the folders, writes every `CLAUDE.md`, the starter
 pages (`Context/me.md`, `voice.md`, `GOALS.md`, the logs, their own person page, their employer's
@@ -190,16 +229,22 @@ Tell them to work from **one** Claude project from now on:
    instructions. Show them the text so they can copy it. If they already have a project with its
    own instructions, merge: keep their additions, and make sure the READ / CAPTURE / DRAFTS / WRITE
    sections are present.
+   Setup fills in the instructions to match: a repo vault gets the pull-and-merge line, a
+   Cowork-only user gets the line on where folder work happens. You don't edit those by hand.
 3. Start every piece of work there. The project reads the vault and writes only to
    `Tracking/Captures/`, which the nightly dream files into the right pages. That's the loop that
    makes the workbench learn from their chats.
+
+**Cowork-only users:** say this once, plainly: "Folder work happens in the Claude desktop app.
+Claude on the web and on your phone is for reading the digest, answering its questions, and
+chatting in the project; it can't reach the folder on your computer."
 
 ## 9. Wrap up
 
 A short summary, not a wall:
 - where the workbench lives, as a small tree
 - connected vs. missing tools, with the single action to fix each missing one
-- routines and their times, in their timezone
+- routines and their times, in their timezone, and the runner with its one-line guarantee
 - three things to try today: ask "what do you know about <a colleague>?", have a chat settle a
   decision and watch it land in today's capture file, and correct Claude once on purpose
 
