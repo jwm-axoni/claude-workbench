@@ -1,6 +1,6 @@
 ---
 name: capture
-description: Write back from a chat into the workbench the only way a chat is allowed to - one line appended to Tracking/Captures/YYYY-MM-DD.md per decision, process change, fact, correction or briefing answer settled in the conversation, plus a copy of every draft handed over to send, saved to Tracking/Drafts/ so the recap can compare it with what was actually sent. The nightly dream files these into the right pages. Use whenever a chat in the workbench project settles something worth remembering, when the user corrects Claude or says "always"/"never", or says "remember this", "capture that", "log this decision", or /workbench:capture.
+description: Write back from a chat into the workbench the only way a chat is allowed to - one line appended to Tracking/Captures/YYYY-MM-DD.md per decision, process change, fact, correction or briefing answer settled in the conversation, plus a copy of every draft handed over to send, saved to Tracking/Drafts/ so the recap can compare it with what was actually sent. The nightly dream files these into the right pages. Works from any chat in any surface (chat, Cowork, Claude Code), not only inside the workbench project. Use whenever a chat settles something worth remembering, when the user corrects Claude or says "always"/"never", or says "remember this", "capture that", "log this decision", or /workbench:capture.
 ---
 
 # Capture
@@ -8,6 +8,18 @@ description: Write back from a chat into the workbench the only way a chat is al
 Chats are invisible to the routines. Captures are how what's settled in a chat reaches the vault:
 you append one line per item; the nightly dream files it into the right page and the weekly flags
 anything left unfiled.
+
+**This works from any chat, in any surface:** the workbench project, another Cowork chat, a
+Claude Code session, a plain chat. The chats that settle things outside the project are exactly
+the ones that otherwise write nothing down. Wherever you are, the destination is the same: the
+workbench's `Tracking/Captures/` folder, same file names, same line shape. Find the workbench the
+way the commands do: the nearest folder above the current one containing
+`.workbench/manifest.json`, or the folder the project is attached to. Set `source:` to where the
+chat happened (`project-chat`, `cowork-chat`, `code-session`, `chat`).
+
+**If this chat can't reach the workbench folder, you can't file the capture.** Write the
+formatted capture lines in your reply instead, say plainly that they weren't saved and why, and
+ask the owner to paste them into the project (or today's capture file) so the dream picks them up.
 
 **You write two places: `Tracking/Captures/<today>.md` and `Tracking/Drafts/`** (today in the owner's timezone, from
 `Context/me.md`). Append only. Never edit or delete an earlier line, never write any other vault

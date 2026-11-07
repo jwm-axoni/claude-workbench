@@ -9,18 +9,49 @@ The briefing is the surface the owner reads to start the day. It is not the reco
 is), so it can be opinionated about priorities, but every fact in it must trace to a source.
 
 **You own one file:** `Daily/<today>_MORNING_BRIEFING.md`. In midday mode you append to it. You
-write nothing else in the vault. The one thing you may send is the **digest**, to the owner only,
+write nothing else in the vault, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`. The one thing you may send is the **digest**, to the owner only,
 by the channel in `.workbench/profile.json` → `delivery` (the root `CLAUDE.md` standing exception).
+
+## Step 0: system health
+
+Before composing anything, read `Tracking/Signals/RUN_LEDGER.md` and `.workbench/schedules.json`.
+From the schedules, work out which routines should have run since the last briefing (normally
+yesterday's recap and dream, the calendar syncs, and on the first workday the weekly). For each
+one, look for its ledger line.
+
+- A routine with no line, or a line marked `failed`, is a gap. Name it in the briefing, first line
+  under **Urgent and at risk**, in plain words with the consequence: "The dream didn't run last
+  night, so 4 captures are unfiled." "Yesterday's recap didn't run, so this briefing has no record
+  of yesterday afternoon." Count the consequence from the vault (unfiled capture lines, the missing
+  file), don't guess it.
+- A `partial` line: mention its `gaps:` text under Notes.
+- Put the same one-line warning first in the digest.
+
+Never silently compose over a gap. If the ledger itself is missing (a vault older than v0.2.0),
+fall back to checking for the files those routines write, and say under Notes that you did.
+
+In a repo vault, if the root `CLAUDE.md` or the project instructions say cloud runs push to
+`claude/` branches, check that the working copy has merged them first (see the `schedules` skill).
+If unmerged `claude/` branches are newer than the working copy, say so as a gap: the vault you're
+reading is behind.
 
 ## Read first, in this order
 
 1. Root `CLAUDE.md`, then `Context/me.md` (role lens, what urgent means, reachable tools, blocks
-   that never appear), `People/NAME_VARIANTS.md`, `Tracking/GOALS.md`, `Resources/GLOSSARY.md`.
+   that never appear), then **`Context/surfacing.md`**, then `People/NAME_VARIANTS.md`,
+   `Tracking/GOALS.md`, `Resources/GLOSSARY.md`.
+
+   Apply `surfacing.md` to everything that follows. **Always surface** topics go in even when
+   there's little news on them. **Never surface** topics stay out of the file and the digest.
+   During **Quiet hours**, hold proactive items (a midday update in quiet hours writes its file
+   but sends nothing). **Format preferences** set the shape for their topic. Lines marked
+   `pending` or `superseded` aren't rules yet; ignore them.
 2. The **ledgers**, before any live source, so you don't re-report what the vault already knows:
    - yesterday's (or the last workday's) `Daily/*_DAILY_RECAP.md`, especially open follow-ups and
      tomorrow-prep
    - the newest entry in `Tracking/DREAM_LOG.md`, especially **Needs your yes**
    - `## Open commitments (mine)` on active projects in `Projects/INDEX.md`
+   - **`Tracking/COMMITMENTS.md`** (see Commitments below)
    - today's `Daily/<today>_CALENDAR.md` if it exists and isn't `stale`; otherwise the calendar connector
 3. Then the live sources, **only tools `Context/me.md` marks reachable**, since the last recap:
    email, chat DMs and mentions, tickets or tasks due today or tomorrow, the role-specific sources
@@ -28,6 +59,18 @@ by the channel in `.workbench/profile.json` → `delivery` (the root `CLAUDE.md`
    `## Transcript` marker only**.
 
 If a source can't be reached, say so in one line under Notes. Never fill a gap with a guess.
+
+## Commitments
+
+From `Tracking/COMMITMENTS.md`:
+
+- A row past its `Due` date with no `Last evidence` in 7 or more days goes under **Urgent and at
+  risk**, phrased as a question, never an assertion: "Did the Q4 draft go to [[Pat Lee]]? It was
+  due 11-03 and nothing's mentioned it since 10-29." For `them:<name>` rows, ask whether to chase.
+- A row due within 2 days is mentioned once, in **Today**.
+- Rows marked `looks-done` are not surfaced. The weekly closes them.
+- You never write to the register. If a question you ask gets answered, the answer comes back as a
+  capture and the dream updates the row.
 
 ## Morning mode: file shape
 
@@ -113,6 +156,9 @@ connector), new actions. **Append** at the bottom:
 Never edit anything above it. What was known in the morning has value precisely because it
 wasn't rewritten. If nothing changed, append one line saying so.
 
+If the update runs more than 2 hours after its scheduled time, say so in its heading:
+`## Intraday update — HH:MM (ran late; scheduled HH:MM)`.
+
 ## Deliver the digest
 
 After writing the file, send a short digest by `delivery.channel`:
@@ -138,7 +184,9 @@ Full briefing: Daily/<date>_MORNING_BRIEFING.md
 ```
 
 Number questions `Q1…` to match the file's `## Questions`, so replies like "1 yes, 2 no it's Jo
-Tan" map back. Put **Needs your yes** items from the dream log first. Record the channel and time
+Tan" map back. Put **Needs your yes** items from the dream log first. On the first workday, also
+carry the newest weekly plan's `## Needs reconciling` questions, keeping their "Reconcile N" labels
+so the answer ("reconcile 2: March") maps back. Record the channel and time
 sent under `## Notes` in the file (e.g. `Delivered: slack 07:58`). If sending fails, note the
 failure there and in the digest's next successful send; don't retry in a loop.
 
@@ -152,3 +200,21 @@ personal meetings, secrets, guarded data.
 ## If the file already exists in morning mode
 
 The task ran twice or someone re-ran it. Don't overwrite. Append an `## Intraday update` instead.
+
+## Late runs
+
+If the morning briefing runs more than 2 hours after its scheduled time (a laptop that was asleep,
+a catch-up run), add `late: true` and `scheduled: HH:MM` to the frontmatter and say it under the
+title: "_Ran at 11:40, scheduled 08:00._" Items already past by then go under Notes, not Today.
+
+## Finish: the run ledger
+
+Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
+delete an existing line. The routine is `daily-briefing` in morning mode and `midday-update` in
+midday mode. Include every gap Step 0 found.
+
+```
+- YYYY-MM-DD HH:MM | daily-briefing | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
+
+Example: `- 2026-11-09 08:01 | daily-briefing | ok | wrote: 2026-11-09_MORNING_BRIEFING.md | gaps: nightly-dream missing for 11-06`

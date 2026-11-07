@@ -9,14 +9,30 @@ The recap is **the record of the day**. Every source reaches the vault through i
 the weekly read it instead of forming their own picture, so two routines never describe the same
 day differently. Completeness and provenance matter more here than polish.
 
-**You own two files:** `Daily/<today>_DAILY_RECAP.md` and `Tracking/Signals/<today>_recap.md`.
-Nothing else.
+**You own two files:** `Daily/<today>_DAILY_RECAP.md` and `Tracking/Signals/<today>_recap.md`,
+plus `Daily/<date>_RECONSTRUCTED_RECAP.md` for a workday whose recap never ran (see below). Nothing
+else, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`.
 
 ## Read first
 
 Root `CLAUDE.md`, `Context/me.md`, `People/NAME_VARIANTS.md`, `Resources/GLOSSARY.md`, and today's
 `Daily/<today>_MORNING_BRIEFING.md` (including intraday updates) and `_CALENDAR.md` if present.
 Then `Tracking/Captures/<today>.md` if it exists: the owner's project chats from today.
+
+## Source order (binding)
+
+Read in this order, and let the earlier source win when it already settles something:
+
+1. **Today's captures** (`Tracking/Captures/<today>.md`), first. Cite the capture for any claim it
+   supports (`source: capture 14:20`). A settled fact that's already in a capture is never
+   re-derived from scratch from email or chat; the capture is the owner's own account of it.
+2. **Calendar events**: what actually happened, from today's calendar file or the connector.
+3. **Meeting notes**, if `Meetings/` exists.
+4. **Project and people pages**, for what was already known going in.
+5. **Git activity**, if the vault is a git repository: commits made today, including cloud
+   routine branches.
+
+The live sweep below fills in what those don't cover.
 
 ## Sweep the sources
 
@@ -142,3 +158,54 @@ answer to a numbered question goes under `## Answers` in the Signals file:
 
 Append an `## Update — HH:MM` section with only what's new since; don't rewrite. Same for the
 Signals file.
+
+## Late runs
+
+If you run more than 2 hours after the scheduled time, add `late: true` and `scheduled: HH:MM` to
+the frontmatter and say so under the title: "_Ran at 23:05, scheduled 18:00. Sources read up to
+23:05._" Never present a late recap as if it ran on time.
+
+## A missed day: the reconstructed recap
+
+Check `Tracking/Signals/RUN_LEDGER.md` for the previous workday. If its recap never ran (no
+`eod-recap` line and no `_DAILY_RECAP.md` for that date), cover that day in a **separate, short
+file**, `Daily/<that date>_RECONSTRUCTED_RECAP.md`, before writing today's:
+
+```markdown
+---
+type: daily-recap
+date: YYYY-MM-DD
+tags: [daily, recap]
+status: reconstructed
+source: claude-routine
+reconstructed_on: YYYY-MM-DD
+---
+
+# Reconstructed recap — YYYY-MM-DD (Weekday)
+
+_Reconstructed on YYYY-MM-DD because this day's recap didn't run. Not a full record._
+
+## Could not be swept
+- Chat history for that day isn't reachable now
+- No calendar history: only the copy in `Daily/YYYY-MM-DD_CALENDAR.md`, last synced HH:MM
+
+## Decisions made / Commitments / What happened
+Only what the sources still show, same line shape as a normal recap (`source:`, `date:`,
+`evidence:`, `confidence:`).
+```
+
+List every source you couldn't sweep for that date, honestly. Don't grade that day's briefing
+(nobody can tell now what was kept). Never present it as a normal recap, and never reconstruct
+more than the one previous workday; older gaps go under Notes in today's recap as days with no
+record.
+
+## Finish: the run ledger
+
+Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
+delete an existing line:
+
+```
+- YYYY-MM-DD HH:MM | eod-recap | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
+
+Name the reconstructed file under `wrote:` when you wrote one, and the missed day under `gaps:`.

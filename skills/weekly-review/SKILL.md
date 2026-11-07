@@ -11,7 +11,10 @@ nothing else does, which is why you're the one routine allowed to move files and
 **You own:** `Daily/<today>_NEXT_WEEK_PLAN.md`, `Tracking/Signals/<today>_weekly.md`,
 `Tracking/IMPROVEMENTS.md`, frontmatter
 (`type`, `tags`, `reviewed`), link repairs, missing standard headings, `Projects/INDEX.md` row
-repairs, stale claims in page prose **outside** dream-owned blocks, and every move into `Archive/`.
+repairs, stale claims in page prose **outside** dream-owned blocks, every move into `Archive/`,
+and closing rows in `Tracking/COMMITMENTS.md`: the dream adds rows and updates `Last evidence` and
+`State`; you alone remove rows, closing `looks-done` rows on evidence. You also append your one
+line to `Tracking/Signals/RUN_LEDGER.md`.
 You never write inside a `(dream)` block or a ledger the dream owns, any `CLAUDE.md`, another
 routine's `Daily/` file, `Captures/`, or the contents of `Archive/`. You never delete.
 
@@ -36,8 +39,9 @@ source: claude-routine
 # Week ahead — YYYY-MM-DD (week of … to …)
 
 ## Health
-Routines that ran vs. expected last week (from Signals and Daily files), captures unfiled for
-more than two workdays, pages past their review date, open FRICTION_LOG items. Three to six lines.
+Routines that ran vs. expected last week (from `Tracking/Signals/RUN_LEDGER.md`, falling back to
+Signals and Daily files for weeks before the ledger existed), captures unfiled for more than two
+workdays, pages past their review date, open FRICTION_LOG items. Three to six lines.
 
 ## Priorities this week
 Three to five, each tied to a goal in GOALS.md or a hard date.
@@ -55,6 +59,10 @@ The scorecard headline (is it getting better?), rules the dream promoted last we
 confidence bar and why, and improvements done or verified.
 ## Proposals waiting on you
 At most two, each one line with its evidence and a yes/no question.
+## Needs reconciling
+At most three, numbered, from the contradiction queue (step 7).
+## Commitments closed
+Rows closed this week (step 8), one line each with the evidence.
 ## Notes
 ```
 
@@ -141,3 +149,39 @@ You own `Tracking/IMPROVEMENTS.md`.
 
 Changes to any `CLAUDE.md` are applied by the owner or by `/workbench:migrate`, never by you. Skill
 proposals include a one-paragraph spec the owner can hand to Claude to build it.
+
+## 7. The contradiction queue
+
+Collect every `## Needs reconciling` section across the live vault. Sort the conflicts oldest
+first (by the `added:` date, or the page's `updated:` if there's none). Put **at most three** in
+the plan under `## Needs reconciling`, as numbered questions the next briefing carries into the
+digest, each with both conflicting claims and the page each one sits on:
+
+```
+Reconcile 1. When does the Acme pilot start? [[Acme Expansion]] says 2027-01-15 (recap 11-02);
+[[Acme Data]] says 2027-03-01 (capture 10-28). Which is right?
+```
+
+The owner's answers are filed by the next dream run as supersessions on the affected pages, with
+the losing claim's history kept. You don't edit the sections yourself. Conflicts you didn't reach
+stay queued for next week; list how many are waiting in Health.
+
+## 8. Commitment closure
+
+In `Tracking/COMMITMENTS.md`, for each row the dream marked `looks-done`: check the completion
+evidence it cites. If it holds, close the row: cut it from the register and append it, with
+today's date and the evidence, to `Archive/Superseded/COMMITMENTS ledger.md` (create it if
+missing). Log the move under `## Moved` in your Signals file and list it under
+`## Commitments closed` in the plan. Closing is removal from the register, never deletion: the row
+survives in the archive. This is the only step in any routine that removes register rows. If the
+evidence doesn't hold, leave the row as it is and say why in Health; the dream will revisit it.
+Never close an `open` or `looks-stale` row.
+
+## Finish: the run ledger
+
+Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
+delete an existing line:
+
+```
+- YYYY-MM-DD HH:MM | weekly | <ok|partial|failed> | wrote: <file names, or "nothing"> | gaps: <none, or a short description>
+```
