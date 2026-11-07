@@ -18,10 +18,9 @@ jobs:
         # 3.9 is what macOS ships with Apple's command-line tools; 3.13 catches newer breakage.
         python: ["3.9", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python }}
+      - uses: actions/checkout@v5
+      # uv installs any Python version on any runner image. setup-python has no 3.9 build for
+      # newer Ubuntu images, which is what broke the first run.
+      - uses: astral-sh/setup-uv@v6
       # PyYAML is test-only (the relationship test parses frontmatter). The plugin itself stays stdlib-only.
-      - run: python -m pip install --quiet pyyaml
-      - run: python -m unittest discover -s tests -v
+      - run: uv run --no-project --python ${{ matrix.python }} --with pyyaml python -m unittest discover -s tests -v
