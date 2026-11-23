@@ -883,6 +883,12 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
           librarian's checks with the safe fixes applied.</p>
       </div>
       <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; before the briefing and midday</span>
+        <h4>Team</h4>
+        <p>A drafter, a prep writer and an editor take what the sweep queued and do the work
+          ahead of time. Choices it shouldn't make alone come to you with a recommendation.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag routine">Runs itself &middot; hourly through the workday</span>
         <h4>Sweep</h4>
         <p>Notices what came in since its last run and sorts it for the briefing, on the
@@ -989,7 +995,7 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <div class="rcircle stepnum">6</div>
         <div>
           <h3>Turn on the routines</h3>
-          <p>Seven scheduled tasks, all named <code>[Workbench]</code>, timed off your
+          <p>Eight scheduled tasks, all named <code>[Workbench]</code>, timed off your
             hours. If you already have older tasks doing the same job, it lists them and
             asks before replacing each one, so you never get two briefings.</p>
         </div>
@@ -1256,13 +1262,14 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
 
     <div class="mem" style="margin-top:30px">
       <table>
-        <caption class="sr-only">The seven scheduled routines plus the librarian, when each one runs by default, and what each one writes.</caption>
+        <caption class="sr-only">The eight scheduled routines plus the librarian, when each one runs by default, and what each one writes.</caption>
         <thead>
           <tr><th scope="col">Routine</th><th scope="col">Default time</th><th scope="col">What it writes</th></tr>
         </thead>
         <tbody>
           <tr><td><b>Calendar sync</b></td><td>Before work, 11:30, end of day</td><td>A calendar copy for today and the next workday</td></tr>
           <tr><td><b>Sweep</b></td><td>Hourly through the workday, first one just before the briefing</td><td>A short sorted list of what came in since its last run, on the smallest model; after a closed-laptop night it covers the whole night</td></tr>
+          <tr><td><b>Team</b></td><td>Before the briefing and before the midday update</td><td>Reply drafts, meeting prep pages, and decisions for you with a recommended answer; on Sonnet, and only when the sweep queued something</td></tr>
           <tr><td><b>Daily briefing</b></td><td>30 minutes before work</td><td>The morning briefing file, and your digest</td></tr>
           <tr><td><b>Midday update</b></td><td>12:00</td><td>An update appended below the briefing</td></tr>
           <tr><td><b>End-of-day recap</b></td><td>30 minutes after work</td><td>The daily recap, and the day's scores</td></tr>
@@ -1599,6 +1606,15 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <p><b>How you use it.</b> Nothing. Or "plan my week".</p>
         <p><b>What it writes.</b> The plan, its scores, the improvements list, and
           structural fixes.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; before the briefing and midday</span>
+        <h4>Team</h4>
+        <p><b>What it does.</b> Drafts replies in your voice, writes prep pages for meetings
+          that need them, and checks both before saving. Never sends anything.</p>
+        <p><b>How you use it.</b> Read the drafts, send what's right, answer its numbered
+          questions. Tailor it in <code>Context/team.md</code>.</p>
+        <p><b>What it writes.</b> Drafts, prep pages, and decisions waiting on you.</p>
       </div>
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag routine">Runs itself &middot; hourly through the workday</span>

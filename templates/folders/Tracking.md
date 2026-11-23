@@ -19,6 +19,8 @@ appended to**, not pages per entity.
 - `Signals/RUN_LEDGER.md` — one line per routine run; a missing line is a missed run
 - `Drafts/` — every draft the project hands the owner to send, saved as given, graded by the recap
 - `Queue/` — one file per day from the hourly `sweep`: what came in since its last run, sorted for the briefing
+- `Prep/` — one page per meeting or job the `team` prepared ahead of time
+- `NEEDS_YOU.md` — decisions only the owner can make, each with a recommended answer
 - `IMPROVEMENTS.md` — what the system proposed to change about itself, and whether it worked
 
 ## Frontmatter
@@ -43,8 +45,10 @@ updated: YYYY-MM-DD
   deletes a line. The librarian reads it. The one documented exception to one writer per file.
 - `COMMITMENTS.md`: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
   `weekly-review` alone removes rows, closing `looks-done` rows on evidence.
-- `Drafts/`: the project (and the briefing, for reply drafts). Final once its chat ends.
+- `Drafts/`: the project, and the `team` drafter (`by: team-drafter`). Final once its chat or run ends.
 - `Queue/`: `sweep` only, one file per day (`YYYY-MM-DD_sweep.md`), appended once per run. The briefing reads it.
+- `Prep/`: `team` only. Final once the run that wrote it ends.
+- `NEEDS_YOU.md`: `team` appends `open` items, `eod-recap` appends `answered` lines, the owner may append an answer. Nobody edits a line.
 - `IMPROVEMENTS.md`: `weekly-review` only. The dream proposes in `DREAM_LOG.md`; the weekly logs and follows up.
 
 ## Conventions

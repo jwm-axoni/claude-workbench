@@ -9,8 +9,8 @@ updated: {{created_date}}
 
 Every draft Claude hands {{preferred_name}} that's meant to go to someone else (an email, a Slack
 message, a doc section, a post) is saved here at the moment it's given, as
-`YYYY-MM-DD_<short-slug>.md`. One writer: the Claude project (and the briefing, if it drafts
-replies). The chat that wrote a draft may overwrite it with its final revision; after that chat,
+`YYYY-MM-DD_<short-slug>.md`. Writers: the Claude project, and the `team` routine's drafter,
+which marks its files `by: team-drafter` and starts their slug with `reply-`. The chat that wrote a draft may overwrite it with its final revision; after that chat,
 it's never edited.
 
 This is how the workbench learns from what {{preferred_name}} actually sends, not just from what
@@ -39,6 +39,8 @@ date: YYYY-MM-DD
 channel: email | slack | doc | post | other
 to: "[[Pat Lee]]"
 about: "[[Acme Expansion]]"
+by: team-drafter        # only on drafts the team wrote; the project leaves it out
+queue: q-20261123-004   # the queue item it answers, team drafts only
 ---
 
 <the draft exactly as given>

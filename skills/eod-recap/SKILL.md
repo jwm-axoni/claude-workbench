@@ -158,6 +158,12 @@ answer to a numbered question goes under `## Answers` in the Signals file:
 `- briefing YYYY-MM-DD Q2 — yes, it's Jamie Torres`. Answers given in the project arrive as
 `answer:` captures; list those too, so the dream has one place to read them.
 
+When an answered question carries a Needs-you id (`Q2 (n-007)`), or a capture answers one
+(`answer: n-007 after the call`), also append one line to `Tracking/NEEDS_YOU.md`, and never edit
+an existing line there:
+`- YYYY-MM-DD HH:MM | n-007 | answered | after the call | via: digest Q2`. Skip ids that already
+have an `answered` line.
+
 ## If the recap already exists
 
 Append an `## Update — HH:MM` section with only what's new since; don't rewrite. Same for the

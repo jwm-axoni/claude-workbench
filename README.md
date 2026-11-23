@@ -100,6 +100,11 @@ Three files keep the memory honest rather than just full:
 - `Context/surfacing.md`: what your briefing should always raise, never raise, when to stay quiet, and the shape you want per topic. Edit it yourself, or just correct a briefing twice and the dream writes the rule.
 - `Tracking/Signals/RUN_LEDGER.md`: one line per routine run, so a missed run is visible (see [The routines](#the-routines)).
 
+Two more pages run the team that works between briefings:
+
+- `Context/team.md`: which personas work for you (drafter, prep, editor), how much each does in a day, extra jobs for your role, and whether the sweep may ping you about urgent things (off until you turn it on). This is the one page to edit to tailor the Workbench to someone.
+- `Tracking/NEEDS_YOU.md`: decisions only you can make, each with the answer Claude would pick. The briefing asks them as numbered questions, and your reply closes them.
+
 When two sources disagree, the page gets a `## Needs reconciling` section instead of a guess. The weekly turns the oldest three into numbered questions, and your answer becomes a supersession with the losing claim's history kept. New briefing and recap claims carry an `evidence:` quote or page reference and a `confidence:`, so `/workbench:why` can show you where any fact came from.
 
 Every folder carries its own `CLAUDE.md` with the schema and a page shape to copy, so there is no templates folder to drift out of sync. Each routine owns specific files and writes nothing else; your chats write only to `Tracking/Captures/` and `Tracking/Drafts/`. Nothing is ever deleted: a fact that stops being true is marked superseded with a link to what replaced it, then archived.
@@ -135,6 +140,8 @@ On Team and Enterprise plans, Cowork can run sessions in the cloud only if your 
 
 **The sweep notices things between the briefings.** Every hour of the working day, starting just before the morning briefing, it reads your reachable sources for what came in since its last good run, sorts each item (urgent, reply owed, prep needed, possible commitment, FYI) and appends a short list to `Tracking/Queue/`. The briefing and midday update build on that list instead of going back to every source. If the laptop was closed overnight, the first sweep of the morning covers the whole night, because it starts from the last run recorded in the run ledger and your sources keep their history. It never drafts, sends or edits a page.
 
+**The team does the work before you get to it.** Fifteen minutes or more before the morning briefing and the midday update, the `team` routine takes what the sweep queued. The drafter writes replies in your voice into `Tracking/Drafts/`, prep writes a page for meetings that need one into `Tracking/Prep/`, and the editor checks both before they're saved: every fact traced to a source, your voice rules followed, nothing you said never to raise. A choice it shouldn't make alone goes to `Tracking/NEEDS_YOU.md` with its recommendation. So the briefing says "a reply to Pat is drafted" instead of "Pat is waiting". It never sends anything. When there's nothing queued it stops after one quick check, so a quiet day costs almost nothing.
+
 **Missed runs show up instead of vanishing.** Every routine appends one line to `Tracking/Signals/RUN_LEDGER.md` when it finishes. The next morning's briefing checks that ledger before anything else and tells you in plain words what didn't run and what that cost ("the dream didn't run last night, so 4 captures are unfiled"). The dream then files every unfiled capture whatever its date, a recap for a day that never got one is written as a short file marked reconstructed that says what it couldn't sweep, and a routine that runs late says so in its own file. None of that depends on a scheduler promising to catch up.
 
 ![The nightly dream: four things it produces, all landing on your pages with a receipt](docs/assets/workbench-nightly-dream.png)
@@ -169,7 +176,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:migrate` | Upgrade after a plugin update without losing your edits, or adopt an older vault. |
 | `/workbench:librarian` | Get a health report across 34 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled, pages gone quiet. |
 | `/workbench:capture` | Log what a chat settled, from any chat in any surface. Usually happens on its own. |
-| `/workbench:sweep`, `daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
+| `/workbench:sweep`, `team`, `daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |
 | `/workbench:project <name>` | Where a project stands, what's decided, what's owed. |
 | `/workbench:vault-search <question>` | Search with the folder's own rules: name variants, trust order, sources cited. |
