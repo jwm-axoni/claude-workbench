@@ -12,7 +12,8 @@ Closed chapters. **Read-only.**
 3. **Don't delete.** The archive exists so nothing had to be thrown away.
 
 Only `weekly-review` moves files here, mirroring the original folder
-(`Archive/Projects/`, `Archive/Organizations/`, `Archive/Superseded/`), and it logs each move
+(`Archive/Projects/`, `Archive/Organizations/`, `Archive/Superseded/`, `Archive/Tracking/Queue/`,
+`Archive/Tracking/Prep/`), and it logs each move
 under `## Moved` in `Tracking/Signals/YYYY-MM-DD_weekly.md`: what, from where, to where, which
 rule fired. That log is what makes a move reversible without git.
 

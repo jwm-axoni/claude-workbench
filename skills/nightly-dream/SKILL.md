@@ -80,6 +80,13 @@ Step 0 runs even when tonight's recap is missing (see Inputs): filing captures d
     for the duplicate check only), and `Context/surfacing.md`.
 11. The newest `Daily/*_NEXT_WEEK_PLAN.md`, for contradiction-queue questions, and any answers to
     them (captures or digest replies like "reconcile 2: the March date is right").
+12. The proactive team's trail, if the vault has one:
+    - every `Tracking/Queue/*_sweep.md` file since your last `ok` ledger line (so a missed night is
+      caught up), for its `commitment-candidate` items. Skip any `q-` id already listed under
+      `## Processed captures` in `DREAM_LOG.md`, and list each one you file there, like a capture.
+    - the recap Signals `## Queue` grades for the last 14 days
+    - the `### Editor` and `### Held` lines in `Tracking/Signals/*_team.md` for the last 14 days
+    - `Context/roster.md`
 
 ## What to do
 
@@ -137,8 +144,11 @@ date you added it (`added: YYYY-MM-DD`). Never pick one. The weekly queues these
 
 **b4. Commitments maintenance.** After the contradiction pass, scan tonight's recap (both `### Owed by` and `### Owed to`, since
 **Owed to** lines reach no page otherwise), any reconstructed recaps filed this run (3b), the pages
-you touched tonight, and today's captures (plus any backlog captures from Step 0) for commitment language: promises,
-deadlines, "I will", "I'll send", "owes", "waiting on", "by Friday". For each:
+you touched tonight, today's captures (plus any backlog captures from Step 0), and today's queue
+`commitment-candidate` items not yet processed (input 12; their `evidence:` quote is the source, cited as
+`queue q-…`) for commitment language: promises, deadlines, "I will", "I'll send", "owes",
+"waiting on", "by Friday". A queue item the recap graded `ignored` is weaker evidence: it needs a
+second source before it clears the bar. For each:
 
 - **Below the bar**: a candidate under the commitment confidence bar (the same bar as step b) is
   not a row. It stays a **Needs your yes** item, and becomes a row only once the owner approves it
@@ -177,6 +187,19 @@ counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 rescheduled, 1 
   edit is an anecdote; write a rule into `## Learned rules (dream)` in `Context/voice.md` only when
   the same change shows up in two or more drafts, citing them. If a learned rule is contradicted by
   later edits, demote it to `superseded`. `verbatim` drafts are evidence a rule works; note them.
+  Team drafts (`by: team-drafter`) count the same as the project's.
+- **Editor send-backs.** Each `### Editor` line that sent a draft back names what was wrong ("opened
+  with a pleasantry"). That's evidence about the drafter, not the owner. Count it toward a voice
+  rule only alongside an owner edit that shows the same thing. A send-back reason that repeats on 3
+  or more days with no matching rule means the drafter keeps missing a rule that exists: log it in
+  `FRICTION_LOG.md` `## Open`.
+- **What the sweep surfaces.** From the recap's `## Queue` grades: when `fyi` items from the same
+  sender or on the same topic are graded `ignored` on two different days, append a `pending` line
+  under **Never surface** in `Context/surfacing.md` (source: the two recap dates). Those two days
+  are the first signal, not two. It becomes standing only on a later signal dated after the
+  pending line: a third ignored day, or the owner saying so. Never write a rule from `urgent`, `reply-owed` or
+  `prep-needed` items being ignored: unanswered isn't unwanted. Ask about those instead, as a
+  **Needs your yes** item.
 - **Surfacing rules.** Same machinery as voice rules, different target. When the owner says a
   topic should always or never be in the briefing, says when not to be bothered, or corrects a
   briefing's shape for a topic ("put the numbers first for pipeline"), append the rule to the
@@ -188,8 +211,10 @@ counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 rescheduled, 1 
   that's friction: log it, and ask fewer, sharper questions.
 - **Proposals.** Notice repeated manual work (the same kind of task three times in two weeks),
   repeated corrections, and friction without a fix. Propose one concrete change for each under
-  **Proposals** in the log entry, with its kind (`rule`, `skill`, `routine`, `source`, `cleanup`) and
-  evidence. Skip anything already open or declined in `IMPROVEMENTS.md`. You only propose; the weekly
+  **Proposals** in the log entry, with its kind (`rule`, `skill`, `routine`, `source`, `cleanup`,
+  `persona`) and evidence. A `persona` proposal is a line for `## Role workers` in
+  `Context/roster.md`, for repeated prep or drafting the team doesn't cover yet ("Deal desk: …,
+  done by hand 3 times since 11-02"). The owner adds it to the roster; you never edit the roster. Skip anything already open or declined in `IMPROVEMENTS.md`. You only propose; the weekly
   logs it and follows up.
 
 **d. Escape hatch.** If a recap line is genuinely ambiguous about one entity, you may make one

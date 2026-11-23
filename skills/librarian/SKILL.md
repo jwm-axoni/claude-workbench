@@ -1,6 +1,6 @@
 ---
 name: librarian
-description: Audit the workbench vault against 34 checks and report what's wrong with it: missing frontmatter, broken or path-style links, orphan and duplicate pages, superseded entries without forward links, stale pages, ledger entries missing provenance, unfiled captures, missed routines from the run ledger, a malformed commitments register or surfacing page, unreconciled conflicts, a repo clone behind its remote, one-writer violations, files in the wrong folder. Read-only by default; the weekly routine runs these checks and fixes what's safe. Use for "audit my vault", "is my workbench healthy", "clean up my notes", "find duplicates", or /workbench:librarian.
+description: Audit the workbench vault against 38 checks and report what's wrong with it: missing frontmatter, broken or path-style links, orphan and duplicate pages, superseded entries without forward links, stale pages, ledger entries missing provenance, unfiled captures, missed routines from the run ledger, a malformed commitments register or surfacing page, unreconciled conflicts, a repo clone behind its remote, one-writer violations, files in the wrong folder. Read-only by default; the weekly routine runs these checks and fixes what's safe. Use for "audit my vault", "is my workbench healthy", "clean up my notes", "find duplicates", or /workbench:librarian.
 ---
 
 # Librarian
@@ -21,7 +21,7 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
 
 ## Checks
 
-34 checks, numbered 1–30, with the relationship checks as 13a–13d.
+38 checks, numbered 1–34, with the relationship checks as 13a–13d.
 
 **Structure**
 1. Files in the wrong folder: an entity page in `Daily/`, a dated note in `Resources/`, a person
@@ -99,6 +99,16 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
     90+ days old. Report each as a question ("still current, or has this ended?"). Never change its
     status or move it; a quiet page may still be true. The answer comes back as a capture and the
     dream applies it.
+
+**The proactive team** (skip a check when its file or folder doesn't exist)
+31. Queue files in `Tracking/Queue/` older than 14 days whose items all have a grade in a recap's
+    `## Queue`, or any older than 30 days: candidates for the weekly's archive move.
+32. Items in `Tracking/NEEDS_YOU.md` open for more than 7 days (no `answered` line with their id).
+    Report each with its question; one the owner keeps skipping may not be worth asking.
+33. Prep pages in `Tracking/Prep/` more than 30 days past their date: candidates for the archive move.
+34. `Context/roster.md` exists and has `## Personas`, `## Role workers` and `## Urgent pings`, in
+    that order, and `## Urgent pings` says `on` or `off`. Report anything else; never fix it, the
+    page is the owner's.
 
 ## Report
 
