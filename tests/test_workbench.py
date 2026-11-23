@@ -263,6 +263,29 @@ class Routines(Base):
         self.assertIn("workbench:nightly-dream", r["nightly-dream"]["prompt"])
         self.assertIn(".workbench/routines/nightly-dream.md", r["nightly-dream"]["prompt"])
 
+    def test_sweep_runs_hourly_through_the_working_day_on_the_small_model(self):
+        r = self.routines(PROFILE)
+        self.assertEqual(r["sweep"]["cron"], "20 7,8,9,10,11,12,13,14,15,16,17 * * 1-5",
+                         "the first sweep runs before the 08:00 briefing")
+        self.assertIn("07:20", r["sweep"]["when"])
+        self.assertIn("17:20", r["sweep"]["when"])
+        self.assertEqual(r["sweep"]["model"], "haiku")
+        self.assertIn("workbench:sweep", r["sweep"]["prompt"])
+        self.assertIn("Tracking/Queue/YYYY-MM-DD_sweep.md", r["sweep"]["writes"])
+        late = self.routines(dict(PROFILE, routine_times={"daily-briefing": "10:00"}))
+        self.assertTrue(late["sweep"]["cron"].startswith("20 8,"), "never before the working day starts")
+        r = self.routines(dict(PROFILE, routines={"sweep": False}))
+        self.assertNotIn("sweep", r)
+
+    def test_every_routine_names_a_model_and_the_profile_can_change_it(self):
+        r = self.routines(PROFILE)
+        self.assertEqual(r["daily-briefing"]["model"], "sonnet")
+        self.assertEqual(r["calendar-sync"]["model"], "haiku")
+        self.assertTrue(all(x["model"] in wb.MODELS for x in r.values()))
+        r = self.routines(dict(PROFILE, models={"nightly-dream": "Opus", "sweep": "gpt-4"}))
+        self.assertEqual(r["nightly-dream"]["model"], "opus")
+        self.assertEqual(r["sweep"]["model"], "haiku", "an unknown model falls back to the blueprint's")
+
     def test_cron_days(self):
         self.assertEqual(wb.cron_days(wb.parse_workdays("Mon-Fri")), "1-5")
         self.assertEqual(wb.cron_days(wb.parse_workdays(["Mon", "Wed", "Fri"])), "1,3,5")
@@ -284,6 +307,25 @@ class NewVaultFiles(Base):
         surfacing = (self.root / "Context/surfacing.md").read_text()
         headings = re.findall(r"^## (.+)$", surfacing, re.M)
         self.assertEqual(headings, ["Always surface", "Never surface", "Quiet hours", "Format preferences"])
+
+    def test_upgrade_adds_the_queue_and_the_sweep_routine(self):
+        self.apply()
+        manifest_path = self.root / ".workbench/manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        for rel in ["Tracking/Queue/README.md", ".workbench/routines/sweep.md"]:
+            (self.root / rel).unlink()
+            manifest["files"].pop(rel)
+        (self.root / "Tracking/Queue").rmdir()
+        manifest["plugin_version"] = "0.2.0"
+        manifest_path.write_text(json.dumps(manifest))
+        out = self.apply()
+        ops = {a["path"]: a["op"] for a in out["actions"]}
+        self.assertEqual(ops["Tracking/Queue/README.md"], "create")
+        self.assertEqual(ops[".workbench/routines/sweep.md"], "create")
+        self.assertIn("written only by `sweep`", (self.root / "Tracking/Queue/README.md").read_text())
+        schedules = json.loads((self.root / ".workbench/schedules.json").read_text())
+        self.assertIn("sweep", [r["id"] for r in schedules["routines"]])
+        self.assertIn("`sweep`", (self.root / "CLAUDE.md").read_text(), "the ownership table names the sweep")
 
     def test_repo_vault_gets_a_gitignore_and_local_does_not(self):
         self.apply(dict(PROFILE, vault_home="local"))

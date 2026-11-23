@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased (0.3.0)
+
+The first piece of a proactive Workbench: something now watches between the scheduled briefings.
+
+- New routine `sweep` (`[Workbench] Sweep`): hourly through the working day, the first run just before the morning briefing. Reads every reachable source for what came in since its last `ok` line in the run ledger (capped at 72 hours, the rest recorded as a gap), sorts items as `urgent`, `reply-owed`, `prep-needed`, `commitment-candidate` or `fyi`, dedupes by source id, and appends one section to `Tracking/Queue/YYYY-MM-DD_sweep.md`. Never drafts, sends or edits a page. A closed-laptop night is covered by the next morning's first run, so the sweep stays local; a Cowork cloud task was tested and rejected (its files land in a throwaway sandbox, and nothing reads them until the laptop opens)
+- The briefing and midday update read the queue first and go to live sources only for what it doesn't cover; lines that came from a queue item carry its `q-` id. A missed sweep hour isn't a gap; the briefing names the sweep only when it has no `ok` line since the last briefing or reports a capped window
+- Every routine names a `model` (`haiku`, `sonnet` or `opus`) in `.workbench/schedules.json`: the sweep and calendar sync default to `haiku`, the rest to `sonnet`. Override per routine with `models` in the profile. The `schedules` skill sets it on each task, or tells the owner which to pick when the tool can't
+- Migration: `/workbench:migrate` adds `Tracking/Queue/README.md` and the sweep's fallback routine copy through the normal `apply` path; `/workbench:schedules` then offers to create the sweep task and set each task's model
+
 ## 0.2.0 — 2026-11-07
 
 Dual-runtime support and memory that behaves more like judgment than storage.

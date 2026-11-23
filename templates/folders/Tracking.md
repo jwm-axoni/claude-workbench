@@ -18,6 +18,7 @@ appended to**, not pages per entity.
 - `Signals/` — one file per date per routine: claims, outcomes, changes, archive moves
 - `Signals/RUN_LEDGER.md` — one line per routine run; a missing line is a missed run
 - `Drafts/` — every draft the project hands the owner to send, saved as given, graded by the recap
+- `Queue/` — one file per day from the hourly `sweep`: what came in since its last run, sorted for the briefing
 - `IMPROVEMENTS.md` — what the system proposed to change about itself, and whether it worked
 
 ## Frontmatter
@@ -43,6 +44,7 @@ updated: YYYY-MM-DD
 - `COMMITMENTS.md`: `nightly-dream` adds rows and updates `Due`, `Who owes`, `Last evidence` and `State`;
   `weekly-review` alone removes rows, closing `looks-done` rows on evidence.
 - `Drafts/`: the project (and the briefing, for reply drafts). Final once its chat ends.
+- `Queue/`: `sweep` only, one file per day (`YYYY-MM-DD_sweep.md`), appended once per run. The briefing reads it.
 - `IMPROVEMENTS.md`: `weekly-review` only. The dream proposes in `DREAM_LOG.md`; the weekly logs and follows up.
 
 ## Conventions

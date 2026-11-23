@@ -152,6 +152,10 @@ def resolve_role_pack(profile: dict, roles: dict) -> str:
     return best
 
 
+SWEEP_MINUTE = 20
+MODELS = {"haiku", "sonnet", "opus"}
+
+
 def routine_times(profile: dict) -> dict:
     hours = profile.get("work_hours") or {}
     start, end = hhmm(hours.get("start"), "09:00"), hhmm(hours.get("end"), "17:30")
@@ -165,8 +169,13 @@ def routine_times(profile: dict) -> dict:
         "weekly": hhmm(custom.get("weekly"), fmt(shift(start, -90))),
     }
     cal = shift(start, -60)
+    # The sweep runs hourly through the working day, at a minute clear of the other routines. Its
+    # first run lands before the morning briefing, so the overnight catch-up is in the queue in time.
+    first = min(start[0], shift(t["brief"], -(SWEEP_MINUTE + 20))[0])
+    sweep_hours = list(range(first, end[0] + 1))
     return {"start": start, "end": end, "days": days, "t": t,
-            "cal_minute": cal[1], "cal_hours": sorted({cal[0], 11, end[0]})}
+            "cal_minute": cal[1], "cal_hours": sorted({cal[0], 11, end[0]}),
+            "sweep_minute": SWEEP_MINUTE, "sweep_hours": sweep_hours}
 
 
 def build_context(profile: dict, root: Path):
@@ -259,6 +268,11 @@ def build_context(profile: dict, root: Path):
         "cal_minute": times["cal_minute"],
         "cal_hours": ",".join(map(str, times["cal_hours"])),
         "cal_times": ", ".join(fmt((h, times["cal_minute"])) for h in times["cal_hours"]),
+        "sweep_minute": times["sweep_minute"],
+        "sweep_minute_pad": f"{times['sweep_minute']:02d}",
+        "sweep_hours": ",".join(map(str, times["sweep_hours"])),
+        "sweep_first": fmt((times["sweep_hours"][0], times["sweep_minute"])),
+        "sweep_last": fmt((times["sweep_hours"][-1], times["sweep_minute"])),
     }
     for k, v in times["t"].items():
         ctx[f"{k}_time"], ctx[f"{k}_hour"], ctx[f"{k}_minute"] = fmt(v), v[0], v[1]
@@ -266,6 +280,12 @@ def build_context(profile: dict, root: Path):
 
 
 # ---------------------------------------------------------------- desired state
+
+def routine_model(profile: dict, routine: dict) -> str:
+    """The model a routine's scheduled task runs on: the profile's choice if valid, else the blueprint's."""
+    chosen = str((profile.get("models") or {}).get(routine["id"], "")).lower()
+    return chosen if chosen in MODELS else routine.get("model", "sonnet")
+
 
 def desired_routines(profile: dict, ctx: dict, base: dict) -> list[dict]:
     toggles = profile.get("routines") or {}
@@ -284,6 +304,7 @@ def desired_routines(profile: dict, ctx: dict, base: dict) -> list[dict]:
             f"This routine writes only: {r['writes']}. Read sources; never send, post or change anything outside the workbench."
         )
         out.append({"id": r["id"], "name": r["name"], "skill": r["skill"], "mode": r.get("mode"),
+                    "model": routine_model(profile, r),
                     "when": render(r["when"], ctx), "cron": render(r["cron"], ctx),
                     "timezone": ctx["timezone"], "writes": r["writes"], "prompt": prompt})
     return out
@@ -643,7 +664,7 @@ def main(argv=None) -> int:
     out.pop("_files", None)
     if not args.full:
         out["actions"] = [a for a in out["actions"] if a["op"] != "keep"]
-        out["routines"] = [{k: r[k] for k in ("id", "name", "when", "cron")} for r in out["routines"]]
+        out["routines"] = [{k: r[k] for k in ("id", "name", "when", "cron", "model")} for r in out["routines"]]
     print(json.dumps(out, indent=2, ensure_ascii=False))
     return 0
 

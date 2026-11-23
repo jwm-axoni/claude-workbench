@@ -12,6 +12,7 @@
     { "path": "Tracking/Captures" },
     { "path": "Tracking/Signals" },
     { "path": "Tracking/Drafts" },
+    { "path": "Tracking/Queue" },
     { "path": "Meetings",           "template": "folders/Meetings.md", "when": "meetings" },
     { "path": "Archive",            "template": "folders/Archive.md" },
     { "path": ".workbench" },
@@ -35,6 +36,7 @@
     { "path": "Tracking/Captures/README.md",        "template": "pages/Captures-README.md" },
     { "path": "Tracking/Signals/README.md",         "template": "pages/Signals-README.md" },
     { "path": "Tracking/Drafts/README.md",          "template": "pages/Drafts-README.md" },
+    { "path": "Tracking/Queue/README.md",           "template": "pages/Queue-README.md" },
     { "path": "Tracking/IMPROVEMENTS.md",           "template": "pages/IMPROVEMENTS.md",     "user_owned": true },
     { "path": "Tracking/COMMITMENTS.md",            "template": "pages/COMMITMENTS.md",      "user_owned": true, "on_collision": "conflict" },
     { "path": "Tracking/Signals/RUN_LEDGER.md",     "template": "pages/RUN_LEDGER.md",       "user_owned": true, "on_collision": "conflict" },
@@ -46,6 +48,7 @@
   "routines": [
     {
       "id": "calendar-sync",
+      "model": "haiku",
       "name": "[Workbench] Calendar Sync",
       "skill": "calendar-sync",
       "when": "workdays at {{cal_times}}",
@@ -53,7 +56,17 @@
       "writes": "Daily/YYYY-MM-DD_CALENDAR.md (today and the next workday); appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
+      "id": "sweep",
+      "model": "haiku",
+      "name": "[Workbench] Sweep",
+      "skill": "sweep",
+      "when": "workdays, hourly at :{{sweep_minute_pad}} from {{sweep_first}} to {{sweep_last}}",
+      "cron": "{{sweep_minute}} {{sweep_hours}} * * {{workdays_cron}}",
+      "writes": "appends one section per run to Tracking/Queue/YYYY-MM-DD_sweep.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
+    },
+    {
       "id": "daily-briefing",
+      "model": "sonnet",
       "name": "[Workbench] Morning Briefing",
       "skill": "daily-briefing",
       "when": "workdays at {{brief_time}}",
@@ -62,6 +75,7 @@
     },
     {
       "id": "midday-update",
+      "model": "sonnet",
       "name": "[Workbench] Midday Update",
       "skill": "daily-briefing",
       "mode": "midday",
@@ -71,6 +85,7 @@
     },
     {
       "id": "eod-recap",
+      "model": "sonnet",
       "name": "[Workbench] End-of-Day Recap",
       "skill": "eod-recap",
       "when": "workdays at {{recap_time}}",
@@ -79,6 +94,7 @@
     },
     {
       "id": "nightly-dream",
+      "model": "sonnet",
       "name": "[Workbench] Nightly Dream",
       "skill": "nightly-dream",
       "when": "workday nights at {{dream_time}}",
@@ -87,6 +103,7 @@
     },
     {
       "id": "weekly",
+      "model": "sonnet",
       "name": "[Workbench] Weekly Plan & Maintenance",
       "skill": "weekly-review",
       "when": "first workday at {{weekly_time}}",

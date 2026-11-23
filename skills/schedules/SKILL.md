@@ -13,7 +13,10 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/workbench.py" schedules --root "<workbenc
 ```
 
 Each routine there has `id`, `name` (always `[Workbench] …`), `cron`, `timezone`, `when` (human
-text) and `prompt`. The prompt is deliberately short: it invokes the plugin skill, with the copy in
+text), `model` and `prompt`. `model` is `haiku`, `sonnet` or `opus`: the hourly sweep and the
+calendar sync run on the smallest model, the rest on `sonnet`. The owner changes one with
+`models` in `.workbench/profile.json` (`{"nightly-dream": "opus"}`); never put a routine on a
+larger model on your own, since every run spends the owner's credit. The prompt is deliberately short: it invokes the plugin skill, with the copy in
 `.workbench/routines/` as a fallback, so upgrading the plugin upgrades the routines without
 touching the schedule.
 
@@ -65,6 +68,11 @@ only files it owns, merges conflict only where git can show it. If cloud tasks a
 switched off for the account, fall back to Runner 2 against the local clone; never run both for the
 same routine.
 
+**Why not the cloud for the sweep?** It was tested (2026-11): a Cowork cloud task's files land in
+its own throwaway sandbox, not in a Project or the local folder, and nothing reads what it finds
+until the laptop opens anyway. So the sweep runs locally like everything else, and each run
+starts from the last good one in the run ledger, which covers a closed-laptop night.
+
 **Plan notes.** On Team and Enterprise plans, Cowork sessions run in the cloud only if the
 organization turns on "Run Cowork in the cloud" (Organization settings > Cowork), and even then a
 task that requires local files runs locally. On personal plans there's no location choice. Either
@@ -99,12 +107,14 @@ named correctly) and delete the other after saying so.
 
 ## 3. Reconcile
 
-Show the plan as one small table (routine · action · when) and get a yes, then apply it:
+Show the plan as one small table (routine · action · when · model) and get a yes, then apply it.
+If the scheduling tool has no model setting, create the task anyway and tell the owner which
+model to pick for it by hand in the task's settings:
 
 | Situation | Action |
 |---|---|
-| desired, not present | **create** with the exact `name`, `cron`, `timezone`, `prompt` |
-| present, cron/prompt/timezone differ | **update** in place (keeps its history); if the tool can't update, delete then create |
+| desired, not present | **create** with the exact `name`, `cron`, `timezone`, `model`, `prompt` |
+| present, cron/prompt/timezone/model differ | **update** in place (keeps its history); if the tool can't update, delete then create |
 | present and identical | leave it |
 | ours, retired | **delete** |
 | look-alike the person said to replace | pause it, then create ours |
@@ -123,4 +133,4 @@ If the tool supports it, turn on notifications only for failures. Nobody needs s
    reconciled", and what was created, updated or deleted. That's the audit trail if a routine
    later goes missing.
 
-Finish with the final table: routine, when (in their timezone), where it runs.
+Finish with the final table: routine, when (in their timezone), model, where it runs.
