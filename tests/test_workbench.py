@@ -281,6 +281,20 @@ class Routines(Base):
         r = self.routines(dict(PROFILE, routines={"sweep": False}))
         self.assertNotIn("sweep", r)
 
+    def test_team_runs_before_the_briefing_and_the_midday_update_after_a_sweep(self):
+        r = self.routines(PROFILE)
+        self.assertEqual(r["team"]["cron"], "45 7,11 * * 1-5", "07:45 before the 08:00 briefing, 11:45 before 12:00")
+        self.assertEqual(r["team"]["model"], "sonnet")
+        self.assertIn("workbench:team", r["team"]["prompt"])
+        self.assertIn("Standing exceptions", r["team"]["prompt"])
+        for brief in ["08:00", "08:30", "09:10", "08:55", "00:05"]:
+            t = wb.routine_times(dict(PROFILE, routine_times={"daily-briefing": brief}))
+            team_h, team_m = t["team"][0]
+            b = wb.hhmm(brief, "")
+            gap = (b[0] * 60 + b[1] - team_h * 60 - team_m) % (24 * 60)
+            self.assertTrue(15 <= gap < 75, f"team {team_h}:{team_m} vs briefing {brief}")
+            self.assertIn(team_h, t["sweep_hours"], f"a sweep runs at {team_h}:20, before the team at :45")
+
     def test_every_routine_names_a_model_and_the_profile_can_change_it(self):
         r = self.routines(PROFILE)
         self.assertEqual(r["daily-briefing"]["model"], "sonnet")
@@ -330,6 +344,21 @@ class NewVaultFiles(Base):
         schedules = json.loads((self.root / ".workbench/schedules.json").read_text())
         self.assertIn("sweep", [r["id"] for r in schedules["routines"]])
         self.assertIn("`sweep`", (self.root / "CLAUDE.md").read_text(), "the ownership table names the sweep")
+
+    def test_fresh_vault_has_the_team_files(self):
+        self.apply()
+        team = (self.root / "Context/roster.md").read_text()
+        self.assertIn("- **drafter**: on", team)
+        self.assertIn("Deal desk:", team, "the sales role pack adds its worker")
+        self.assertIn("## Urgent pings\n\noff", team)
+        self.assertTrue((self.root / "Tracking/NEEDS_YOU.md").read_text().rstrip().endswith("## Items"))
+        self.assertIn("team-prep", (self.root / "Tracking/Prep/README.md").read_text())
+        self.assertTrue((self.root / ".workbench/routines/team.md").exists())
+        contract = (self.root / "CLAUDE.md").read_text()
+        self.assertIn("`Tracking/NEEDS_YOU.md`", contract)
+        self.assertIn("the sweep may send an urgent ping", contract)
+        ctx, _, _ = wb.build_context(dict(PROFILE, role="Office manager"), self.root)
+        self.assertIn("_None for this role yet.", ctx["role_workers"], "a role with no workers says so")
 
     def test_repo_vault_gets_a_gitignore_and_local_does_not(self):
         self.apply(dict(PROFILE, vault_home="local"))

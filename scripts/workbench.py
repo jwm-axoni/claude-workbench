@@ -153,7 +153,14 @@ def resolve_role_pack(profile: dict, roles: dict) -> str:
 
 
 SWEEP_MINUTE = 20
+TEAM_MINUTE = 45
 MODELS = {"haiku", "sonnet", "opus"}
+
+
+def team_slot(before: tuple[int, int]) -> tuple[int, int]:
+    """The latest HH:45 that is at least 15 minutes before `before`."""
+    h, m = shift(before, -15)
+    return (h if m >= TEAM_MINUTE else (h - 1) % 24, TEAM_MINUTE)
 
 
 def routine_times(profile: dict) -> dict:
@@ -169,14 +176,18 @@ def routine_times(profile: dict) -> dict:
         "weekly": hhmm(custom.get("weekly"), fmt(shift(start, -90))),
     }
     cal = shift(start, -60)
-    # The sweep runs hourly through the working day, at a minute clear of the other routines. Its
-    # first run lands before the morning briefing, so the overnight catch-up is in the queue in time.
-    first = min(start[0], shift(t["brief"], -(SWEEP_MINUTE + 20))[0])
+    # The team runs at :45 at least 15 minutes before the briefing and the midday update, so both
+    # carry its drafts and prep. The sweep runs hourly at :20 through the working day, starting in
+    # the team's morning hour, so the overnight catch-up is queued before the team reads it.
+    team = [team_slot(t["brief"]), team_slot(t["midday"])]
+    # Start in the team's morning hour when that comes before the working day (counted around the
+    # clock, so a briefing just after midnight still gets a sweep before its team run).
+    first = team[0][0] if 0 < (start[0] - team[0][0]) % 24 <= 12 else start[0]
     if first <= end[0]:
         sweep_hours = list(range(first, end[0] + 1))
     else:  # a working day that crosses midnight
         sweep_hours = list(range(first, 24)) + list(range(0, end[0] + 1))
-    return {"start": start, "end": end, "days": days, "t": t,
+    return {"start": start, "end": end, "days": days, "t": t, "team": team,
             "cal_minute": cal[1], "cal_hours": sorted({cal[0], 11, end[0]}),
             "sweep_minute": SWEEP_MINUTE, "sweep_hours": sweep_hours}
 
@@ -276,6 +287,11 @@ def build_context(profile: dict, root: Path):
         "sweep_hours": ",".join(map(str, sorted(times["sweep_hours"]))),
         "sweep_first": fmt((times["sweep_hours"][0], times["sweep_minute"])),
         "sweep_last": fmt((times["sweep_hours"][-1], times["sweep_minute"])),
+        "team_minute": TEAM_MINUTE,
+        "team_hours": ",".join(map(str, sorted({h for h, _ in times["team"]}))),
+        "team_times": " and ".join(dict.fromkeys(fmt(x) for x in times["team"])),
+        "role_workers": bullets(pack.get("workers", []),
+                                "_None for this role yet. Add a line here to give the team one more job._"),
     }
     for k, v in times["t"].items():
         ctx[f"{k}_time"], ctx[f"{k}_hour"], ctx[f"{k}_minute"] = fmt(v), v[0], v[1]
@@ -304,7 +320,8 @@ def desired_routines(profile: dict, ctx: dict, base: dict) -> list[dict]:
             f"1. If the `workbench:{r['skill']}` skill is available, invoke it{mode} and follow it exactly.\n"
             f"2. Otherwise read `{ctx['workbench_path']}/{SYSTEM_DIR}/routines/{r['skill']}.md` and follow it exactly.\n\n"
             f"Today's date is the date this runs, in {ctx['timezone']}. Read the workbench's root `CLAUDE.md` first. "
-            f"This routine writes only: {r['writes']}. Read sources; never send, post or change anything outside the workbench."
+            f"This routine writes only: {r['writes']}. Read sources; never send, post or change anything outside the workbench, "
+            f"except what the root `CLAUDE.md` lists under Standing exceptions."
         )
         out.append({"id": r["id"], "name": r["name"], "skill": r["skill"], "mode": r.get("mode"),
                     "model": routine_model(profile, r),

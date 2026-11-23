@@ -11,7 +11,8 @@ don't draft, judge priorities, or file anything into pages. Later routines do th
 
 **You own one file:** `Tracking/Queue/<today>_sweep.md`, which you only append to. You write
 nothing else, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`. You never send,
-post, reply, react or mark anything read.
+post, reply, react or mark anything read, with one exception: the urgent ping in step 6, only
+when the owner has turned it on.
 
 ## Step 1: the window
 
@@ -111,8 +112,28 @@ Rules:
   `[[wikilinks]]` only when the page exists; otherwise write the name plainly.
 - A window that crosses midnight still writes to today's file. The heading shows the real window.
 - No secrets, passcodes or join-link credentials. Private calendar blocks don't appear.
+- If urgent pings are on (step 6), end each `urgent` item you're about to ping with `| pinged`, so
+  the briefing knows the owner already heard. Decide this now, while writing; never edit the
+  section afterwards.
 
-## Step 6: the run ledger
+## Step 6: urgent ping (only if turned on)
+
+Read `## Urgent pings` in `Context/roster.md`. Unless it says `on`, skip this step.
+
+If this run wrote any `urgent` item, and it isn't quiet hours by `Context/surfacing.md`, send one
+short message to the owner only, by the channel in `.workbench/profile.json` → `delivery`
+(Slack: a DM to themselves; email: their own address; `claude` or `none`: skip). One message per
+run, however many items:
+
+```
+Urgent (sweep 10:20): Pat Lee needs the Q4 draft by noon (email 09:12). 1 more in Tracking/Queue.
+```
+
+Never to anyone else, never into a shared channel. Ping exactly the items step 5 marked
+`| pinged`. The dedupe keeps an item from being pinged twice. If sending fails, note it in your ledger line's `gaps:` and
+don't retry.
+
+## Step 7: the run ledger
 
 Last, append exactly one line to the bottom of `Tracking/Signals/RUN_LEDGER.md`, and never edit or
 delete an existing line. Every routine appends one line when it finishes, and none edits or deletes

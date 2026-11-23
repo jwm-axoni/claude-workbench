@@ -13,6 +13,7 @@
     { "path": "Tracking/Signals" },
     { "path": "Tracking/Drafts" },
     { "path": "Tracking/Queue" },
+    { "path": "Tracking/Prep" },
     { "path": "Meetings",           "template": "folders/Meetings.md", "when": "meetings" },
     { "path": "Archive",            "template": "folders/Archive.md" },
     { "path": ".workbench" },
@@ -37,6 +38,9 @@
     { "path": "Tracking/Signals/README.md",         "template": "pages/Signals-README.md" },
     { "path": "Tracking/Drafts/README.md",          "template": "pages/Drafts-README.md" },
     { "path": "Tracking/Queue/README.md",           "template": "pages/Queue-README.md" },
+    { "path": "Tracking/Prep/README.md",            "template": "pages/Prep-README.md" },
+    { "path": "Tracking/NEEDS_YOU.md",              "template": "pages/NEEDS_YOU.md",        "user_owned": true, "on_collision": "conflict" },
+    { "path": "Context/roster.md",                    "template": "pages/roster.md",             "user_owned": true, "on_collision": "conflict" },
     { "path": "Tracking/IMPROVEMENTS.md",           "template": "pages/IMPROVEMENTS.md",     "user_owned": true },
     { "path": "Tracking/COMMITMENTS.md",            "template": "pages/COMMITMENTS.md",      "user_owned": true, "on_collision": "conflict" },
     { "path": "Tracking/Signals/RUN_LEDGER.md",     "template": "pages/RUN_LEDGER.md",       "user_owned": true, "on_collision": "conflict" },
@@ -62,7 +66,16 @@
       "skill": "sweep",
       "when": "workdays, hourly at :{{sweep_minute_pad}} from {{sweep_first}} to {{sweep_last}}",
       "cron": "{{sweep_minute}} {{sweep_hours}} * * {{workdays_cron}}",
-      "writes": "appends one section per run to Tracking/Queue/YYYY-MM-DD_sweep.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
+      "writes": "appends one section per run to Tracking/Queue/YYYY-MM-DD_sweep.md; sends an urgent ping to the owner only, when Context/roster.md turns pings on; appends one line to Tracking/Signals/RUN_LEDGER.md"
+    },
+    {
+      "id": "team",
+      "model": "sonnet",
+      "name": "[Workbench] Team",
+      "skill": "team",
+      "when": "workdays at {{team_times}}",
+      "cron": "{{team_minute}} {{team_hours}} * * {{workdays_cron}}",
+      "writes": "new drafts in Tracking/Drafts/ (by: team-drafter), Tracking/Prep/YYYY-MM-DD_<slug>.md, Tracking/Signals/YYYY-MM-DD_team.md; appends open items to Tracking/NEEDS_YOU.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "daily-briefing",
@@ -90,7 +103,7 @@
       "skill": "eod-recap",
       "when": "workdays at {{recap_time}}",
       "cron": "{{recap_minute}} {{recap_hour}} * * {{workdays_cron}}",
-      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md (plus Daily/YYYY-MM-DD_RECONSTRUCTED_RECAP.md for a missed day), Tracking/Signals/YYYY-MM-DD_recap.md (briefing claims and drafts graded); appends one line to Tracking/Signals/RUN_LEDGER.md"
+      "writes": "Daily/YYYY-MM-DD_DAILY_RECAP.md (plus Daily/YYYY-MM-DD_RECONSTRUCTED_RECAP.md for a missed day), Tracking/Signals/YYYY-MM-DD_recap.md (briefing claims and drafts graded); appends answered lines to Tracking/NEEDS_YOU.md; appends one line to Tracking/Signals/RUN_LEDGER.md"
     },
     {
       "id": "nightly-dream",

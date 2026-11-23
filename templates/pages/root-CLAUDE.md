@@ -52,7 +52,7 @@ conflicts, and if the vault syncs through git a conflict can silently halt the s
 
 {{routine_table}}
 
-**Three files with more than one writer, each on purpose:**
+**Four files with more than one writer, each on purpose:**
 
 - **`Tracking/Signals/RUN_LEDGER.md` is the one exception to one writer per file.** Every routine
   appends one line when it finishes, and none edits or deletes a line. The librarian reads it.
@@ -63,6 +63,9 @@ conflicts, and if the vault syncs through git a conflict can silently halt the s
   the same cell: the dream never deletes or closes, the weekly never adds.
 - **`Context/surfacing.md`**: `nightly-dream` appends learned rules; {{preferred_name}} edits it
   directly. Same split as `voice.md`.
+- **`Tracking/NEEDS_YOU.md`**: `team` appends `open` items, `eod-recap` appends `answered` lines,
+  and {{preferred_name}} may append an answer by hand. Like the run ledger, every write is a new
+  dated line and nobody edits one.
 
 Any routine may run late, twice, or after a gap, and must still leave the vault correct. That's
 why each one opens by checking the run ledger for what's missing, and why a routine that runs
@@ -102,6 +105,11 @@ decision was made. Revoking one means deleting its entry here and in the routine
 anything, except that `daily-briefing` may deliver its digest to the owner alone, by the channel in
 `.workbench/profile.json` (`delivery`). Never to anyone else, never into a shared channel.
 *Reason: not everyone opens the folder every morning; the digest is how the day reaches them.*
+
+**{{created_date}} — the sweep may send an urgent ping to {{preferred_name}}, only when
+`Context/roster.md` says `on`.** One short message per run, for items it marked urgent, by the same
+channel, outside quiet hours. Never to anyone else. Off by default.
+*Reason: urgent things shouldn't wait for the next briefing, but only the owner can opt in.*
 
 ## Conventions
 
@@ -203,8 +211,9 @@ Any routine that writes to a page bumps that page's `updated:` in the same chang
 2. This vault holds real names and internal detail. None of it goes anywhere shared or public
    without {{preferred_name}} checking first.
 3. Write, send or change things in other tools (email, chat, CRM, tickets) only when
-   {{preferred_name}} asks in that session. Routines read; they don't act. The one standing
-   exception is the briefing digest to the owner, below.
+   {{preferred_name}} asks in that session. Routines read; they don't act. The standing
+   exceptions are the briefing digest and, when turned on, the sweep's urgent ping, both to the
+   owner alone (below).
 {{guardrails_rules}}
 
 ## How memory works

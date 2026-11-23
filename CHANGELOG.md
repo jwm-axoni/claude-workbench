@@ -2,14 +2,19 @@
 
 ## Unreleased (0.3.0)
 
-The first piece of a proactive Workbench: something now watches between the scheduled briefings.
+A proactive Workbench: something now watches between the scheduled briefings, and a small team does the work before the owner gets to it.
 
 - New routine `sweep` (`[Workbench] Sweep`): hourly through the working day, the first run just before the morning briefing. Reads every reachable source for what came in since its last `ok` line in the run ledger (capped at 96 hours, the rest recorded as a gap; a source a `partial` run couldn't reach gets its own longer window, so one broken connector doesn't make every run reread everything), sorts items as `urgent`, `reply-owed`, `prep-needed`, `commitment-candidate` or `fyi`, dedupes by source id, and appends one section to `Tracking/Queue/YYYY-MM-DD_sweep.md`. Never drafts, sends or edits a page. A closed-laptop night is covered by the next morning's first run, so the sweep stays local; a Cowork cloud task was tested and rejected (its files land in a throwaway sandbox, and nothing reads them until the laptop opens)
 - The briefing and midday update read the queue first and go to live sources only for what it doesn't cover; lines that came from a queue item carry its `q-` id. A missed sweep hour isn't a gap; the briefing names the sweep only when it has no `ok` line since the last briefing or reports a capped window
 - Every routine names a `model` (`haiku`, `sonnet` or `opus`) in `.workbench/schedules.json`: the sweep and calendar sync default to `haiku`, the rest to `sonnet`. Override per routine with `models` in the profile. The `schedules` skill sets it on each task, or tells the owner which to pick when the tool can't, and keeps any model the owner already chose by hand by writing it into `models`
 - The librarian's missed-routine check and the weekly's ran-vs-expected count the sweep once per workday, not per hourly run
 - Working hours that cross midnight wrap the sweep's hours instead of failing
-- Migration: `/workbench:migrate` adds `Tracking/Queue/README.md` and the sweep's fallback routine copy through the normal `apply` path; `/workbench:schedules` then offers to create the sweep task and set each task's model
+- New routine `team` (`[Workbench] Team`, Sonnet): runs at :45 at least 15 minutes before the briefing and before the midday update, right after a sweep. Stops after one cheap check when nothing is queued. Three personas, each switchable in `Context/roster.md`: the drafter writes reply drafts into `Tracking/Drafts/` (`by: team-drafter`, `queue: q-…`, graded by the recap like any draft), prep writes `Tracking/Prep/YYYY-MM-DD_<slug>.md`, and the editor checks both (facts traced, voice rules, never-surface, no secrets) and holds what fails twice. Records what it handled in `Tracking/Signals/YYYY-MM-DD_team.md`. Never sends
+- Roster `Context/roster.md` (user-owned): personas on or off, daily limits, role workers from the role pack (`workers` in `roles.json`; sales ships a deal desk), and urgent pings (off by default)
+- `Tracking/NEEDS_YOU.md`: decisions only the owner can make, each with a recommended answer, append-only like the run ledger. The team appends `open` items, the recap appends `answered` lines from digest replies and `answer: n-…` captures. The briefing asks open items right after the dream's questions, with their `n-` ids
+- The sweep may send the owner one urgent ping per run, only when `Context/roster.md` turns it on; a new dated standing exception in the root `CLAUDE.md`. Every routine's prompt now points at the standing exceptions
+- The briefing links team drafts under **Replies owed** and prep pages under **Today**, and the digest lists what was drafted
+- Migration: `/workbench:migrate` adds `Tracking/Queue/README.md`, `Tracking/Prep/README.md`, `Context/roster.md`, `Tracking/NEEDS_YOU.md` and the fallback routine copies; `/workbench:schedules` then offers the Sweep and Team tasks
 
 ## 0.2.0 — 2026-11-07
 

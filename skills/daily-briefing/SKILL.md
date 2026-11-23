@@ -54,6 +54,11 @@ reading is behind.
    - the newest entry in `Tracking/DREAM_LOG.md`, especially **Needs your yes**
    - `## Open commitments (mine)` on active projects in `Projects/INDEX.md`
    - **`Tracking/COMMITMENTS.md`** (see Commitments below)
+   - **the team's work**: today's `Tracking/Signals/<today>_team.md`, the drafts and prep pages it
+     lists, and the `open` items in `Tracking/NEEDS_YOU.md` (an item is open until an `answered`
+     line with its id exists). Use only team runs that have their `team` line in the run ledger.
+     If today's run started but has no ledger line yet, it's still working: leave its section out
+     and say "the team is still working; its drafts will be in the midday update" under Notes.
    - today's `Daily/<today>_CALENDAR.md` if it exists and isn't `stale`; otherwise the calendar connector
    - **the queue**: every section of `Tracking/Queue/*_sweep.md` written since the last briefing.
      The sweep has already read and sorted those hours: `urgent` items go first under **Urgent and
@@ -99,13 +104,15 @@ source: claude-routine
 
 ## Today
 Meetings worth attention, each with one line of context from People/Projects/Organizations
-and what to bring. Skip routine internal meetings unless something is due in them.
+and what to bring. Skip routine internal meetings unless something is due in them. When the team
+wrote a prep page for one, link it instead of repeating it.
 
 ## Urgent and at risk
 Only things that match "what urgent means" in Context/me.md, or a hard date in GOALS.md within 7 days.
 
 ## Replies owed
-Grouped by person, oldest first, with where it came from (email, DM, ticket).
+Grouped by person, oldest first, with where it came from (email, DM, ticket). When the team
+drafted the reply, link the draft: "drafted: [[2026-11-23_reply-pat-q4-draft]]".
 
 ## Due today or tomorrow
 Tasks, tickets, deliverables, commitments from project pages.
@@ -124,7 +131,9 @@ Three things, in order, each tied to a goal or a deadline.
 Only terms not in GLOSSARY.md and heard more than once.
 
 ## Questions
-Numbered, one line each, answerable in one word where possible. Max five.
+Numbered, one line each, answerable in one word where possible. Max five. Open Needs-you items
+come right after the dream's **Needs your yes**, oldest first, each with its id and the team's
+recommendation: "Q2 (n-007) Reply to Pat now or after Thursday's call? Team says: after the call."
 
 ## Notes
 Sources skipped or unreachable.
@@ -196,7 +205,9 @@ Full briefing: Daily/<date>_MORNING_BRIEFING.md
 ```
 
 Number questions `Q1…` to match the file's `## Questions`, so replies like "1 yes, 2 no it's Jo
-Tan" map back. Put **Needs your yes** items from the dream log first. On the first workday, also
+Tan" map back. Put **Needs your yes** items from the dream log first, then open Needs-you items
+with their `n-` ids. If the team drafted replies, add one line: "Drafted for you: Pat (Q4 draft),
+Jo (dates)". On the first workday, also
 carry the newest weekly plan's `## Needs reconciling` questions, keeping their "Reconcile N" labels
 so the answer ("reconcile 2: March") maps back. Record the channel and time
 sent under `## Notes` in the file (e.g. `Delivered: slack 07:58`). If sending fails, note the

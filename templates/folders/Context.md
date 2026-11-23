@@ -16,6 +16,8 @@ team operate", not "what happened today".
 - `voice.md` — how {{preferred_name}} writes, and how to write back to them.
 - `surfacing.md` — what the briefing always raises, never raises, when it stays quiet, and the
   shape {{preferred_name}} wants for each topic.
+- `roster.md` — which personas work between briefings, their daily limits, extra role jobs, and
+  whether the sweep may send urgent pings. Edit it to tailor the team.
 
 ## Frontmatter
 
@@ -44,7 +46,8 @@ updated: YYYY-MM-DD
 {{preferred_name}} edits these pages freely. `nightly-dream` writes only the
 `## Current state (dream)` block on `me.md` and on org-structure pages, and the
 `## Learned rules (dream)` block on `voice.md`. On `surfacing.md`, `nightly-dream` appends learned
-rules; {{preferred_name}} edits it directly. Nothing else here is routine-written.
+rules; {{preferred_name}} edits it directly. `roster.md` is {{preferred_name}}'s alone; routines only
+read it. Nothing else here is routine-written.
 
 ## Page shape
 

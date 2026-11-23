@@ -17,6 +17,7 @@
     "briefing_lens": ["External meetings today: account context, last touch, open next steps", "Deals with a close date this month and no activity in 7+ days"],
     "weekly_lens": ["Pipeline movement: stage changes, slipped close dates, new and lost deals", "Accounts with no touch in 14+ days", "Follow-ups promised on calls that haven't gone out"],
     "connectors": ["CRM (Salesforce or HubSpot)", "Email", "Calendar", "Call recorder (Gong, Clari, Fathom)", "Slack"],
+    "workers": ["Deal desk: for each open deal with a next step due in the next 2 workdays, a prep page with the step, who owns it, the last touch and what is still missing"],
     "guardrails": []
   },
   "customer-success": {
