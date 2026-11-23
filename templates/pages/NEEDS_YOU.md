@@ -14,7 +14,7 @@ numbered questions, and an answer comes back through a digest reply or the proje
 <!--
 Line format, newest last:
 - YYYY-MM-DD HH:MM | n-NNN | <question> | recommend: <answer and one-line reason> | from: <q- id or file> | open
-- YYYY-MM-DD HH:MM | n-NNN | answered | <the answer> | via: <digest Q2, project, or owner>
+- YYYY-MM-DD HH:MM | n-NNN | answered | <the answer, or "resolved: <what happened>"> | via: <digest Q2, project, recap, or owner>
 
 Who writes this file: `team` appends `open` items; `eod-recap` appends `answered` lines from
 digest replies and project captures; {{preferred_name}} may append an `answered` line by hand.

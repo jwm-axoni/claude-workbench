@@ -5,7 +5,7 @@ status: active
 updated: {{created_date}}
 ---
 
-# Team
+# Team roster
 
 Who works for {{preferred_name}} between the scheduled briefings, and how much. The `team`
 routine reads this page at the start of every run and does only what it says here. Edit it

@@ -1,6 +1,6 @@
 ---
 name: team
-description: Workbench routine. Runs before the morning briefing and before the midday update. Takes what the hourly sweep queued and does the work ahead of time with three personas, as Context/team.md allows: the drafter writes reply drafts into Tracking/Drafts/, prep writes meeting prep pages into Tracking/Prep/, and the editor checks both before they're saved. Decisions it shouldn't make alone go to Tracking/NEEDS_YOU.md with a recommended answer. Never sends anything. Runs as the "[Workbench] Team" scheduled task; can be run by hand with /workbench:team.
+description: Workbench routine. Runs before the morning briefing and before the midday update. Takes what the hourly sweep queued and does the work ahead of time with three personas, as Context/roster.md allows: the drafter writes reply drafts into Tracking/Drafts/, prep writes meeting prep pages into Tracking/Prep/, and the editor checks both before they're saved. Decisions it shouldn't make alone go to Tracking/NEEDS_YOU.md with a recommended answer. Never sends anything. Runs as the "[Workbench] Team" scheduled task; can be run by hand with /workbench:team.
 ---
 
 # Team
@@ -23,12 +23,13 @@ You write nothing else. A file you saved in an earlier run is final: never edit 
 
 This check comes first, before any other reading, because most runs should be cheap.
 
-1. Read `Context/team.md`. Personas marked `off` don't run.
+1. Read `Context/roster.md`. Personas marked `off` don't run.
 2. Read the queue: `Tracking/Queue/*_sweep.md` for today and the last workday.
 3. Read the `### Handled` lists in `Tracking/Signals/*_team.md` for the last 3 days. A `q-` id
    listed there is done.
-4. Read `Tracking/NEEDS_YOU.md` for `answered` lines on items you raised that no `### Answers
-   acted on` list mentions yet.
+4. Read `Tracking/NEEDS_YOU.md` for `answered` lines dated in the same 3 days, on items you raised,
+   that no `### Answers acted on` list in those Signals files mentions yet. Older answers were
+   acted on by an earlier run (or are past acting on); never go back to them.
 
 If there's no unhandled `urgent`, `reply-owed` or `prep-needed` item, no new answer, and (for
 prep) no meeting in the next 24 hours that needs a page and has none, append your ledger line
@@ -46,7 +47,7 @@ marker in `Meetings/`.
 ## Drafter
 
 For each unhandled `reply-owed` item, and each `urgent` item that needs a reply, oldest first,
-up to the day's limit in `team.md` (count today's files in `Tracking/Drafts/` marked
+up to the day's limit in `roster.md` (count today's files in `Tracking/Drafts/` marked
 `by: team-drafter`):
 
 - Write the reply the owner would send, in their voice from `voice.md`, sized to the
@@ -71,7 +72,7 @@ the team or that the owner organizes that has no page yet, up to the day's limit
   a source or a page.
 - Skip routine internal meetings, and anything in a calendar block `me.md` says never appears.
 
-**Role workers.** Each line under `## Role workers` in `team.md` is one more job. Do what it says,
+**Role workers.** Each line under `## Role workers` in `roster.md` is one more job. Do what it says,
 writing only prep pages (`Tracking/Prep/<date>_<worker>-<slug>.md`, `by: team-<worker>`) or
 Needs-you items. If a line asks for anything else (sending, editing a page, writing elsewhere),
 skip it and record why under `### Held`.
@@ -103,7 +104,7 @@ from the highest id already in the file:
 Each question is answerable in a word or two, and the recommendation says which answer you'd pick
 and why, in one line.
 
-**Answers.** For each `answered` line on an item you raised, act within what you own: write a new
+**Answers.** For each new answer from step 0 (the last 3 days only), act within what you own: write a new
 draft (`-v2` in its slug) if the answer changes what to say, or do nothing if it doesn't. Never
 change an earlier file. List it under `### Answers acted on`.
 

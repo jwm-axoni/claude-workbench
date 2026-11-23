@@ -56,7 +56,9 @@ reading is behind.
    - **`Tracking/COMMITMENTS.md`** (see Commitments below)
    - **the team's work**: today's `Tracking/Signals/<today>_team.md`, the drafts and prep pages it
      lists, and the `open` items in `Tracking/NEEDS_YOU.md` (an item is open until an `answered`
-     line with its id exists)
+     line with its id exists). Use only team runs that have their `team` line in the run ledger.
+     If today's run started but has no ledger line yet, it's still working: leave its section out
+     and say "the team is still working; its drafts will be in the midday update" under Notes.
    - today's `Daily/<today>_CALENDAR.md` if it exists and isn't `stale`; otherwise the calendar connector
    - **the queue**: every section of `Tracking/Queue/*_sweep.md` written since the last briefing.
      The sweep has already read and sorted those hours: `urgent` items go first under **Urgent and

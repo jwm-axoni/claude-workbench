@@ -54,7 +54,7 @@ Summarize the plan before applying: folders to add, files to update, conflicts. 
 Upgrading from 0.2.x, `apply` adds the proactive team's files the same way:
 
 - `Tracking/Queue/README.md` and `Tracking/Prep/README.md` — the sweep's queue and the team's prep pages
-- `Context/team.md` — the roster: personas, daily limits, role workers, urgent pings (off)
+- `Context/roster.md` — the roster: personas, daily limits, role workers, urgent pings (off)
 - `Tracking/NEEDS_YOU.md` — decisions waiting on the owner, each with a recommended answer
 
 Then run `/workbench:schedules`: it offers the new Sweep and Team tasks, sets each task's model,

@@ -102,7 +102,7 @@ Three files keep the memory honest rather than just full:
 
 Two more pages run the team that works between briefings:
 
-- `Context/team.md`: which personas work for you (drafter, prep, editor), how much each does in a day, extra jobs for your role, and whether the sweep may ping you about urgent things (off until you turn it on). This is the one page to edit to tailor the Workbench to someone.
+- `Context/roster.md`: which personas work for you (drafter, prep, editor), how much each does in a day, extra jobs for your role, and whether the sweep may ping you about urgent things (off until you turn it on). This is the one page to edit to tailor the Workbench to someone.
 - `Tracking/NEEDS_YOU.md`: decisions only you can make, each with the answer Claude would pick. The briefing asks them as numbered questions, and your reply closes them.
 
 When two sources disagree, the page gets a `## Needs reconciling` section instead of a guess. The weekly turns the oldest three into numbered questions, and your answer becomes a supersession with the losing claim's history kept. New briefing and recap claims carry an `evidence:` quote or page reference and a `confidence:`, so `/workbench:why` can show you where any fact came from.

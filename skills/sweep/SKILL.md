@@ -112,10 +112,13 @@ Rules:
   `[[wikilinks]]` only when the page exists; otherwise write the name plainly.
 - A window that crosses midnight still writes to today's file. The heading shows the real window.
 - No secrets, passcodes or join-link credentials. Private calendar blocks don't appear.
+- If urgent pings are on (step 6), end each `urgent` item you're about to ping with `| pinged`, so
+  the briefing knows the owner already heard. Decide this now, while writing; never edit the
+  section afterwards.
 
 ## Step 6: urgent ping (only if turned on)
 
-Read `## Urgent pings` in `Context/team.md`. Unless it says `on`, skip this step.
+Read `## Urgent pings` in `Context/roster.md`. Unless it says `on`, skip this step.
 
 If this run wrote any `urgent` item, and it isn't quiet hours by `Context/surfacing.md`, send one
 short message to the owner only, by the channel in `.workbench/profile.json` → `delivery`
@@ -126,9 +129,8 @@ run, however many items:
 Urgent (sweep 10:20): Pat Lee needs the Q4 draft by noon (email 09:12). 1 more in Tracking/Queue.
 ```
 
-Never to anyone else, never into a shared channel. Decide before writing step 5's section, and end
-each item you'll ping with `| pinged`, so the briefing knows the owner already heard. The dedupe
-keeps an item from being pinged twice. If sending fails, note it in your ledger line's `gaps:` and
+Never to anyone else, never into a shared channel. Ping exactly the items step 5 marked
+`| pinged`. The dedupe keeps an item from being pinged twice. If sending fails, note it in your ledger line's `gaps:` and
 don't retry.
 
 ## Step 7: the run ledger

@@ -11,7 +11,8 @@ day differently. Completeness and provenance matter more here than polish.
 
 **You own two files:** `Daily/<today>_DAILY_RECAP.md` and `Tracking/Signals/<today>_recap.md`,
 plus `Daily/<date>_RECONSTRUCTED_RECAP.md` for a workday whose recap never ran (see below). Nothing
-else, except your one appended line in `Tracking/Signals/RUN_LEDGER.md`.
+else, except `answered` lines appended to `Tracking/NEEDS_YOU.md` (see Collect answers) and your one
+appended line in `Tracking/Signals/RUN_LEDGER.md`.
 
 ## Read first
 
@@ -163,6 +164,11 @@ When an answered question carries a Needs-you id (`Q2 (n-007)`), or a capture an
 an existing line there:
 `- YYYY-MM-DD HH:MM | n-007 | answered | after the call | via: digest Q2`. Skip ids that already
 have an `answered` line.
+
+Also close items the day settled without an answer. For each `open` item, check its `from:` queue
+item against today's sources: if the owner already did the thing (replied to the person, sent the
+file, moved the meeting), append `- YYYY-MM-DD HH:MM | n-007 | answered | resolved: replied to Pat
+at 10:02 | via: recap`. So the briefing never keeps asking a question the day already answered.
 
 ## If the recap already exists
 

@@ -107,7 +107,7 @@ anything, except that `daily-briefing` may deliver its digest to the owner alone
 *Reason: not everyone opens the folder every morning; the digest is how the day reaches them.*
 
 **{{created_date}} — the sweep may send an urgent ping to {{preferred_name}}, only when
-`Context/team.md` says `on`.** One short message per run, for items it marked urgent, by the same
+`Context/roster.md` says `on`.** One short message per run, for items it marked urgent, by the same
 channel, outside quiet hours. Never to anyone else. Off by default.
 *Reason: urgent things shouldn't wait for the next briefing, but only the owner can opt in.*
 

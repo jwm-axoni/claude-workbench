@@ -347,7 +347,7 @@ class NewVaultFiles(Base):
 
     def test_fresh_vault_has_the_team_files(self):
         self.apply()
-        team = (self.root / "Context/team.md").read_text()
+        team = (self.root / "Context/roster.md").read_text()
         self.assertIn("- **drafter**: on", team)
         self.assertIn("Deal desk:", team, "the sales role pack adds its worker")
         self.assertIn("## Urgent pings\n\noff", team)
