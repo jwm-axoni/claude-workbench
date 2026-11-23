@@ -80,9 +80,13 @@ Step 0 runs even when tonight's recap is missing (see Inputs): filing captures d
     for the duplicate check only), and `Context/surfacing.md`.
 11. The newest `Daily/*_NEXT_WEEK_PLAN.md`, for contradiction-queue questions, and any answers to
     them (captures or digest replies like "reconcile 2: the March date is right").
-12. The proactive team's trail, if the vault has one: today's `Tracking/Queue/<today>_sweep.md`
-    (its `commitment-candidate` items), the recap Signals `## Queue` grades, and today's
-    `Tracking/Signals/<today>_team.md` (`### Editor` and `### Held`), plus `Context/roster.md`.
+12. The proactive team's trail, if the vault has one:
+    - every `Tracking/Queue/*_sweep.md` file since your last `ok` ledger line (so a missed night is
+      caught up), for its `commitment-candidate` items. Skip any `q-` id already listed under
+      `## Processed captures` in `DREAM_LOG.md`, and list each one you file there, like a capture.
+    - the recap Signals `## Queue` grades for the last 14 days
+    - the `### Editor` and `### Held` lines in `Tracking/Signals/*_team.md` for the last 14 days
+    - `Context/roster.md`
 
 ## What to do
 
@@ -141,7 +145,7 @@ date you added it (`added: YYYY-MM-DD`). Never pick one. The weekly queues these
 **b4. Commitments maintenance.** After the contradiction pass, scan tonight's recap (both `### Owed by` and `### Owed to`, since
 **Owed to** lines reach no page otherwise), any reconstructed recaps filed this run (3b), the pages
 you touched tonight, today's captures (plus any backlog captures from Step 0), and today's queue
-`commitment-candidate` items (input 12; their `evidence:` quote is the source, cited as
+`commitment-candidate` items not yet processed (input 12; their `evidence:` quote is the source, cited as
 `queue q-…`) for commitment language: promises, deadlines, "I will", "I'll send", "owes",
 "waiting on", "by Friday". A queue item the recap graded `ignored` is weaker evidence: it needs a
 second source before it clears the bar. For each:
@@ -191,8 +195,9 @@ counts in the log entry: `**Commitments:** +3 rows, 2 updated, 1 rescheduled, 1 
   `FRICTION_LOG.md` `## Open`.
 - **What the sweep surfaces.** From the recap's `## Queue` grades: when `fyi` items from the same
   sender or on the same topic are graded `ignored` on two different days, append a `pending` line
-  under **Never surface** in `Context/surfacing.md` (source: the two recap dates). It becomes
-  standing the usual way, on a second signal. Never write a rule from `urgent`, `reply-owed` or
+  under **Never surface** in `Context/surfacing.md` (source: the two recap dates). Those two days
+  are the first signal, not two. It becomes standing only on a later signal dated after the
+  pending line: a third ignored day, or the owner saying so. Never write a rule from `urgent`, `reply-owed` or
   `prep-needed` items being ignored: unanswered isn't unwanted. Ask about those instead, as a
   **Needs your yes** item.
 - **Surfacing rules.** Same machinery as voice rules, different target. When the owner says a

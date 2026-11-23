@@ -1,7 +1,7 @@
 {
   "name": "workbench",
   "version": "0.3.0",
-  "description": "Builds and runs your personal Claude Workbench: an onboarding interview, a role-aware markdown vault with a CLAUDE.md in every folder, connector checks, six managed scheduled routines, a librarian, and a nightly loop that learns from your corrections.",
+  "description": "Builds and runs your personal Claude Workbench: an onboarding interview, a role-aware markdown vault with a CLAUDE.md in every folder, connector checks, eight managed scheduled routines (including an hourly sweep and a drafting team), a librarian, and a nightly loop that learns from your corrections.",
   "author": {
     "name": "John Mbwambo"
   },

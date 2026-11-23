@@ -158,9 +158,10 @@ report acceptance per author. Drafts with no `by:` came from the project.
 
 ## Grade the queue
 
-The sweep's queue is a set of claims too: "this needed the owner's attention". For every item in
-today's `Tracking/Queue/<today>_sweep.md`, and the last workday's items still ungraded, decide from
-today's sources and files:
+The sweep's queue is a set of claims too: "this needed the owner's attention". Read the queue files
+from the last 14 days and your own `## Queue` lines in the `*_recap.md` Signals files for the same
+days. Grade every item that has no grade yet or whose newest grade is `open`, deciding from today's
+sources and files. Today's items can be `used` or `open`, never `ignored` yet:
 
 | Grade | Means |
 |---|---|
