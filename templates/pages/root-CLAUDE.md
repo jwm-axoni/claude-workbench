@@ -46,7 +46,7 @@ figures for the same thing. **Report both, never pick one.**
 
 ## Who writes what
 
-Six routines write here on a schedule, each as a `[Workbench] …` scheduled task. **One
+The routines below write here on a schedule, each as a `[Workbench] …` scheduled task. **One
 writer per file** is the rule most worth respecting: two writers racing one file produce
 conflicts, and if the vault syncs through git a conflict can silently halt the sync.
 

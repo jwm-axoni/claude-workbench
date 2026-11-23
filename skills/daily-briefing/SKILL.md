@@ -25,6 +25,8 @@ one, look for its ledger line.
   of yesterday afternoon." Count the consequence from the vault (unfiled capture lines, the missing
   file), don't guess it.
 - A `partial` line: mention its `gaps:` text under Notes.
+- The `sweep` runs hourly, so a missed hour isn't a gap: the next run covers it. Name the sweep
+  only if it has no `ok` line since the last workday's briefing, or a sweep line says `window capped`.
 - Put the same one-line warning first in the digest.
 
 Never silently compose over a gap. If the ledger itself is missing (a vault older than v0.2.0),
@@ -53,7 +55,15 @@ reading is behind.
    - `## Open commitments (mine)` on active projects in `Projects/INDEX.md`
    - **`Tracking/COMMITMENTS.md`** (see Commitments below)
    - today's `Daily/<today>_CALENDAR.md` if it exists and isn't `stale`; otherwise the calendar connector
-3. Then the live sources, **only tools `Context/me.md` marks reachable**, since the last recap:
+   - **the queue**: every section of `Tracking/Queue/*_sweep.md` written since the last briefing.
+     The sweep has already read and sorted those hours: `urgent` items go first under **Urgent and
+     at risk**, `reply-owed` under **Replies owed**, `prep-needed` under **Today**,
+     `commitment-candidate` under **Due today or tomorrow** when they have a date, and `fyi` only if
+     `surfacing.md` says to show that topic. End each line that came from a queue item with its id,
+     `(q-20261123-004)`, so the recap can later tell which items were used.
+3. Then the live sources, **only tools `Context/me.md` marks reachable**, for whatever the queue
+   doesn't cover: the time after its newest section, and any source a sweep line marked unreachable.
+   With no queue (the sweep is off), read them since the last recap:
    email, chat DMs and mentions, tickets or tasks due today or tomorrow, the role-specific sources
    (CRM, code host, etc.). If meetings come through the recorder's connector
    (`meetings_via: connector` in the profile), yesterday's meeting summaries and next steps there,
@@ -142,8 +152,8 @@ Rules:
 
 ## Midday mode
 
-Re-read the morning file, then only what changed since it was written: new email, DMs and
-mentions, calendar changes (from the calendar file's `## Changes since last sync` or the
+Re-read the morning file, then the queue sections written since it, then only what changed after
+the newest queue section: new email, DMs and mentions, calendar changes (from the calendar file's `## Changes since last sync` or the
 connector), new actions. **Append** at the bottom:
 
 ```markdown

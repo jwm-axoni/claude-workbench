@@ -813,7 +813,7 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         uses that appear in no manual. So you re-explain yourself in every chat, and
         drafts sound like a polite stranger wrote them.</p>
       <p><strong>This plugin fixes that.</strong> It gives Claude a memory that lives
-        in plain files you own, six routines that run your day on a schedule, and a
+        in plain files you own, routines that run your day on a schedule, and a
         nightly pass where Claude reads what happened, learns from it, and proposes
         changes. It measures whether it's getting better instead of assuming it is.</p>
       <p>The part that makes it a system is the handoff. The briefing, the recap and
@@ -881,6 +881,12 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <h4>Weekly</h4>
         <p>The week-ahead plan, a "is it getting better?" scorecard, and the
           librarian's checks with the safe fixes applied.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; hourly through the workday</span>
+        <h4>Sweep</h4>
+        <p>Notices what came in since its last run and sorts it for the briefing, on the
+          smallest model. After a closed-laptop night, the first run covers the night.</p>
       </div>
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag routine">Runs itself &middot; three times a workday</span>
@@ -983,7 +989,7 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <div class="rcircle stepnum">6</div>
         <div>
           <h3>Turn on the routines</h3>
-          <p>Six scheduled tasks, all named <code>[Workbench]</code>, timed off your
+          <p>Seven scheduled tasks, all named <code>[Workbench]</code>, timed off your
             hours. If you already have older tasks doing the same job, it lists them and
             asks before replacing each one, so you never get two briefings.</p>
         </div>
@@ -1250,12 +1256,13 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
 
     <div class="mem" style="margin-top:30px">
       <table>
-        <caption class="sr-only">The six scheduled routines plus the librarian, when each one runs by default, and what each one writes.</caption>
+        <caption class="sr-only">The seven scheduled routines plus the librarian, when each one runs by default, and what each one writes.</caption>
         <thead>
           <tr><th scope="col">Routine</th><th scope="col">Default time</th><th scope="col">What it writes</th></tr>
         </thead>
         <tbody>
           <tr><td><b>Calendar sync</b></td><td>Before work, 11:30, end of day</td><td>A calendar copy for today and the next workday</td></tr>
+          <tr><td><b>Sweep</b></td><td>Hourly through the workday, first one just before the briefing</td><td>A short sorted list of what came in since its last run, on the smallest model; after a closed-laptop night it covers the whole night</td></tr>
           <tr><td><b>Daily briefing</b></td><td>30 minutes before work</td><td>The morning briefing file, and your digest</td></tr>
           <tr><td><b>Midday update</b></td><td>12:00</td><td>An update appended below the briefing</td></tr>
           <tr><td><b>End-of-day recap</b></td><td>30 minutes after work</td><td>The daily recap, and the day's scores</td></tr>
@@ -1592,6 +1599,15 @@ Chalk.registerRenderer('chain', function (svg, el, w, h) {
         <p><b>How you use it.</b> Nothing. Or "plan my week".</p>
         <p><b>What it writes.</b> The plan, its scores, the improvements list, and
           structural fixes.</p>
+      </div>
+      <div class="rbox card" style="--rb:var(--hair)">
+        <span class="tag routine">Runs itself &middot; hourly through the workday</span>
+        <h4>Sweep</h4>
+        <p><b>What it does.</b> Reads your reachable sources for everything since its last
+          good run and sorts it: urgent, reply owed, prep needed, possible commitment, FYI.
+          Never drafts, sends or edits a page.</p>
+        <p><b>How you use it.</b> Nothing. The briefing and midday update build on it.</p>
+        <p><b>What it writes.</b> One short list per day in the queue folder.</p>
       </div>
       <div class="rbox card" style="--rb:var(--hair)">
         <span class="tag routine">Runs itself &middot; three times a workday</span>

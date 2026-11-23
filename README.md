@@ -19,7 +19,7 @@ One plugin interviews you, builds a folder of markdown around your role and tool
 
 Out of the box, Claude is smart and knows nothing about you. Not your team, not your accounts, not what "urgent" means to you, not the words your group uses that appear in no manual. So you re-explain yourself in every chat, and drafts sound like a polite stranger wrote them.
 
-The Workbench gives Claude a memory that lives in plain files you own, six routines that run your day on a schedule, and a nightly pass where Claude reads what happened, learns from it, and updates what it knows. It measures whether it's getting better instead of assuming it is.
+The Workbench gives Claude a memory that lives in plain files you own, routines that run your day on a schedule (including an hourly sweep that notices what came in), and a nightly pass where Claude reads what happened, learns from it, and updates what it knows. It measures whether it's getting better instead of assuming it is.
 
 It's the public, company-neutral version of a setup that's been running daily since September 2026. Nothing in it names a company, a person or a tool instance. Everything specific to you is gathered during onboarding.
 
@@ -122,7 +122,7 @@ tools: ["[[Salesforce]]"]
 
 ![The daily chain: the briefing, recap and nightly dream each read what the one before wrote](docs/assets/workbench-daily-chain.png)
 
-Times come from your working hours and timezone, and you can switch any routine off. Where they run follows from two setup answers: which Claude you have, and where the folder lives. You don't pick a runner; setup works it out:
+Times come from your working hours and timezone, and you can switch any routine off. Each routine also names the model it runs on: the hourly **sweep** and the calendar sync use the smallest model, the rest use Sonnet, and you can change any of them with `models` in `.workbench/profile.json`. Every run spends your credit, so nothing runs on a bigger model unless you say so. Where they run follows from two setup answers: which Claude you have, and where the folder lives. You don't pick a runner; setup works it out:
 
 | You have | The vault lives in | Routines run on | What's guaranteed |
 |---|---|---|---|
@@ -132,6 +132,8 @@ Times come from your working hours and timezone, and you can switch any routine 
 | Claude Code | a private GitHub repo, worked from a local clone | Code cloud | Runs with the laptop closed. Research preview: fresh clone per run, pushes to `claude/` branches, minimum interval one hour. No documented catch-up: the run ledger and gap detection cover misses. |
 
 On Team and Enterprise plans, Cowork can run sessions in the cloud only if your organization turns on "Run Cowork in the cloud" (Organization settings > Cowork), and a task that needs local files still runs locally. So a folder on your laptop always means routines that need the laptop. For a team rollout, or more than one computer, setup recommends the private repo.
+
+**The sweep notices things between the briefings.** Every hour of the working day, starting just before the morning briefing, it reads your reachable sources for what came in since its last good run, sorts each item (urgent, reply owed, prep needed, possible commitment, FYI) and appends a short list to `Tracking/Queue/`. The briefing and midday update build on that list instead of going back to every source. If the laptop was closed overnight, the first sweep of the morning covers the whole night, because it starts from the last run recorded in the run ledger and your sources keep their history. It never drafts, sends or edits a page.
 
 **Missed runs show up instead of vanishing.** Every routine appends one line to `Tracking/Signals/RUN_LEDGER.md` when it finishes. The next morning's briefing checks that ledger before anything else and tells you in plain words what didn't run and what that cost ("the dream didn't run last night, so 4 captures are unfiled"). The dream then files every unfiled capture whatever its date, a recap for a day that never got one is written as a short file marked reconstructed that says what it couldn't sweep, and a routine that runs late says so in its own file. None of that depends on a scheduler promising to catch up.
 
@@ -167,7 +169,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:migrate` | Upgrade after a plugin update without losing your edits, or adopt an older vault. |
 | `/workbench:librarian` | Get a health report across 34 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled, pages gone quiet. |
 | `/workbench:capture` | Log what a chat settled, from any chat in any surface. Usually happens on its own. |
-| `/workbench:daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
+| `/workbench:sweep`, `daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |
 | `/workbench:project <name>` | Where a project stands, what's decided, what's owed. |
 | `/workbench:vault-search <question>` | Search with the folder's own rules: name variants, trust order, sources cited. |

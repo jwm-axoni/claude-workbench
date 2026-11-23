@@ -40,7 +40,8 @@ source: claude-routine
 
 ## Health
 Routines that ran vs. expected last week (from `Tracking/Signals/RUN_LEDGER.md`, falling back to
-Signals and Daily files for weeks before the ledger existed), captures unfiled for more than two
+Signals and Daily files for weeks before the ledger existed; the hourly `sweep` counts once per
+workday, as ran if it has any `ok` or `partial` line that day), captures unfiled for more than two
 workdays, pages past their review date, open FRICTION_LOG items. Three to six lines.
 
 ## Priorities this week
