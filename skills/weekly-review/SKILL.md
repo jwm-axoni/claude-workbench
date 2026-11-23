@@ -42,7 +42,9 @@ source: claude-routine
 Routines that ran vs. expected last week (from `Tracking/Signals/RUN_LEDGER.md`, falling back to
 Signals and Daily files for weeks before the ledger existed; the hourly `sweep` counts once per
 workday, as ran if it has any `ok` or `partial` line that day), captures unfiled for more than two
-workdays, pages past their review date, open FRICTION_LOG items. Three to six lines.
+workdays, pages past their review date, open FRICTION_LOG items. Add one line on runs and spend:
+sweep and team runs this week against the schedule, and how many team runs found work, so the owner
+can see what their credit went on. Three to seven lines.
 
 ## Priorities this week
 Three to five, each tied to a goal in GOALS.md or a hard date.
@@ -87,6 +89,9 @@ and list the rest in the plan's Health section:
 | relationship property pointing at a page that doesn't exist | move it to plain text in `## Related`; list it for the dream |
 | YAML wikilink not quoted (`org: [[Acme]]`) | quote it (`org: "[[Acme]]"`); unquoted breaks the YAML |
 | dormant page (librarian check 30) | list at most three in Health as yes/no questions; never change `status` or move it unattended |
+| old queue file or prep page (checks 31, 33) | archive it (step 3) |
+| Needs-you item open 7+ days (check 32) | list it in Health with its question; the briefing keeps asking until it's answered or the recap resolves it |
+| roster page malformed (check 34) | list it in Health; never edit `Context/roster.md`, it's the owner's |
 
 ## 3. Archive moves
 
@@ -97,6 +102,9 @@ You're the only writer of moves into `Archive/`. Move, never delete, and mirror 
 - a `shipped` project with no mention in 30 days → `Archive/Projects/`, and move its row to `## Archived` in `INDEX.md`
 - a `former` organization quiet for 45 days → `Archive/Organizations/`, `status: archived`
 - a `former` person quiet for 90 days → `Archive/People/`
+- a queue file in `Tracking/Queue/` more than 14 days old, once every item in it has a grade in a
+  recap's `## Queue` (or it's 30 days old) → `Archive/Tracking/Queue/`
+- a prep page in `Tracking/Prep/` 30 days past its date → `Archive/Tracking/Prep/`
 
 Log every move under `## Moved` in your Signals file: what, from, to, when, which rule fired.
 
@@ -127,6 +135,10 @@ Compare this week with the previous four from earlier `*_weekly.md` files:
 | Repeat corrections: a correction on a topic that already has a learned rule | captures, voice/me rules | down (a repeat means the rule isn't working: mark it `not-working` and say why) |
 | Questions answered: % of digest questions with an answer within 2 workdays | recap `## Answers`, `answer:` captures | up; if low, ask fewer |
 | Proposals adopted / verified | `IMPROVEMENTS.md` | up |
+| Draft acceptance by author: the same %, split `team-drafter` vs the project | recap `## Drafts` (`by:`) | team up, and close to the project's |
+| Sweep precision: `used` ÷ (`used` + `ignored`), per kind | recap `## Queue` | up; a kind below 50% for two weeks means the sweep is too loose there |
+| Held by the editor per week | team Signals `### Held` | down |
+| Needs-you answered within 2 workdays | `Tracking/NEEDS_YOU.md` | up; if low, the team should ask less |
 
 Say in one or two plain sentences whether the workbench is getting better and what's holding it
 back. If there's too little data (fewer than 5 graded drafts, for example), say so rather than

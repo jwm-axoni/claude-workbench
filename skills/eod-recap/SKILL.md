@@ -150,7 +150,34 @@ few words, without copying the sent text:
 ## Drafts
 - 2026-11-03_pricing-reply-pat | email | light-edit | cut the opening pleasantry; "Hi Pat" not "Hello Pat"; shorter close
 - 2026-11-03_launch-update | slack | heavy-edit | reordered to lead with the date; dropped two bullets; more casual
+- 2026-11-03_reply-pat-q4-draft | email | verbatim | sent at 09:40 | by: team-drafter
 ```
+
+When the draft's frontmatter has a `by:` field, end its line with `| by: <value>`, so the weekly can
+report acceptance per author. Drafts with no `by:` came from the project.
+
+## Grade the queue
+
+The sweep's queue is a set of claims too: "this needed the owner's attention". For every item in
+today's `Tracking/Queue/<today>_sweep.md`, and the last workday's items still ungraded, decide from
+today's sources and files:
+
+| Grade | Means |
+|---|---|
+| `used` | the owner acted on it: replied, sent, attended with the prep page, answered its Needs-you item, or a briefing line carrying its `q-` id was acted on |
+| `ignored` | a full workday passed and nothing happened, and it wasn't the kind of item that waits (a `fyi` read and left is `ignored`) |
+| `open` | still pending and not yet due (a reply owed by Friday); grade it again on a later day |
+
+Add one line each to the Signals file under `## Queue`, with the evidence in a few words:
+
+```markdown
+## Queue
+- q-20261123-004 | reply-owed | used | replied to Pat 16:10 (sent mail)
+- q-20261123-009 | fyi | ignored | newsletter-style update; nothing followed
+- q-20261123-011 | urgent | used | pinged 10:20; call moved within the hour
+```
+
+Grade only what the evidence shows. An item graded `used` or `ignored` is never graded again.
 
 ## Collect answers to the digest
 

@@ -160,6 +160,7 @@ Most people won't open a folder every morning. Setup asks where your digest shou
 - **Briefing feedback** ("stop telling me about X", "always show pipeline numbers first") becomes a rule in `Context/surfacing.md` once you've said it twice.
 - **Drafts** are saved when handed over and compared with what you actually sent. The same edit twice becomes a voice rule.
 - **Proposals** for skills, rules or connectors are tracked in `Tracking/IMPROVEMENTS.md` from proposed to built to verified.
+- **The team is graded too.** Team drafts are graded against what you sent, like any draft, and the weekly reports their acceptance next to your own drafts'. Every item the sweep queued is graded `used` or `ignored`, so the weekly can show how often it's right; FYIs from the same source ignored on two days become a pending "never surface" rule. The editor's send-backs feed the voice rules, and work you keep doing by hand becomes a proposal for a new role worker in `Context/roster.md`.
 
 ![Work from one project: read, capture, drafts, write](docs/assets/workbench-one-project.png)
 
@@ -174,7 +175,7 @@ After setup, create one Claude project named after you, attach the folder, and p
 | `/workbench:setup` | Onboard, or change your role, tools, hours, delivery or routines. |
 | `/workbench:schedules` | Make your scheduled tasks match the plan. Older look-alikes are paused, not deleted. |
 | `/workbench:migrate` | Upgrade after a plugin update without losing your edits, or adopt an older vault. |
-| `/workbench:librarian` | Get a health report across 34 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled, pages gone quiet. |
+| `/workbench:librarian` | Get a health report across 38 checks: stale pages, broken links, duplicates, one-sided relationships, missed routines, a malformed commitments register, conflicts left unreconciled, pages gone quiet. |
 | `/workbench:capture` | Log what a chat settled, from any chat in any surface. Usually happens on its own. |
 | `/workbench:sweep`, `team`, `daily-briefing`, `eod-recap`, `nightly-dream`, `weekly-review`, `calendar-sync` | The routines. They run on schedule, and you can run any of them by hand. |
 | `/workbench:person <name>` | Everything the folder knows about someone and what's open between you. |

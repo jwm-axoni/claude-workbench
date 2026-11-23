@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (0.3.0)
+## 0.3.0 — 2026-11-23
 
 A proactive Workbench: something now watches between the scheduled briefings, and a small team does the work before the owner gets to it.
 
@@ -14,6 +14,9 @@ A proactive Workbench: something now watches between the scheduled briefings, an
 - `Tracking/NEEDS_YOU.md`: decisions only the owner can make, each with a recommended answer, append-only like the run ledger. The team appends `open` items, the recap appends `answered` lines from digest replies and `answer: n-…` captures. The briefing asks open items right after the dream's questions, with their `n-` ids
 - The sweep may send the owner one urgent ping per run, only when `Context/roster.md` turns it on; a new dated standing exception in the root `CLAUDE.md`. Every routine's prompt now points at the standing exceptions
 - The briefing links team drafts under **Replies owed** and prep pages under **Today**, and the digest lists what was drafted
+- The learning loops cover the team. The recap grades every queue item `used`, `ignored` or `open` under `## Queue`, and tags team drafts `by: team-drafter`. The dream files queue `commitment-candidate` items as commitments (an `ignored` one needs a second source), counts editor send-backs as drafter evidence alongside owner edits, turns `fyi` items from one source ignored on two days into a `pending` never-surface rule (never for urgent, reply-owed or prep items), and can propose a `persona`: a new role worker for the roster
+- The weekly scorecard adds draft acceptance by author, sweep precision per kind, items the editor held, and Needs-you answers within 2 workdays; Health adds a runs-and-spend line. The weekly archives graded queue files after 14 days and prep pages 30 days past their date, into `Archive/Tracking/`
+- Librarian: 38 checks (four new: old queue files, Needs-you items open 7+ days, old prep pages, a malformed roster)
 - Migration: `/workbench:migrate` adds `Tracking/Queue/README.md`, `Tracking/Prep/README.md`, `Context/roster.md`, `Tracking/NEEDS_YOU.md` and the fallback routine copies; `/workbench:schedules` then offers the Sweep and Team tasks
 
 ## 0.2.0 — 2026-11-07

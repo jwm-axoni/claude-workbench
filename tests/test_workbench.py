@@ -433,6 +433,14 @@ class PackageHygiene(unittest.TestCase):
                 for key in ("lspServers", "outputStyles", "themes", "settings"):
                     self.assertNotIn(key, plugin, f"{manifest.name} declares {key}")
 
+    def test_librarian_check_count_matches_everywhere_it_is_stated(self):
+        lib = (self.ROOT / "skills/librarian/SKILL.md").read_text()
+        checks = re.findall(r"^\s*(\d+[a-d]?)\. ", lib.split("## Report")[0], re.M)
+        n = len(set(checks))
+        for rel in ["skills/librarian/SKILL.md", "README.md", "docs/index.html"]:
+            stated = set(re.findall(r"(\d+) checks", (self.ROOT / rel).read_text()))
+            self.assertEqual(stated, {str(n)}, f"{rel} states {stated}, the librarian lists {n}")
+
     def test_both_manifests_carry_the_same_version(self):
         plugin = json.loads((self.ROOT / ".claude-plugin/plugin.json").read_text())
         market = json.loads((self.ROOT / ".claude-plugin/marketplace.json").read_text())
