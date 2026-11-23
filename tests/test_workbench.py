@@ -274,6 +274,10 @@ class Routines(Base):
         self.assertIn("Tracking/Queue/YYYY-MM-DD_sweep.md", r["sweep"]["writes"])
         late = self.routines(dict(PROFILE, routine_times={"daily-briefing": "10:00"}))
         self.assertTrue(late["sweep"]["cron"].startswith("20 8,"), "never before the working day starts")
+        night = self.routines(dict(PROFILE, work_hours={"start": "22:00", "end": "06:00", "days": "Mon-Fri"}))
+        self.assertEqual(night["sweep"]["cron"], "20 0,1,2,3,4,5,6,20,21,22,23 * * 1-5",
+                         "a working day across midnight wraps instead of crashing")
+        self.assertIn("from 20:20 to 06:20", night["sweep"]["when"])
         r = self.routines(dict(PROFILE, routines={"sweep": False}))
         self.assertNotIn("sweep", r)
 

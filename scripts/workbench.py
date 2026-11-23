@@ -172,7 +172,10 @@ def routine_times(profile: dict) -> dict:
     # The sweep runs hourly through the working day, at a minute clear of the other routines. Its
     # first run lands before the morning briefing, so the overnight catch-up is in the queue in time.
     first = min(start[0], shift(t["brief"], -(SWEEP_MINUTE + 20))[0])
-    sweep_hours = list(range(first, end[0] + 1))
+    if first <= end[0]:
+        sweep_hours = list(range(first, end[0] + 1))
+    else:  # a working day that crosses midnight
+        sweep_hours = list(range(first, 24)) + list(range(0, end[0] + 1))
     return {"start": start, "end": end, "days": days, "t": t,
             "cal_minute": cal[1], "cal_hours": sorted({cal[0], 11, end[0]}),
             "sweep_minute": SWEEP_MINUTE, "sweep_hours": sweep_hours}
@@ -270,7 +273,7 @@ def build_context(profile: dict, root: Path):
         "cal_times": ", ".join(fmt((h, times["cal_minute"])) for h in times["cal_hours"]),
         "sweep_minute": times["sweep_minute"],
         "sweep_minute_pad": f"{times['sweep_minute']:02d}",
-        "sweep_hours": ",".join(map(str, times["sweep_hours"])),
+        "sweep_hours": ",".join(map(str, sorted(times["sweep_hours"]))),
         "sweep_first": fmt((times["sweep_hours"][0], times["sweep_minute"])),
         "sweep_last": fmt((times["sweep_hours"][-1], times["sweep_minute"])),
     }

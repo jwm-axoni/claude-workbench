@@ -16,7 +16,13 @@ Each routine there has `id`, `name` (always `[Workbench] …`), `cron`, `timezon
 text), `model` and `prompt`. `model` is `haiku`, `sonnet` or `opus`: the hourly sweep and the
 calendar sync run on the smallest model, the rest on `sonnet`. The owner changes one with
 `models` in `.workbench/profile.json` (`{"nightly-dream": "opus"}`); never put a routine on a
-larger model on your own, since every run spends the owner's credit. The prompt is deliberately short: it invokes the plugin skill, with the copy in
+larger model on your own, since every run spends the owner's credit.
+
+**Keep a model the owner already chose.** If an existing task runs on a different model than
+`schedules.json` says and the profile has no `models` entry for that routine, the owner picked it
+by hand. Don't change it. Write it into the profile's `models` (for example
+`"nightly-dream": "opus"`), regenerate `schedules.json`, and say so in one line. A model differs
+from the plan only after the owner changes `models` themselves. The prompt is deliberately short: it invokes the plugin skill, with the copy in
 `.workbench/routines/` as a fallback, so upgrading the plugin upgrades the routines without
 touching the schedule.
 

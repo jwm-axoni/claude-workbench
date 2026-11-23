@@ -19,7 +19,7 @@ in `Tracking/Signals/RUN_LEDGER.md`.
 ## Why it catches up
 
 Each run starts where the last good run ended, read from the run ledger. If the laptop was
-closed overnight, the first run of the morning covers the whole night (up to 72 hours; anything
+closed overnight, the first run of the morning covers the whole night (up to 96 hours, which covers a long weekend; anything
 older is recorded as a gap and the briefing names it). Nothing that stayed in the source is lost
 by checking late.
 

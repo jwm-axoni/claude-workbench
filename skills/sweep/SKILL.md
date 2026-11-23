@@ -15,14 +15,19 @@ post, reply, react or mark anything read.
 
 ## Step 1: the window
 
-Read `Tracking/Signals/RUN_LEDGER.md`. Find the newest `sweep` line marked `ok`. The window runs
-from that line's date and time to now.
+Read `Tracking/Signals/RUN_LEDGER.md`. Find the newest `sweep` line marked `ok` or `partial`. The
+window runs from that line's date and time to now.
 
-- No earlier `ok` line (first run, or a new install): the window starts 24 hours ago.
-- The window is longer than 72 hours: start it 72 hours ago, and record the rest as a gap in your
-  ledger line (`gaps: window capped; nothing read before YYYY-MM-DD HH:MM`). The briefing names it.
-- A `partial` or `failed` line doesn't move the window, so the next run reads that stretch again.
-  The dedupe in step 4 keeps it from listing anything twice.
+- No earlier `ok` or `partial` line (first run, or a new install): the window starts 24 hours ago.
+- A `failed` line doesn't move the window, so the next run reads that stretch again.
+- A source that a `partial` line named in its `gaps:` gets a longer window of its own: from the
+  newest sweep line that didn't name it. Every other source uses the normal window. So one broken
+  connector doesn't make every run reread every source.
+- Any window longer than 96 hours (that covers a long weekend): start it 96 hours ago, and record
+  the rest as a gap in your ledger line (`gaps: window capped; <source> not read before
+  YYYY-MM-DD HH:MM`). The briefing names it.
+
+The dedupe in step 4 keeps an overlap from listing anything twice.
 
 Laptops sleep and the app closes, so runs get missed. That's fine: the next run covers everything
 since the last good one, because the sources keep their history.
@@ -43,7 +48,8 @@ since the last good one, because the sources keep their history.
    Never read meeting transcripts. If meetings come through a recorder's connector, read only its
    summaries and next steps.
 
-If a source can't be reached, carry on with the rest and mark the run `partial`, naming the source.
+If a source can't be reached, carry on with the rest and mark the run `partial`, naming the source
+in `gaps:` exactly as `me.md` names it (`gaps: CRM unreachable`), so the next run can find it.
 
 ## Step 3: sort
 

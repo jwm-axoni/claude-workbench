@@ -69,6 +69,9 @@ only check naming). Skip `.workbench/`, `.obsidian/`, `.git/`.
     two weeks, compare the routines `.workbench/schedules.json` expects with the ledger's lines.
     A missing line, or one marked `failed`, is a miss; a `partial` line is reported with its
     `gaps:` text. Infer from file dates only for days before the ledger existed, and say so.
+    The `sweep` is hourly and each run covers the hours before it, so count it per day, not per
+    run: a workday is a miss only when it has no `ok` or `partial` sweep line at all. Report a
+    sweep line whose `gaps:` says `window capped`.
     These are routine defects; name the scheduled task to check.
 21. One-writer violations: if the vault is a git repo, commits from the last two weeks that touched a
     file outside the committing routine's ownership table in the root `CLAUDE.md`.
